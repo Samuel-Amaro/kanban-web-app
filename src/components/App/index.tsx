@@ -1,7 +1,12 @@
+import Header from "../Header";
 import "./App.css";
 
 function App() {
-  return <h1>Vite + React</h1>;
+  return (
+    <>
+      <Header />
+    </>
+  );
 }
 
 export default App;
