@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface Board {
     name: string;
     columns: Column[];
@@ -22,5 +24,7 @@ export interface Subtask {
 
 export type DataContextType = {
     datas: Board[];
-    //functions de atualizar quadro, tarefas, subtarefas, criar novos quadros, criar novas tarefas, subtarefas
+    currentSelectedBoard: Board;
+    setCurrentSelectedBoard: React.Dispatch<React.SetStateAction<Board>>;
+    //TODO: functions de atualizar quadro, tarefas, subtarefas, criar novos quadros, criar novas tarefas, subtarefas, editar , aqui somente especificamos a declarações das functions, e oque elas retornar
 };

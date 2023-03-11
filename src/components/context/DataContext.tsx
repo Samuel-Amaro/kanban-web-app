@@ -1,27 +1,33 @@
 import React, { useState, useContext } from "react";
-import { Board, DataContextType} from "../../data";
+import { Board, DataContextType } from "../../data";
 import data from "../../data.json";
 
 const DataContext = React.createContext<DataContextType | null>(null);
 
-export function DataProvider({children}: {children: React.ReactNode}) {
+export default function DataContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  //todos os boards estão aqui para primeiro carregamento
   const [datas, setDatas] = useState<Board[]>(data.boards);
+  //obtem o primeiro board via codigo, mas se tiver uma outra maneira de escolha so adpatar
+  const [currentSelectedBoard, setCurrentSelectedBoard] = useState<Board>(datas[0]);
 
   //TODO: implementar as functions do DataContextType declaradas aqui, criar o corpo delas aqui, e especificar no value do provider
   //TODO: as functions de atualizar, deletar, e criar, tarefas, boards, subtaskas, columns, editar as mesmas, implementar cada uma delas aqui, especificando os paramentros, e atualizar o datas state com novo objetos com novos dados
 
   return (
-    <DataContext.Provider value={{ datas }}>{children}</DataContext.Provider>
+    <DataContext.Provider value={{ datas, currentSelectedBoard, setCurrentSelectedBoard }}>{children}</DataContext.Provider>
   );
 }
 
 export function useDataContext() {
-     const dataContext = useContext(DataContext);
+  const dataContext = useContext(DataContext);
 
-    if(!dataContext) {
-        throw new Error("Error in data context");
-    }
+  if (!dataContext) {
+    throw new Error("Error in data context");
+  }
 
-    return dataContext;
+  return dataContext;
 }
-
