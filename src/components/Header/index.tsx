@@ -4,7 +4,7 @@ import ChevronDown from "../Icons/ChevronDown";
 import LogoMobile from "../Icons/LogoMobile";
 import VerticalEllipsis from "../Icons/VerticalEllipsis";
 
-//TODO: ADICIONAR INTERATIVIDADE VIA MOUSE E TECLADO
+
 //TODO: ADICIONAR LOGICA DE ESTADO
 
 export default function Header() {
@@ -29,6 +29,7 @@ export default function Header() {
           <Button type="button" size="l" variant="primary" title="Add New Task">
             + Add New Task
           </Button>
+          {/*//TODO: ADICIONAR INTERATIVIDADE VIA MOUSE E TECLADO*/}
           {/*button menu to actions board*/}
           <div className="header__menu-button-board">
             <button
