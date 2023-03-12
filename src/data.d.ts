@@ -1,5 +1,7 @@
 import React from "react";
 
+//TODO: adicionar index nas tarefas e subtarefas e se precisar nas colunas e boards para ajudar em filtragem e rastreio
+
 export interface Board {
     name: string;
     columns: Column[];
@@ -27,4 +29,5 @@ export type DataContextType = {
     currentSelectedBoard: Board;
     setCurrentSelectedBoard: React.Dispatch<React.SetStateAction<Board>>;
     //TODO: functions de atualizar quadro, tarefas, subtarefas, criar novos quadros, criar novas tarefas, subtarefas, editar , aqui somente especificamos a declarações das functions, e oque elas retornar
+    //TODO 1: primeira function a criar e a de criar novo board, e apos criar ele o seleciona-lo para ser atualmente preenchido
 };
