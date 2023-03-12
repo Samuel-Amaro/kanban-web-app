@@ -4,18 +4,25 @@ import ChevronDown from "../Icons/ChevronDown";
 import LogoMobile from "../Icons/LogoMobile";
 import VerticalEllipsis from "../Icons/VerticalEllipsis";
 import { useDataContext } from "../context/DataContext";
+import { useThemeContext } from "../context/ThemeContext";
+import Logo from "../Icons/Logo";
 
 //TODO: ADICIONAR LOGICA DE ESTADO
 
 export default function Header() {
   const dataContext = useDataContext();
+  const themeContext = useThemeContext();
   return (
     <header className="header">
       {/*mostrar somente a partir de dispositivos como tablets e desktops*/}
+      <div className="header__logo">
+        <Logo theme={themeContext.theme} />
+      </div>
       <Heading level={1} className="header__name-board">
         {dataContext.currentSelectedBoard.name}
       </Heading>
       {/*mostrar somente em layout mobile*/}
+      {/*//TODO: usar state definido em app para mostrar ou ocultar a side bar em versão mobile*/}
       <div className="header__group">
         <LogoMobile />
         <div className="header__container">

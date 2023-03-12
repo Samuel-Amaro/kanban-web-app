@@ -17,6 +17,11 @@ export default function DataContextProvider({
   //TODO: implementar as functions do DataContextType declaradas aqui, criar o corpo delas aqui, e especificar no value do provider
   //TODO: as functions de atualizar, deletar, e criar, tarefas, boards, subtaskas, columns, editar as mesmas, implementar cada uma delas aqui, especificando os paramentros, e atualizar o datas state com novo objetos com novos dados
 
+  function saveBoard(board: Board) {
+    //TODO: implementar logica para criar um novo board e add no contexto, e seleciona-lo para ser editado
+  }
+
+
   return (
     <DataContext.Provider value={{ datas, currentSelectedBoard, setCurrentSelectedBoard }}>{children}</DataContext.Provider>
   );
