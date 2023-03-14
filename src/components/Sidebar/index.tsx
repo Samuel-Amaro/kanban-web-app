@@ -52,11 +52,7 @@ export default function Sidebar({
         <ListBoards type="list"/>
       </div>
       <div className="sidebar__container">
-        <div className="sidebar__container-switch">
-          <LightTheme />
-          <Switch />
-          <DarkTheme />
-        </div>
+        <Switch />
         <Button
           type="button"
           size="l"

@@ -10,23 +10,34 @@ type PropsListBoards = {
 
 /**
  * * IMPORTANT: este componente pode ser uma lista de boards comun, ou uma menu acessivel
- * 
- * @param param0 
- * @returns 
+ *
+ * @param param0
+ * @returns
  */
-export default function ListBoards({type, idElement, ariaLabelledby} : PropsListBoards) {
+export default function ListBoards({
+  type,
+  idElement,
+  ariaLabelledby,
+}: PropsListBoards) {
   const dataContext = useDataContext();
   return (
+    //TODO: definir estilos globais deste componente para não precisar ficar reescrevendo css
     <ul
       className="list-boards"
       role={type === "list" ? undefined : "menu"}
       id={type === "menu" && idElement ? idElement : undefined}
-      aria-labelledby={type === "menu" && ariaLabelledby ? ariaLabelledby : undefined}
+      aria-labelledby={
+        type === "menu" && ariaLabelledby ? ariaLabelledby : undefined
+      }
     >
       {dataContext.datas.map((board, index) => {
         //TODO: add classe de active para demostrar na UI qual o board atual selecionado, mas para fazer isso devemos, adicionar ids, nos boards e columns para não comparar com somente nomes
         return (
-          <li className="list-boards__item" key={index} role={type === "menu" ? "menuitem" : undefined}>
+          <li
+            className="list-boards__item"
+            key={index}
+            role={type === "menu" ? "none" : undefined}
+          >
             <Button
               type="button"
               size="l"
@@ -41,13 +52,14 @@ export default function ListBoards({type, idElement, ariaLabelledby} : PropsList
                   dataContext.setCurrentSelectedBoard(board);
                 }
               }}
+              role={type === "menu" ? "menuitem" : undefined}
             >
               <BoardIcon /> {board.name}
             </Button>
           </li>
         );
       })}
-      <li className="sidebar__item">
+      <li className="sidebar__item" role={type === "menu" ? "none" : undefined}>
         {/*//TODO: adicionar class de forma que destaque esse button dos demais, porque ele tem que visualmente ser destacado*/}
         <Button
           type="button"
@@ -63,6 +75,7 @@ export default function ListBoards({type, idElement, ariaLabelledby} : PropsList
               //TODO: chamar function do state do context data para criar um novo board
             }
           }}
+          role={type === "menu" ? "menuitem" : undefined}
         >
           <BoardIcon /> + Create New Board
         </Button>

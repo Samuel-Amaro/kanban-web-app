@@ -13,14 +13,22 @@ export default function Heading({
 }: PropsTypeHeadings) {
   switch (level) {
     case 1:
-      return <h1 className={"heading-xl " + className}>{children}</h1>;
+      return (
+        <h1 className={className ? `heading-xl ${className}` : "heading-xl"}>
+          {children}
+        </h1>
+      );
     case 2:
-      return <h2 className={"heading-l " + className}>{children}</h2>;
+      return (
+        <h2 className={className ? `heading-l ${className}` : "heading-l"}>
+          {children}
+        </h2>
+      );
     case 3:
-      return <h3 className={"heading-m " + className}>{children}</h3>;
+      return <h3 className={className ? `heading-m ${className}` : "heading-m"}>{children}</h3>;
     case 4:
-      return <h4 className={"heading-s " + className}>{children}</h4>;
+      return <h4 className={className ? `heading-s ${className}` : "heading-s"}>{children}</h4>;
     default:
-        throw("Level de headings undefined");
+      throw "Level de headings undefined";
   }
 }

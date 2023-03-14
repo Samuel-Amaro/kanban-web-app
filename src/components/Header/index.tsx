@@ -7,6 +7,10 @@ import { useDataContext } from "../context/DataContext";
 import { useThemeContext } from "../context/ThemeContext";
 import Logo from "../Icons/Logo";
 import ChevronUp from "../Icons/ChevronUp";
+import ListBoards from "../ListBoards";
+import Switch from "../Switch";
+import { useRef } from "react";
+import BoardIcon from "../Icons/Board";
 
 type PropsSidebar = {
   isSidebarHidden: boolean;
@@ -63,21 +67,131 @@ function MenuButtonSidebar({
   setIsSidebarHidden,
 }: PropsMenuButtonSidebar) {
   const dataContext = useDataContext();
+  const btnSideBar = useRef<HTMLDivElement | null>(null);
+  const refsItemsMenu = useRef<HTMLButtonElement[]>([]);
   //TODO: terminade construir este menu button sidebar, pensar na acessibilidade do mesmo
   //TODO: pensar em como mostrar o sidebar mobile resposivo e totalmente acessivel via mouse e teclado
   return (
     <div className="header__group">
       <LogoMobile />
-      <div className="header__menu-button-sidebar">
+      <div
+        ref={btnSideBar}
+        className="header__menu-button-sidebar"
+        role="button"
+        tabIndex={0}
+        id="menubutton-sidebar"
+        aria-haspopup="true"
+        aria-controls="menu-sidebar"
+        onPointerDown={() => {
+          setIsSidebarHidden(!isSidebarHidden);
+        }}
+        onKeyDown={(e) => {
+          //TODO: APLICAR GERENCIAMENTO DE FOCO AQUI
+          switch (e.key) {
+            case " ":
+            case "Enter":
+            case "ArrowDown":
+            case "Down":
+              //abre o menu via keys
+              setIsSidebarHidden(false);
+              //TODO: add o focus ao primeiro item do menu apos abrir
+              refsItemsMenu.current[0].focus();
+              break;
+            case "Esc":
+            case "Escape":
+              //fecha o menu via keys
+              setIsSidebarHidden(true);
+              //TODO: add o focus para o button sidebar apos fechar o menu
+              if (btnSideBar.current) btnSideBar.current.focus();
+              break;
+            case "Up":
+            case "ArrowUp":
+              //abre o menu via keys
+              setIsSidebarHidden(false);
+              //TODO: apos abrir menu o foco vai para o ultimo item de menu
+              refsItemsMenu.current[dataContext.datas.length - 1].focus();
+              break;
+            default:
+              break;
+          }
+        }}
+      >
         <Heading level={1} className="header__name-board">
           {dataContext.currentSelectedBoard.name}
         </Heading>
         {isSidebarHidden ? <ChevronDown /> : <ChevronUp />}
       </div>
+      {!isSidebarHidden && (
+        <div className="header__sidebar-mobile">
+          <Heading level={4} className="header__count-boards">
+            All Boards ({dataContext.datas.length})
+          </Heading>
+          <ul
+            className="list-boards"
+            role="menu"
+            id="menu-sidebar"
+            aria-labelledby="menubutton-sidebar"
+          >
+            {dataContext.datas.map((board, index) => {
+              //TODO: add classe de active para demostrar na UI qual o board atual selecionado, mas para fazer isso devemos, adicionar ids, nos boards e columns para não comparar com somente nomes
+              return (
+                <li className="list-boards__item" key={index} role="none">
+                  <Button
+                    type="button"
+                    size="l"
+                    className="list-boards__btn list-boards__btn--select-board"
+                    aria-label={`Select ${board.name} board`}
+                    title={`Select ${board.name} board`}
+                    onPointerDown={() => {
+                      dataContext.setCurrentSelectedBoard(board);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        dataContext.setCurrentSelectedBoard(board);
+                      }
+                    }}
+                    role="menuitem"
+                    ref={(btn) => {
+                      if(btn) {
+                        refsItemsMenu.current[index] = btn;
+                      }
+                    }}
+                  >
+                    <BoardIcon /> {board.name}
+                  </Button>
+                </li>
+              );
+            })}
+            <li className="sidebar__item" role="none">
+              {/*//TODO: adicionar class de forma que destaque esse button dos demais, porque ele tem que visualmente ser destacado*/}
+              <Button
+                type="button"
+                size="l"
+                className="list-boards__btn list-boards__btn--create-board"
+                aria-label="create new board"
+                title={`create new board`}
+                onPointerDown={() => {
+                  //TODO: chamar function do state do context data para criar um novo board
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    //TODO: chamar function do state do context data para criar um novo board
+                  }
+                }}
+                role="menuitem"
+              >
+                <BoardIcon /> + Create New Board
+              </Button>
+            </li>
+          </ul>
+          <Switch />
+        </div>
+      )}
     </div>
   );
 }
 
+//TODO: TERMINAR DE CONSTRUIRE ESTE COMPONENTE, ADD STATE E INTERATIVIDADE E HTML
 function MenuButtonBoard() {
   return (
     <div className="header__menu-button-board">

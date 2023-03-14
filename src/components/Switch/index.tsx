@@ -1,3 +1,5 @@
+import DarkTheme from "../Icons/DarkTheme";
+import LightTheme from "../Icons/LightTheme";
 import { useThemeContext } from "../context/ThemeContext";
 
 export default function Switch() {
@@ -18,37 +20,43 @@ export default function Switch() {
   }
 
   return (
-    <div
-      className="switch"
-      role="switch"
-      aria-checked={themeContext.theme === "light" ? false : true}
-      onPointerDown={(event) => {
-        toggleStatus(event);
-        themeContext.setTheme(
-          event.currentTarget.getAttribute("aria-checked") === "true"
-            ? "dark"
-            : "light"
-        );
-      }}
-      aria-label="Site cores scheme switcher"
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          toggleStatus(event);
-          themeContext.setTheme(
-            event.currentTarget.getAttribute("aria-checked") === "true"
-              ? "dark"
-              : "light"
-          );
-        }
-      }}
-      tabIndex={0}
-      title="Toggle Theme"
-    >
-      <span
-        className="switch-controler"
-        aria-label="Switch Controller to switch themes"
-        title="Switch Controller to switch themes"
-      ></span>
+    <div className="switch">
+      <div className="switch__container">
+        <LightTheme />
+        <div
+          className="switch__swtch"
+          role="switch"
+          aria-checked={themeContext.theme === "light" ? false : true}
+          onPointerDown={(event) => {
+            toggleStatus(event);
+            themeContext.setTheme(
+              event.currentTarget.getAttribute("aria-checked") === "true"
+                ? "dark"
+                : "light"
+            );
+          }}
+          aria-label="Site cores scheme switcher"
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              toggleStatus(event);
+              themeContext.setTheme(
+                event.currentTarget.getAttribute("aria-checked") === "true"
+                  ? "dark"
+                  : "light"
+              );
+            }
+          }}
+          tabIndex={0}
+          title="Toggle Theme"
+        >
+          <span
+            className="switch__controler"
+            aria-label="Switch Controller to switch themes"
+            title="Switch Controller to switch themes"
+          ></span>
+        </div>
+        <DarkTheme />
+      </div>
     </div>
   );
 }
