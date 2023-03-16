@@ -8,7 +8,7 @@ import { useThemeContext } from "../context/ThemeContext";
 import Logo from "../Icons/Logo";
 import ChevronUp from "../Icons/ChevronUp";
 import Switch from "../Switch";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import BoardIcon from "../Icons/Board";
 import "./test.css";
 
@@ -208,12 +208,6 @@ function MenuButtonSidebar({
                     onKeyDown={(e) => {
                       if (e.ctrlKey || e.altKey || e.metaKey) {
                         return;
-                      }
-                      if (e.shiftKey) {
-                        if (e.key === "Tab") {
-                          btnSideBar.current?.focus();
-                          setIsSidebarHidden(true);
-                        }
                       } else {
                         switch (e.key) {
                           case "Esc":
@@ -236,9 +230,6 @@ function MenuButtonSidebar({
                           case "End":
                           case "PageDown":
                             setToFocus(getRefsItemsMenu().length - 1);
-                            break;
-                          case "Tab":
-                            setIsSidebarHidden(true);
                             break;
                           case "Enter":
                           case " ":
@@ -282,7 +273,8 @@ function MenuButtonSidebar({
                 }}
                 role="menuitem"
               >
-                <BoardIcon className="list-boards__icon-btn-create-board" /> + Create New Board
+                <BoardIcon className="list-boards__icon-btn-create-board" /> +
+                Create New Board
               </Button>
             </li>
           </ul>
@@ -295,31 +287,128 @@ function MenuButtonSidebar({
 
 //TODO: TERMINAR DE CONSTRUIRE ESTE COMPONENTE, ADD STATE E INTERATIVIDADE E HTML
 function MenuButtonBoard() {
+  const [isHiddenMenuBoard, setIsHiddenMenuBoard] = useState(true);
+  const refsButtons = useRef<HTMLButtonElement[]>([]);
+  const refBtnBoadMenu = useRef<HTMLButtonElement>(null);
+
+  function getRefs() {
+    if (!refsButtons.current) {
+      refsButtons.current = [];
+    }
+    return refsButtons.current;
+  }
+
+  function setFocus(itemId: number) {
+    const refsBtns = getRefs();
+    refsBtns.forEach((item) => {
+      if (item.classList.contains("header__btn-board--active")) {
+        item.classList.remove("header__btn-board--active");
+      }
+    });
+    refsBtns[itemId].classList.add("header__btn-board--active");
+    refsBtns[itemId].focus();
+  }
+
+  //TODO: arrumar interatividade via teclado deste componente, e pensar numar forma de reaproveitar functions e metodos em comuns com o componente do menu side bar mobile
+
   return (
     <div className="header__menu-button-board">
       <button
         type="button"
         className="header__btn-board"
-        title="Show options for current board"
+        title={
+          isHiddenMenuBoard
+            ? "Show options for current board"
+            : "Hidden options board"
+        }
         id="menubutton1"
         aria-haspopup="true"
         aria-controls="menu1"
+        aria-expanded={isHiddenMenuBoard ? true : false}
+        aria-label="Options to actions in boards"
+        onPointerDown={() => {
+          setIsHiddenMenuBoard(!isHiddenMenuBoard);
+        }}
+        onKeyDown={(e) => {
+          switch (e.key) {
+            case " ":
+            case "Enter":
+            case "ArrowDown":
+            case "Down":
+              //abre o menu via keys
+              setIsHiddenMenuBoard(false);
+              //add o focus ao primeiro item do menu apos abrir
+              setFocus(0);
+              break;
+            case "Esc":
+            case "Escape":
+              //fecha o menu via keys
+              setIsHiddenMenuBoard(true);
+              //add o focus para o button sidebar apos fechar o menu
+              if (refBtnBoadMenu.current) refBtnBoadMenu.current.focus();
+              break;
+            case "Up":
+            case "ArrowUp":
+              //abre o menu via keys
+              setIsHiddenMenuBoard(false);
+              //apos abrir menu o foco vai para o ultimo item de menu
+              setFocus(getRefs().length - 1);
+              break;
+            default:
+              break;
+          }
+        }}
+        ref={refBtnBoadMenu}
       >
         <VerticalEllipsis />
       </button>
-      <ul
-        id="menu1"
-        role="menu"
-        aria-labelledby="menubutton1"
-        className="header__menu-board"
-      >
-        <li role="menuitem" className="header__menu-item">
-          Edit Board
-        </li>
-        <li role="menuitem" className="header__menu-item">
-          Delete Board
-        </li>
-      </ul>
+      {!isHiddenMenuBoard && (
+        <ul
+          id="menu1"
+          role="menu"
+          aria-labelledby="menubutton1"
+          className="header__menu-board"
+        >
+          <li role="none" className="header__menu-item">
+            <button
+              type="button"
+              className="header__btn-board header__btn-board--edit"
+              role="menuitem"
+              aria-label="Edit current board"
+              title="Edit current board"
+              ref={(btn) => {
+                const refItems = getRefs();
+                if (btn) {
+                  refItems[0] = btn;
+                } else {
+                  refItems.splice(0, 1);
+                }
+              }}
+            >
+              Edit Board
+            </button>
+          </li>
+          <li role="menuitem" className="header__menu-item">
+            <button
+              type="button"
+              className="header__btn-board header__btn-board--delte"
+              role="menuitem"
+              aria-label="Delete current board"
+              title="Delete current board"
+              ref={(btn) => {
+                const refItems = getRefs();
+                if (btn) {
+                  refItems[1] = btn;
+                } else {
+                  refItems.splice(1, 1);
+                }
+              }}
+            >
+              Delete Board
+            </button>
+          </li>
+        </ul>
+      )}
     </div>
   );
 }
