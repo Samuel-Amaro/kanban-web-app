@@ -7,10 +7,10 @@ import { useDataContext } from "../context/DataContext";
 import { useThemeContext } from "../context/ThemeContext";
 import Logo from "../Icons/Logo";
 import ChevronUp from "../Icons/ChevronUp";
-import ListBoards from "../ListBoards";
 import Switch from "../Switch";
 import { useRef } from "react";
 import BoardIcon from "../Icons/Board";
+import "./test.css";
 
 type PropsSidebar = {
   isSidebarHidden: boolean;
@@ -60,6 +60,8 @@ export default function Header({
   );
 }
 
+//TODO: PULAR O PROBLEMA DO GERENCIAMENTO DE FOCO E CONTRUIR OS MENUS LOGO DEPOIS PENSAR EM COMO GERENCIAR O FOCO
+
 interface PropsMenuButtonSidebar extends PropsSidebar {}
 
 function MenuButtonSidebar({
@@ -69,8 +71,62 @@ function MenuButtonSidebar({
   const dataContext = useDataContext();
   const btnSideBar = useRef<HTMLDivElement | null>(null);
   const refsItemsMenu = useRef<HTMLButtonElement[]>([]);
-  //TODO: terminade construir este menu button sidebar, pensar na acessibilidade do mesmo
-  //TODO: pensar em como mostrar o sidebar mobile resposivo e totalmente acessivel via mouse e teclado
+
+  function getRefsItemsMenu() {
+    if (!refsItemsMenu.current) {
+      refsItemsMenu.current = [];
+    }
+    return refsItemsMenu.current;
+  }
+
+  function setToFocus(itemId: number) {
+    const refItems = getRefsItemsMenu();
+    const item = refItems[itemId];
+    addClassFocusItemActive(item);
+    item.focus();
+  }
+
+  function setToFocusPreviousItem(itemCurrent: HTMLButtonElement) {
+    const refItems = getRefsItemsMenu();
+    let menuItemSelected = null;
+    if (itemCurrent === refItems[0]) {
+      menuItemSelected = itemCurrent;
+    } else {
+      const index = refItems.indexOf(itemCurrent);
+      menuItemSelected = refItems[index - 1];
+    }
+    addClassFocusItemActive(menuItemSelected);
+    menuItemSelected.focus();
+  }
+
+  function setFocusNextItem(itemCurrent: HTMLButtonElement) {
+    const refItems = getRefsItemsMenu();
+    let menuItemSelected = null;
+    if (itemCurrent === refItems[refItems.length - 1]) {
+      menuItemSelected = itemCurrent;
+    } else {
+      const index = refItems.indexOf(itemCurrent);
+      menuItemSelected = refItems[index + 1];
+    }
+    addClassFocusItemActive(menuItemSelected);
+    menuItemSelected.focus();
+  }
+
+  function addClassFocusItemActive(el: HTMLButtonElement) {
+    removeClassFocusItemActive();
+    if (!el.classList.contains("list-boards__btn--board-selected")) {
+      el.classList.add("list-boards__btn--board-selected");
+    }
+  }
+
+  function removeClassFocusItemActive() {
+    getRefsItemsMenu().forEach((item) => {
+      if (item.classList.contains("list-boards__btn--board-selected")) {
+        item.classList.remove("list-boards__btn--board-selected");
+      }
+    });
+  }
+
   return (
     <div className="header__group">
       <LogoMobile />
@@ -82,9 +138,13 @@ function MenuButtonSidebar({
         id="menubutton-sidebar"
         aria-haspopup="true"
         aria-controls="menu-sidebar"
+        title={
+          isSidebarHidden ? "View sidebar boards" : "Hidden sidebar boards"
+        }
         onPointerDown={() => {
           setIsSidebarHidden(!isSidebarHidden);
         }}
+        aria-expanded={isSidebarHidden ? true : false}
         onKeyDown={(e) => {
           //TODO: APLICAR GERENCIAMENTO DE FOCO AQUI
           switch (e.key) {
@@ -94,22 +154,22 @@ function MenuButtonSidebar({
             case "Down":
               //abre o menu via keys
               setIsSidebarHidden(false);
-              //TODO: add o focus ao primeiro item do menu apos abrir
-              refsItemsMenu.current[0].focus();
+              //add o focus ao primeiro item do menu apos abrir
+              setToFocus(0);
               break;
             case "Esc":
             case "Escape":
               //fecha o menu via keys
               setIsSidebarHidden(true);
-              //TODO: add o focus para o button sidebar apos fechar o menu
+              //add o focus para o button sidebar apos fechar o menu
               if (btnSideBar.current) btnSideBar.current.focus();
               break;
             case "Up":
             case "ArrowUp":
               //abre o menu via keys
               setIsSidebarHidden(false);
-              //TODO: apos abrir menu o foco vai para o ultimo item de menu
-              refsItemsMenu.current[dataContext.datas.length - 1].focus();
+              //apos abrir menu o foco vai para o ultimo item de menu
+              setToFocus(dataContext.datas.length - 1);
               break;
             default:
               break;
@@ -146,24 +206,66 @@ function MenuButtonSidebar({
                       dataContext.setCurrentSelectedBoard(board);
                     }}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        dataContext.setCurrentSelectedBoard(board);
+                      if (e.ctrlKey || e.altKey || e.metaKey) {
+                        return;
+                      }
+                      if (e.shiftKey) {
+                        if (e.key === "Tab") {
+                          btnSideBar.current?.focus();
+                          setIsSidebarHidden(true);
+                        }
+                      } else {
+                        switch (e.key) {
+                          case "Esc":
+                          case "Escape":
+                            btnSideBar.current?.focus();
+                            setIsSidebarHidden(true);
+                            break;
+                          case "Up":
+                          case "ArrowUp":
+                            setToFocusPreviousItem(e.currentTarget);
+                            break;
+                          case "ArrowDown":
+                          case "Down":
+                            setFocusNextItem(e.currentTarget);
+                            break;
+                          case "Home":
+                          case "PageUp":
+                            setToFocus(0);
+                            break;
+                          case "End":
+                          case "PageDown":
+                            setToFocus(getRefsItemsMenu().length - 1);
+                            break;
+                          case "Tab":
+                            setIsSidebarHidden(true);
+                            break;
+                          case "Enter":
+                          case " ":
+                            dataContext.setCurrentSelectedBoard(board);
+                            break;
+                          default:
+                            break;
+                        }
                       }
                     }}
                     role="menuitem"
                     ref={(btn) => {
-                      if(btn) {
-                        refsItemsMenu.current[index] = btn;
+                      const refItems = getRefsItemsMenu();
+                      if (btn) {
+                        refItems[index] = btn;
+                      } else {
+                        refItems.splice(index, 1);
                       }
                     }}
                   >
-                    <BoardIcon /> {board.name}
+                    <BoardIcon className="list-boards__icon-btn-select-board" />{" "}
+                    {board.name}
                   </Button>
                 </li>
               );
             })}
-            <li className="sidebar__item" role="none">
-              {/*//TODO: adicionar class de forma que destaque esse button dos demais, porque ele tem que visualmente ser destacado*/}
+            <li className="list-boards__item" role="none">
               <Button
                 type="button"
                 size="l"
@@ -180,7 +282,7 @@ function MenuButtonSidebar({
                 }}
                 role="menuitem"
               >
-                <BoardIcon /> + Create New Board
+                <BoardIcon className="list-boards__icon-btn-create-board" /> + Create New Board
               </Button>
             </li>
           </ul>

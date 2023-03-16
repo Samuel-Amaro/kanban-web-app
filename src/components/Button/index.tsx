@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import classNames from "classnames";
 
 interface PropsTypeButton extends React.ComponentPropsWithRef<"button"> {
@@ -7,13 +7,30 @@ interface PropsTypeButton extends React.ComponentPropsWithRef<"button"> {
   className?: string;
 }
 
-export default function Button(props: PropsTypeButton) {
+export type Ref = HTMLButtonElement;
+
+const Button = forwardRef<Ref, PropsTypeButton>(function Button(props, ref) {
   const { size, className, variant, ...rest } = props;
+  const classNameMapped = classNames(
+    "button",
+    { [`button__${size}`]: size },
+    { [`button__${variant}`]: variant, className }
+  );
+  return <button className={classNameMapped} ref={ref} {...rest} />;
+});
+
+/*
+export default function Button(props: PropsTypeButton) {
+  const { size, className, variant,...rest } = props;
   const classNameMapped = classNames("button", {[`button__${size}`]: size}, {[`button__${variant}`]: variant, className});
   return (
     <button
       className={classNameMapped}
+      ref={mRef}
       {...rest}
     />
   );
 }
+*/
+
+export default Button;
