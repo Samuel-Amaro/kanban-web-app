@@ -14,7 +14,8 @@ const Button = forwardRef<Ref, PropsTypeButton>(function Button(props, ref) {
   const classNameMapped = classNames(
     "button",
     { [`button__${size}`]: size },
-    { [`button__${variant}`]: variant, className }
+    { [`button__${variant}`]: variant },
+    className
   );
   return <button className={classNameMapped} ref={ref} {...rest} />;
 });
