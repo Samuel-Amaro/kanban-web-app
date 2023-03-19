@@ -1,55 +1,114 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Button from "../Button";
 import BoardIcon from "../Icons/Board";
 import { useDataContext } from "../context/DataContext";
 import { Board } from "../../data";
 
-type PropsListBoards = {
-  type: "list" | "menu";
-  idElement?: string;
-  ariaLabelledby?: string;
-  //refsBtnsBoards?: React.RefObject<HTMLButtonElement[] | null>;
-  //onKeyDown?: (e: React.KeyboardEvent<HTMLButtonElement>, board: Board) => void
+interface PropsListBoards extends React.ComponentPropsWithoutRef<"ul"> {
+  onCloseWrapper: () => void;
+  setIdItemToFocus?: number;
 };
 
-/**
- * * IMPORTANT: este componente pode ser uma lista de boards comun, ou uma menu acessivel
- *
- * @param param0
- * @returns
- */
-export default function ListBoards({
-  type,
-  idElement,
-  ariaLabelledby,
-  //refsBtnsBoards,
-  //onKeyDown
-}: PropsListBoards) {
+export default function ListBoards(props : 
+PropsListBoards) {
+  const {onCloseWrapper, setIdItemToFocus} = props;
   const dataContext = useDataContext();
+  const refsItemsMenu = useRef<HTMLButtonElement[] | null>(null);
 
-  /*function getRefsItemsMenu() {
-    if (!refsBtnsBoards.current) {
-      throw Error("refs btns board is null");
+  useEffect(() => {
+    if(typeof setIdItemToFocus  === "number") {
+      setToFocus(setIdItemToFocus);
     }
-    return refsBtnsBoards.current;
-  }*/
+  });
+
+  function getRefsItemsMenu() {
+    if (!refsItemsMenu.current) {
+      refsItemsMenu.current = [];
+    }
+    return refsItemsMenu.current;
+  }
+
+  function setToFocus(itemId: number) {
+    const refItems = getRefsItemsMenu();
+    const item = refItems[itemId];
+    item.focus();
+  }
+
+  function setToFocusPreviousItem(itemCurrent: HTMLButtonElement) {
+    const refItems = getRefsItemsMenu();
+    let menuItemSelected = null;
+    if (itemCurrent === refItems[0]) {
+      menuItemSelected = itemCurrent;
+    } else {
+      const index = refItems.indexOf(itemCurrent);
+      menuItemSelected = refItems[index - 1];
+    }
+    menuItemSelected.focus();
+  }
+
+  function setFocusNextItem(itemCurrent: HTMLButtonElement) {
+    const refItems = getRefsItemsMenu();
+    let menuItemSelected = null;
+    if (itemCurrent === refItems[refItems.length - 1]) {
+      menuItemSelected = itemCurrent;
+    } else {
+      const index = refItems.indexOf(itemCurrent);
+      menuItemSelected = refItems[index + 1];
+    }
+    menuItemSelected.focus();
+  }
+
+  function handleKeyDownBtnBoard(
+    e: React.KeyboardEvent<HTMLButtonElement>,
+    board: Board
+  ) {
+    if (e.ctrlKey || e.altKey || e.metaKey) {
+      return;
+    } else {
+      switch (e.key) {
+        case "Esc":
+        case "Escape":
+          //fecha o wrraper via teclado
+          onCloseWrapper();
+          break;
+        case "Up":
+        case "ArrowUp":
+          setToFocusPreviousItem(e.currentTarget);
+          break;
+        case "ArrowDown":
+        case "Down":
+          setFocusNextItem(e.currentTarget);
+          break;
+        case "Home":
+        case "PageUp":
+          setToFocus(0);
+          break;
+        case "End":
+        case "PageDown":
+          setToFocus(getRefsItemsMenu().length - 1);
+          break;
+        case "Enter":
+        case " ":
+          dataContext.setCurrentSelectedBoard(board);
+          break;
+        default:
+          break;
+      }
+    }
+  }
 
   return (
     //TODO: definir estilos globais deste componente para não precisar ficar reescrevendo css
     <ul
       className="list-boards"
-      role={type === "list" ? undefined : "menu"}
-      id={type === "menu" && idElement ? idElement : undefined}
-      aria-labelledby={
-        type === "menu" && ariaLabelledby ? ariaLabelledby : undefined
-      }
+      {...props}
     >
       {dataContext.datas.map((board, index) => {
         return (
           <li
             className="list-boards__item"
             key={index}
-            role={type === "menu" ? "none" : undefined}
+            role="none"
           >
             <Button
               type="button"
@@ -65,13 +124,10 @@ export default function ListBoards({
                 dataContext.setCurrentSelectedBoard(board);
               }}
               onKeyDown={(e) => {
-                if(e.key === "Enter" || e.key === " ") {
-                  dataContext.setCurrentSelectedBoard(board);
-                }
-                //onKeyDown(e, board);
+                handleKeyDownBtnBoard(e, board);
               }}
-              role={type === "menu" ? "menuitem" : undefined}
-              /*ref={(btn) => {
+              role="menuitem"
+              ref={(btn) => {
                 const refItems = getRefsItemsMenu();
                 if (btn) {
                   refItems[index] = btn;
@@ -79,7 +135,6 @@ export default function ListBoards({
                   refItems.splice(index, 1);
                 }
               }}
-              */
             >
               <BoardIcon className="list-boards__icon-btn-select-board" />{" "}
               {board.name}
@@ -89,7 +144,7 @@ export default function ListBoards({
       })}
       <li
         className="list-boards__item"
-        role={type === "menu" ? "none" : undefined}
+        role="none"
       >
         <Button
           type="button"
@@ -105,7 +160,7 @@ export default function ListBoards({
               //TODO: chamar function do state do context data para criar um novo board
             }
           }}
-          role={type === "menu" ? "menuitem" : undefined}
+          role="menuitem"
         >
           <BoardIcon className="list-boards__icon-btn-create-board" /> + Create
           New Board

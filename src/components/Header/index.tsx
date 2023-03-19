@@ -9,23 +9,16 @@ import Logo from "../Icons/Logo";
 import ChevronUp from "../Icons/ChevronUp";
 import Switch from "../Switch";
 import React, { useRef, useState } from "react";
-import BoardIcon from "../Icons/Board";
-import { Board } from "../../data";
-import "./Header.css";
 import iconTaskMobile from "../../assets/images/icon-add-task-mobile.svg";
 import ListBoards from "../ListBoards";
+import "./Header.css";
 
 type PropsSidebar = {
   isSidebarHidden: boolean;
   onSidebar: (isHidden: boolean) => void;
-  //setIsSidebarHidden: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function Header({
-  isSidebarHidden,
-  //setIsSidebarHidden,
-  onSidebar,
-}: PropsSidebar) {
+export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
   const dataContext = useDataContext();
   const themeContext = useThemeContext();
   return (
@@ -42,7 +35,6 @@ export default function Header({
       {/*//* IMPORTANT: mostrar somente em layout mobile*/}
       <MenuButtonSidebar
         isSidebarHidden={isSidebarHidden}
-        //setIsSidebarHidden={setIsSidebarHidden}
         onSidebar={onSidebar}
       />
       <div className="header__container-buttons">
@@ -69,51 +61,12 @@ export default function Header({
 
 //interface PropsMenuButtonSidebar extends PropsSidebar {}
 
-function MenuButtonSidebar({
-  isSidebarHidden,
-  //setIsSidebarHidden,
-  onSidebar,
-}: PropsSidebar) {
+function MenuButtonSidebar({ isSidebarHidden, onSidebar }: PropsSidebar) {
   const dataContext = useDataContext();
   const btnSideBar = useRef<HTMLDivElement | null>(null);
-  const refsItemsMenu = useRef<HTMLButtonElement[] | null>(null);
-
-  function getRefsItemsMenu() {
-    if (!refsItemsMenu.current) {
-      refsItemsMenu.current = [];
-    }
-    return refsItemsMenu.current;
-  }
-
-  function setToFocus(itemId: number) {
-    const refItems = getRefsItemsMenu();
-    const item = refItems[itemId];
-    item.focus();
-  }
-
-  function setToFocusPreviousItem(itemCurrent: HTMLButtonElement) {
-    const refItems = getRefsItemsMenu();
-    let menuItemSelected = null;
-    if (itemCurrent === refItems[0]) {
-      menuItemSelected = itemCurrent;
-    } else {
-      const index = refItems.indexOf(itemCurrent);
-      menuItemSelected = refItems[index - 1];
-    }
-    menuItemSelected.focus();
-  }
-
-  function setFocusNextItem(itemCurrent: HTMLButtonElement) {
-    const refItems = getRefsItemsMenu();
-    let menuItemSelected = null;
-    if (itemCurrent === refItems[refItems.length - 1]) {
-      menuItemSelected = itemCurrent;
-    } else {
-      const index = refItems.indexOf(itemCurrent);
-      menuItemSelected = refItems[index + 1];
-    }
-    menuItemSelected.focus();
-  }
+  const [indexItemMenuFocus, setIndexItemMenuFocus] = useState<number | null>(
+    null
+  );
 
   function handleKeyDownBtnSideBar(e: React.KeyboardEvent<HTMLDivElement>) {
     switch (e.key) {
@@ -123,15 +76,13 @@ function MenuButtonSidebar({
       case "Down":
         //abre o menu via keys
         onSidebar(false);
-        //setIsSidebarHidden(false);
         //add o focus ao primeiro item do menu apos abrir
-        setToFocus(0);
+        setIndexItemMenuFocus(0);
         break;
       case "Esc":
       case "Escape":
         //fecha o menu via keys
         onSidebar(true);
-        //setIsSidebarHidden(true);
         //add o focus para o button sidebar apos fechar o menu
         if (btnSideBar.current) btnSideBar.current.focus();
         break;
@@ -139,53 +90,17 @@ function MenuButtonSidebar({
       case "ArrowUp":
         //abre o menu via keys
         onSidebar(false);
-        //setIsSidebarHidden(false);
         //apos abrir menu o foco vai para o ultimo item de menu
-        setToFocus(dataContext.datas.length - 1);
+        setIndexItemMenuFocus(dataContext.datas.length - 1);
         break;
       default:
         break;
     }
   }
 
-  function handleKeyDownBtnBoard(
-    e: React.KeyboardEvent<HTMLButtonElement>,
-    board: Board
-  ) {
-    if (e.ctrlKey || e.altKey || e.metaKey) {
-      return;
-    } else {
-      switch (e.key) {
-        case "Esc":
-        case "Escape":
-          btnSideBar.current?.focus();
-          onSidebar(true);
-          //setIsSidebarHidden(true);
-          break;
-        case "Up":
-        case "ArrowUp":
-          setToFocusPreviousItem(e.currentTarget);
-          break;
-        case "ArrowDown":
-        case "Down":
-          setFocusNextItem(e.currentTarget);
-          break;
-        case "Home":
-        case "PageUp":
-          setToFocus(0);
-          break;
-        case "End":
-        case "PageDown":
-          setToFocus(getRefsItemsMenu().length - 1);
-          break;
-        case "Enter":
-        case " ":
-          dataContext.setCurrentSelectedBoard(board);
-          break;
-        default:
-          break;
-      }
-    }
+  function onCloseSidebar() {
+    btnSideBar.current?.focus();
+    onSidebar(true);
   }
 
   return (
@@ -204,7 +119,6 @@ function MenuButtonSidebar({
         }
         onPointerDown={() => {
           onSidebar(!isSidebarHidden);
-          //setIsSidebarHidden(!isSidebarHidden);
         }}
         aria-expanded={isSidebarHidden ? true : false}
         onKeyDown={(e) => {
@@ -231,77 +145,16 @@ function MenuButtonSidebar({
           <Heading level={4} className="header__count-boards">
             All Boards ({dataContext.datas.length})
           </Heading>
-          {/*<ListBoards
-            type="menu"
-            idElement="menu-sidebar"
-            ariaLabelledby="menubutton-sidebar"
-            onKeyDown={handleKeyDownBtnBoard}
-            refsBtnsBoards={refsItemsMenu}
-          />
-          */}
-          <ul
-            className="list-boards"
-            role="menu"
+          <ListBoards
             id="menu-sidebar"
             aria-labelledby="menubutton-sidebar"
-          >
-            {dataContext.datas.map((board, index) => {
-              return (
-                <li className="list-boards__item" key={index} role="none">
-                  <Button
-                    type="button"
-                    size="l"
-                    className={
-                      board.id === dataContext.currentSelectedBoard.id
-                        ? "list-boards__btn list-boards__btn--select-board list-boards__btn--active"
-                        : "list-boards__btn list-boards__btn--select-board"
-                    }
-                    aria-label={`Select ${board.name} board`}
-                    title={`Select ${board.name} board`}
-                    onPointerDown={() => {
-                      dataContext.setCurrentSelectedBoard(board);
-                    }}
-                    onKeyDown={(e) => {
-                      handleKeyDownBtnBoard(e, board);
-                    }}
-                    role="menuitem"
-                    ref={(btn) => {
-                      const refItems = getRefsItemsMenu();
-                      if (btn) {
-                        refItems[index] = btn;
-                      } else {
-                        refItems.splice(index, 1);
-                      }
-                    }}
-                  >
-                    <BoardIcon className="list-boards__icon-btn-select-board" />
-                    {board.name}
-                  </Button>
-                </li>
-              );
-            })}
-            <li className="list-boards__item" role="none">
-              <Button
-                type="button"
-                size="l"
-                className="list-boards__btn list-boards__btn--create-board"
-                aria-label="create new board"
-                title={`create new board`}
-                onPointerDown={() => {
-                  //TODO: chamar function do state do context data para criar um novo board
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    //TODO: chamar function do state do context data para criar um novo board
-                  }
-                }}
-                role="menuitem"
-              >
-                <BoardIcon className="list-boards__icon-btn-create-board" /> +
-                Create New Board
-              </Button>
-            </li>
-          </ul>
+            onCloseWrapper={onCloseSidebar}
+            setIdItemToFocus={
+              typeof indexItemMenuFocus === "number"
+                ? indexItemMenuFocus
+                : undefined
+            }
+          />
           <Switch />
         </div>
       </div>
