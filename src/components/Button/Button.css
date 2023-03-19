@@ -1,0 +1,18 @@
+.button{
+    display: block;
+    appearance: none;
+    border: none;
+    font-family: inherit;
+}
+
+.button__l{
+    border-radius: 24px;
+}
+
+.button__primary{
+    background-color: var(--btn-primary-l);
+}
+
+.button__primary:hover, .button__primary:focus{
+    background-color: var(--btn-primary-l-hover);
+}

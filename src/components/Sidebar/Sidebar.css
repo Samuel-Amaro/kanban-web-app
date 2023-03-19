@@ -1,0 +1,5 @@
+/**mobile-first**/
+
+.sidebar, .btn-show-sidebar{
+    display: none;
+}

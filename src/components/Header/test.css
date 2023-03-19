@@ -1,7 +1,0 @@
-.list-boards__btn--board-selected{
-    border: 2px solid green;
-}
-
-.header__sidebar-mobile--hide, .header__menu-board--hide{
-    display: none;
-}

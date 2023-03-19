@@ -10,17 +10,21 @@ import ChevronUp from "../Icons/ChevronUp";
 import Switch from "../Switch";
 import React, { useRef, useState } from "react";
 import BoardIcon from "../Icons/Board";
-import "./test.css";
 import { Board } from "../../data";
+import "./Header.css";
+import iconTaskMobile from "../../assets/images/icon-add-task-mobile.svg";
+import ListBoards from "../ListBoards";
 
 type PropsSidebar = {
   isSidebarHidden: boolean;
-  setIsSidebarHidden: React.Dispatch<React.SetStateAction<boolean>>;
+  onSidebar: (isHidden: boolean) => void;
+  //setIsSidebarHidden: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function Header({
   isSidebarHidden,
-  setIsSidebarHidden,
+  //setIsSidebarHidden,
+  onSidebar,
 }: PropsSidebar) {
   const dataContext = useDataContext();
   const themeContext = useThemeContext();
@@ -35,37 +39,40 @@ export default function Header({
           {dataContext.currentSelectedBoard.name}
         </Heading>
       </div>
-      {/*
-        //* IMPORTANT: mostrar somente em layout mobile
-        //TODO: usar state definido em apçp para mostrar ou ocultar a side bar em versão mobile
-        //TODO: implementar um menu button que ira abrir um menu com options de boards e o switch componente, que ira controlar se pode ou não mostrar um sidebar mobile
-      */}
+      {/*//* IMPORTANT: mostrar somente em layout mobile*/}
       <MenuButtonSidebar
         isSidebarHidden={isSidebarHidden}
-        setIsSidebarHidden={setIsSidebarHidden}
+        //setIsSidebarHidden={setIsSidebarHidden}
+        onSidebar={onSidebar}
       />
-      {/*--------*/}
-      <div className="header__container">
-        <Button type="button" size="l" variant="primary" title="Add New Task">
-          + Add New Task
+      <div className="header__container-buttons">
+        <Button
+          type="button"
+          size="l"
+          variant="primary"
+          title="Add New Task"
+          className="header__btn-add-task"
+        >
+          <span className="header__text-btn-add-task">+ Add New Task</span>
+          <img
+            src={iconTaskMobile}
+            alt=""
+            aria-hidden="true"
+            className="header__icon-btn-add-task"
+          />
         </Button>
-        {/*
-          //TODO: ADICIONAR INTERATIVIDADE VIA MOUSE E TECLADO
-          //TODO: OPTIONS QUE IRÃO CHAMAR MODAIS PARA EDITAR E DELETAR UM BOARD
-        */}
         <MenuButtonBoard />
       </div>
     </header>
   );
 }
 
-//TODO: PULAR O PROBLEMA DO GERENCIAMENTO DE FOCO E CONTRUIR OS MENUS LOGO DEPOIS PENSAR EM COMO GERENCIAR O FOCO
-
 //interface PropsMenuButtonSidebar extends PropsSidebar {}
 
 function MenuButtonSidebar({
   isSidebarHidden,
-  setIsSidebarHidden,
+  //setIsSidebarHidden,
+  onSidebar,
 }: PropsSidebar) {
   const dataContext = useDataContext();
   const btnSideBar = useRef<HTMLDivElement | null>(null);
@@ -115,21 +122,24 @@ function MenuButtonSidebar({
       case "ArrowDown":
       case "Down":
         //abre o menu via keys
-        setIsSidebarHidden(false);
+        onSidebar(false);
+        //setIsSidebarHidden(false);
         //add o focus ao primeiro item do menu apos abrir
         setToFocus(0);
         break;
       case "Esc":
       case "Escape":
         //fecha o menu via keys
-        setIsSidebarHidden(true);
+        onSidebar(true);
+        //setIsSidebarHidden(true);
         //add o focus para o button sidebar apos fechar o menu
         if (btnSideBar.current) btnSideBar.current.focus();
         break;
       case "Up":
       case "ArrowUp":
         //abre o menu via keys
-        setIsSidebarHidden(false);
+        onSidebar(false);
+        //setIsSidebarHidden(false);
         //apos abrir menu o foco vai para o ultimo item de menu
         setToFocus(dataContext.datas.length - 1);
         break;
@@ -149,7 +159,8 @@ function MenuButtonSidebar({
         case "Esc":
         case "Escape":
           btnSideBar.current?.focus();
-          setIsSidebarHidden(true);
+          onSidebar(true);
+          //setIsSidebarHidden(true);
           break;
         case "Up":
         case "ArrowUp":
@@ -179,7 +190,7 @@ function MenuButtonSidebar({
 
   return (
     <div className="header__group">
-      <LogoMobile />
+      <LogoMobile className="header__icon header__icon--logo" />
       <div
         ref={btnSideBar}
         className="header__menu-button-sidebar"
@@ -192,98 +203,111 @@ function MenuButtonSidebar({
           isSidebarHidden ? "View sidebar boards" : "Hidden sidebar boards"
         }
         onPointerDown={() => {
-          setIsSidebarHidden(!isSidebarHidden);
+          onSidebar(!isSidebarHidden);
+          //setIsSidebarHidden(!isSidebarHidden);
         }}
         aria-expanded={isSidebarHidden ? true : false}
         onKeyDown={(e) => {
           handleKeyDownBtnSideBar(e);
         }}
       >
-        <Heading level={1} className="header__name-board">
+        <Heading level={2} className="header__name-board">
           {dataContext.currentSelectedBoard.name}
         </Heading>
-        {isSidebarHidden ? <ChevronDown /> : <ChevronUp />}
+        {isSidebarHidden ? (
+          <ChevronDown className="header__icon header__icon--chevron-down" />
+        ) : (
+          <ChevronUp className="header__icon header__icon--chevron-up" />
+        )}
       </div>
       <div
         className={
           isSidebarHidden
-            ? "header__sidebar-mobile header__sidebar-mobile--hide"
-            : "header__sidebar-mobile"
+            ? "header__backdrop-sidebar header__backdrop-sidebar--hidden"
+            : "header__backdrop-sidebar"
         }
       >
-        <Heading level={4} className="header__count-boards">
-          All Boards ({dataContext.datas.length})
-        </Heading>
-        <ul
-          className="list-boards"
-          role="menu"
-          id="menu-sidebar"
-          aria-labelledby="menubutton-sidebar"
-        >
-          {dataContext.datas.map((board, index) => {
-            //TODO: add classe de active para demostrar na UI qual o board atual selecionado, mas para fazer isso devemos, adicionar ids, nos boards e columns para não comparar com somente nomes
-            return (
-              <li className="list-boards__item" key={index} role="none">
-                <Button
-                  type="button"
-                  size="l"
-                  className={
-                    board.id === dataContext.currentSelectedBoard.id
-                      ? "list-boards__btn list-boards__btn--select-board list-boards__btn--active"
-                      : "list-boards__btn list-boards__btn--select-board"
-                  }
-                  aria-label={`Select ${board.name} board`}
-                  title={`Select ${board.name} board`}
-                  onPointerDown={() => {
-                    dataContext.setCurrentSelectedBoard(board);
-                  }}
-                  onKeyDown={(e) => {
-                    handleKeyDownBtnBoard(e, board);
-                  }}
-                  role="menuitem"
-                  ref={(btn) => {
-                    const refItems = getRefsItemsMenu();
-                    if (btn) {
-                      refItems[index] = btn;
-                    } else {
-                      refItems.splice(index, 1);
+        <div className="header__sidebar-mobile">
+          <Heading level={4} className="header__count-boards">
+            All Boards ({dataContext.datas.length})
+          </Heading>
+          {/*<ListBoards
+            type="menu"
+            idElement="menu-sidebar"
+            ariaLabelledby="menubutton-sidebar"
+            onKeyDown={handleKeyDownBtnBoard}
+            refsBtnsBoards={refsItemsMenu}
+          />
+          */}
+          <ul
+            className="list-boards"
+            role="menu"
+            id="menu-sidebar"
+            aria-labelledby="menubutton-sidebar"
+          >
+            {dataContext.datas.map((board, index) => {
+              return (
+                <li className="list-boards__item" key={index} role="none">
+                  <Button
+                    type="button"
+                    size="l"
+                    className={
+                      board.id === dataContext.currentSelectedBoard.id
+                        ? "list-boards__btn list-boards__btn--select-board list-boards__btn--active"
+                        : "list-boards__btn list-boards__btn--select-board"
                     }
-                  }}
-                >
-                  <BoardIcon className="list-boards__icon-btn-select-board" />
-                  {board.name}
-                </Button>
-              </li>
-            );
-          })}
-          <li className="list-boards__item" role="none">
-            <Button
-              type="button"
-              size="l"
-              className="list-boards__btn list-boards__btn--create-board"
-              aria-label="create new board"
-              title={`create new board`}
-              onPointerDown={() => {
-                //TODO: chamar function do state do context data para criar um novo board
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
+                    aria-label={`Select ${board.name} board`}
+                    title={`Select ${board.name} board`}
+                    onPointerDown={() => {
+                      dataContext.setCurrentSelectedBoard(board);
+                    }}
+                    onKeyDown={(e) => {
+                      handleKeyDownBtnBoard(e, board);
+                    }}
+                    role="menuitem"
+                    ref={(btn) => {
+                      const refItems = getRefsItemsMenu();
+                      if (btn) {
+                        refItems[index] = btn;
+                      } else {
+                        refItems.splice(index, 1);
+                      }
+                    }}
+                  >
+                    <BoardIcon className="list-boards__icon-btn-select-board" />
+                    {board.name}
+                  </Button>
+                </li>
+              );
+            })}
+            <li className="list-boards__item" role="none">
+              <Button
+                type="button"
+                size="l"
+                className="list-boards__btn list-boards__btn--create-board"
+                aria-label="create new board"
+                title={`create new board`}
+                onPointerDown={() => {
                   //TODO: chamar function do state do context data para criar um novo board
-                }
-              }}
-              role="menuitem"
-            >
-              <BoardIcon className="list-boards__icon-btn-create-board" /> +
-              Create New Board
-            </Button>
-          </li>
-        </ul>
-        <Switch />
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    //TODO: chamar function do state do context data para criar um novo board
+                  }
+                }}
+                role="menuitem"
+              >
+                <BoardIcon className="list-boards__icon-btn-create-board" /> +
+                Create New Board
+              </Button>
+            </li>
+          </ul>
+          <Switch />
+        </div>
       </div>
     </div>
   );
 }
-
 
 function MenuButtonBoard() {
   const [isHiddenMenuBoard, setIsHiddenMenuBoard] = useState(true);
@@ -355,6 +379,7 @@ function MenuButtonBoard() {
         case "Enter":
         case " ":
           //TODO: chama o modal necessario de acordo com o button clicado da option
+          //TODO: modal para deletar ou editar board
           break;
         default:
           break;
@@ -364,7 +389,7 @@ function MenuButtonBoard() {
 
   return (
     <div className="header__menu-button-board">
-      <button
+      <Button
         type="button"
         className="header__btn-board"
         title={
@@ -411,8 +436,8 @@ function MenuButtonBoard() {
         }}
         ref={refBtnBoadMenu}
       >
-        <VerticalEllipsis />
-      </button>
+        <VerticalEllipsis className="header__icon" />
+      </Button>
       <ul
         id="menu1"
         role="menu"

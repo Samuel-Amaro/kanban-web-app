@@ -1,4 +1,6 @@
-export default function VerticalEllipsis() {
+import { PropsIcons } from "./PropsIcons";
+
+export default function VerticalEllipsis({className} : PropsIcons) {
   return (
     <svg width="5" height="20" xmlns="http://www.w3.org/2000/svg">
       <g fill="#828FA3" fillRule="evenodd">

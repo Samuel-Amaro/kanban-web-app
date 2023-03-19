@@ -1,21 +1,22 @@
 import Button from "../Button";
 import Heading from "../Heading";
-import DarkTheme from "../Icons/DarkTheme";
 import HideSidebar from "../Icons/HideSidebar";
-import LightTheme from "../Icons/LightTheme";
 import Switch from "../Switch";
 import { useDataContext } from "../context/DataContext";
 import ListBoards from "../ListBoards";
 import ShowSidebar from "../Icons/ShowSidebar";
+import "./Sidebar.css";
 
 type PropsSidebar = {
   isSidebarHidden: boolean;
-  setIsSidebarHidden: React.Dispatch<React.SetStateAction<boolean>>;
+  //setIsSidebarHidden: React.Dispatch<React.SetStateAction<boolean>>;
+  onSidebar: (isHidden: boolean) => void;
 };
 
 export default function Sidebar({
   isSidebarHidden,
-  setIsSidebarHidden,
+  //setIsSidebarHidden,
+  onSidebar
 }: PropsSidebar) {
   const dataContext = useDataContext();
 
@@ -30,11 +31,13 @@ export default function Sidebar({
         title="Show Sidebar"
         aria-label="Show Sidebar"
         onPointerDown={() => {
-          setIsSidebarHidden(false);
+          onSidebar(false);
+          //setIsSidebarHidden(false);
         }}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
-            setIsSidebarHidden(false);
+            onSidebar(false);
+            //setIsSidebarHidden(false);
           }
         }}
       >
@@ -60,11 +63,13 @@ export default function Sidebar({
           aria-label="Hide Sidebar"
           className="sidebar__btn-hide"
           onPointerDown={() => {
-            setIsSidebarHidden(true);
+            onSidebar(true);
+            //setIsSidebarHidden(true);
           }}
           onKeyDown={(e) => {
             if(e.key === "Enter" || e.key === " ") {
-              setIsSidebarHidden(true);
+              onSidebar(true);
+              //setIsSidebarHidden(true);
             }
           }}
         >

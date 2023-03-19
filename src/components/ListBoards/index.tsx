@@ -1,11 +1,15 @@
+import React from "react";
 import Button from "../Button";
 import BoardIcon from "../Icons/Board";
 import { useDataContext } from "../context/DataContext";
+import { Board } from "../../data";
 
 type PropsListBoards = {
   type: "list" | "menu";
   idElement?: string;
   ariaLabelledby?: string;
+  //refsBtnsBoards?: React.RefObject<HTMLButtonElement[] | null>;
+  //onKeyDown?: (e: React.KeyboardEvent<HTMLButtonElement>, board: Board) => void
 };
 
 /**
@@ -18,8 +22,18 @@ export default function ListBoards({
   type,
   idElement,
   ariaLabelledby,
+  //refsBtnsBoards,
+  //onKeyDown
 }: PropsListBoards) {
   const dataContext = useDataContext();
+
+  /*function getRefsItemsMenu() {
+    if (!refsBtnsBoards.current) {
+      throw Error("refs btns board is null");
+    }
+    return refsBtnsBoards.current;
+  }*/
+
   return (
     //TODO: definir estilos globais deste componente para não precisar ficar reescrevendo css
     <ul
@@ -31,7 +45,6 @@ export default function ListBoards({
       }
     >
       {dataContext.datas.map((board, index) => {
-        //TODO: add classe de active para demostrar na UI qual o board atual selecionado, mas para fazer isso devemos, adicionar ids, nos boards e columns para não comparar com somente nomes
         return (
           <li
             className="list-boards__item"
@@ -41,26 +54,43 @@ export default function ListBoards({
             <Button
               type="button"
               size="l"
-              className="list-boards__btn list-boards__btn--select-board"
+              className={
+                board.id === dataContext.currentSelectedBoard.id
+                  ? "list-boards__btn list-boards__btn--select-board list-boards__btn--active"
+                  : "list-boards__btn list-boards__btn--select-board"
+              }
               aria-label={`Select ${board.name} board`}
               title={`Select ${board.name} board`}
               onPointerDown={() => {
                 dataContext.setCurrentSelectedBoard(board);
               }}
               onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
+                if(e.key === "Enter" || e.key === " ") {
                   dataContext.setCurrentSelectedBoard(board);
                 }
+                //onKeyDown(e, board);
               }}
               role={type === "menu" ? "menuitem" : undefined}
+              /*ref={(btn) => {
+                const refItems = getRefsItemsMenu();
+                if (btn) {
+                  refItems[index] = btn;
+                } else {
+                  refItems.splice(index, 1);
+                }
+              }}
+              */
             >
-              <BoardIcon /> {board.name}
+              <BoardIcon className="list-boards__icon-btn-select-board" />{" "}
+              {board.name}
             </Button>
           </li>
         );
       })}
-      <li className="sidebar__item" role={type === "menu" ? "none" : undefined}>
-        {/*//TODO: adicionar class de forma que destaque esse button dos demais, porque ele tem que visualmente ser destacado*/}
+      <li
+        className="list-boards__item"
+        role={type === "menu" ? "none" : undefined}
+      >
         <Button
           type="button"
           size="l"
@@ -77,7 +107,8 @@ export default function ListBoards({
           }}
           role={type === "menu" ? "menuitem" : undefined}
         >
-          <BoardIcon /> + Create New Board
+          <BoardIcon className="list-boards__icon-btn-create-board" /> + Create
+          New Board
         </Button>
       </li>
     </ul>

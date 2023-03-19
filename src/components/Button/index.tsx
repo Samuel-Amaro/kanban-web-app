@@ -1,8 +1,9 @@
 import React, { forwardRef } from "react";
 import classNames from "classnames";
+import "./Button.css";
 
 interface PropsTypeButton extends React.ComponentPropsWithRef<"button"> {
-  size: "l" | "s";
+  size?: "l" | "s";
   variant?: "primary" | "secondary" | "destructive";
   className?: string;
 }

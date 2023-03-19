@@ -10,16 +10,22 @@ function App() {
   //porque no desktop e tables componente sidebar usa o state, no mobile dispositivo, o header usa o componente
   const [isSidebarHidden, setIsSidebarHidden] = useState(false);
 
+  function onSidebar(isHidden: boolean) {
+    setIsSidebarHidden(isHidden);
+  }
+
   return (
     <ThemeContextProvider>
       <DataContextProvider>
         <Header
           isSidebarHidden={isSidebarHidden}
-          setIsSidebarHidden={setIsSidebarHidden}
+          onSidebar={onSidebar}
+          //setIsSidebarHidden={setIsSidebarHidden}
         />
         <Sidebar
           isSidebarHidden={isSidebarHidden}
-          setIsSidebarHidden={setIsSidebarHidden}
+          onSidebar={onSidebar}
+          //setIsSidebarHidden={setIsSidebarHidden}
         />
       </DataContextProvider>
     </ThemeContextProvider>
