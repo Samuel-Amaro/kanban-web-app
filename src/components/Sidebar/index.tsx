@@ -52,7 +52,7 @@ export default function Sidebar({
         <Heading level={4} className="sidebar__title">
           All Boards ({dataContext.datas.length})
         </Heading>
-        <ListBoards type="list"/>
+        <ListBoards />
       </div>
       <div className="sidebar__container">
         <Switch />

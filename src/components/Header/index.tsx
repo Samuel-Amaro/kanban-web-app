@@ -142,9 +142,10 @@ function MenuButtonSidebar({ isSidebarHidden, onSidebar }: PropsSidebar) {
         }
       >
         <div className="header__sidebar-mobile">
-          <Heading level={4} className="header__count-boards">
+          {/*<Heading level={4} className="header__count-boards">
             All Boards ({dataContext.datas.length})
           </Heading>
+          */}
           <ListBoards
             id="menu-sidebar"
             aria-labelledby="menubutton-sidebar"

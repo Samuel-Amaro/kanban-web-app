@@ -1,30 +1,37 @@
-*{
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-:root{
-    --main-purple: #635FC7;
-    --main-purple-hover: #A8A4FF;
-    --black: #000112;
-    --very-dark-grey: #20212C;
-    --dark-grey: #2B2C37;
-    --lines-dark: #3E3F4E;
-    --medium-grey: #828FA3;
-    --lines-light: #E4EBFA;
-    --light-grey: #F4F7FD;
-    --white: #FFFFFF;
-    --red: #EA5555;
-    --red-hover: #FF9898;
-    /**css variables**/
-    --title-name-board: var(--black);
-    --btn-primary-l: var(--main-purple);
-    --btn-primary-l-hover: var(--main-purple-hover);
-    --bg-sidebar: var(--white);
-    --box-shadow-sidebar-mobile: rgba(54, 78, 126, 0.25);
+:root {
+  --main-purple: #635fc7;
+  --main-purple-hover: #a8a4ff;
+  --black: #000112;
+  --very-dark-grey: #20212c;
+  --dark-grey: #2b2c37;
+  --lines-dark: #3e3f4e;
+  --medium-grey: #828fa3;
+  --lines-light: #e4ebfa;
+  --light-grey: #f4f7fd;
+  --white: #ffffff;
+  --red: #ea5555;
+  --red-hover: #ff9898;
+  /**css variables**/
+  /**headings**/
+  --title-name-board: var(--black);
+  --color-heading-s: var(--medium-grey);
+  /**buttons**/
+  --bg-primary-l-btn: var(--main-purple);
+  --bg-primary-l-btn-hover: var(--main-purple-hover);
+  --color-primary-l-btn: var(--white);
+  --bg-btn-select-board-hover: rgba(99, 95, 199, 0.1);
+  --color-btn-select-board-hover: var(--main-purple);
+  /**outros**/
+  --bg-sidebar: var(--white);
+  --box-shadow-sidebar-mobile: rgba(54, 78, 126, 0.25);
 }
 
-html{
-    font-family: 'Plus Jakarta Sans', sans-serif;
+html {
+  font-family: "Plus Jakarta Sans", sans-serif;
 }

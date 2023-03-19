@@ -6,13 +6,19 @@
 }
 
 .button__l{
+    /*heading M*/
+    font-weight: 700;
     border-radius: 24px;
+    font-size: 15px;
+    line-height: 19px;
+    font-style: normal;
 }
 
 .button__primary{
-    background-color: var(--btn-primary-l);
+    background-color: var(--bg-primary-l-btn);
+    color: var(--color-primary-l-btn);
 }
 
 .button__primary:hover, .button__primary:focus{
-    background-color: var(--btn-primary-l-hover);
+    background-color: var(--bg-primary-l-btn-hover);
 }

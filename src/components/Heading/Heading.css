@@ -6,3 +6,11 @@
     line-height: 23px;
     font-style: normal;
 }
+
+.heading-s{
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: 2.4px;
+    font-style: normal;
+}
