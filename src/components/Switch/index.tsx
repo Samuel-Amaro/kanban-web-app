@@ -1,6 +1,7 @@
 import DarkTheme from "../Icons/DarkTheme";
 import LightTheme from "../Icons/LightTheme";
 import { useThemeContext } from "../context/ThemeContext";
+import "./Switch.css";
 
 export default function Switch() {
   const themeContext = useThemeContext();
@@ -22,9 +23,9 @@ export default function Switch() {
   return (
     <div className="switch">
       <div className="switch__container">
-        <LightTheme />
+        <LightTheme className="switch__icon" />
         <div
-          className="switch__swtch"
+          className="switch__wrapper"
           role="switch"
           aria-checked={themeContext.theme === "light" ? false : true}
           onPointerDown={(event) => {
@@ -55,7 +56,7 @@ export default function Switch() {
             title="Switch Controller to switch themes"
           ></span>
         </div>
-        <DarkTheme />
+        <DarkTheme className="switch__icon" />
       </div>
     </div>
   );

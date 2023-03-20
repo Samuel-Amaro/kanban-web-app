@@ -9,6 +9,7 @@
 
 .list-boards__list {
   list-style: none;
+  max-width: 240px;
 }
 
 .list-boards__btn--select-board,
@@ -18,7 +19,7 @@
   flex-flow: row nowrap;
   align-items: center;
   gap: 12px;
-  padding: 15px 68px 14px 24px;
+  padding: 15px 41px 14px 24px;
   border-radius: 0px 100px 100px 0px;
   cursor: pointer;
   background-color: transparent;

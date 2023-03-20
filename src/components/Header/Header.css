@@ -88,3 +88,7 @@
   box-shadow: 0 10px 20px var(--box-shadow-sidebar-mobile);
   padding: 16px 0 16px 0;
 }
+
+.header__list-boards{
+  margin: 0 0 16px 0;
+}

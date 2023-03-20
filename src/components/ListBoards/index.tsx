@@ -99,16 +99,17 @@ export default function ListBoards(props: PropsListBoards) {
   }
 
   return (
-    <div className="list-boards-container">
+    <div
+      className={
+        className
+          ? `list-boards-container ${className}`
+          : "list-boards-container"
+      }
+    >
       <Heading level={4} className="list-boards__title">
         ALL BOARDS ({dataContext.datas.length})
       </Heading>
-      <ul
-        className={
-          className ? `list-boards__list ${className}` : "list-boards__list"
-        }
-        {...props}
-      >
+      <ul {...props} className="list-boards__list">
         {dataContext.datas.map((board, index) => {
           return (
             <li className="list-boards__item" key={index} role="none">

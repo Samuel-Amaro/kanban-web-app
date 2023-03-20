@@ -155,6 +155,7 @@ function MenuButtonSidebar({ isSidebarHidden, onSidebar }: PropsSidebar) {
                 ? indexItemMenuFocus
                 : undefined
             }
+            className="header__list-boards"
           />
           <Switch />
         </div>

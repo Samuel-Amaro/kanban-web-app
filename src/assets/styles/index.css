@@ -30,6 +30,8 @@
   /**outros**/
   --bg-sidebar: var(--white);
   --box-shadow-sidebar-mobile: rgba(54, 78, 126, 0.25);
+  /**switch**/
+  --bg-switch: var(--light-grey);
 }
 
 html {
