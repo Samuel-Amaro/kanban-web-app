@@ -168,6 +168,10 @@ function MenuButtonBoard() {
   const [isHiddenMenuBoard, setIsHiddenMenuBoard] = useState(true);
   const refsButtons = useRef<HTMLButtonElement[] | null>(null);
   const refBtnBoadMenu = useRef<HTMLButtonElement>(null);
+  const dataButtons = [
+    { text: "Edit", action: "edit" },
+    { text: "Delete", action: "delete" },
+  ];
 
   function getRefs() {
     if (!refsButtons.current) {
@@ -205,7 +209,10 @@ function MenuButtonBoard() {
     menuItemSelected.focus();
   }
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
+  function handleKeyDown(
+    e: React.KeyboardEvent<HTMLButtonElement>,
+    action: string
+  ) {
     if (e.ctrlKey || e.altKey || e.metaKey) {
       return;
     } else {
@@ -239,6 +246,19 @@ function MenuButtonBoard() {
         default:
           break;
       }
+    }
+  }
+
+  function handlePointerDownBtnOptionBoard(e: React.PointerEvent<HTMLButtonElement>, action: string) {
+    switch(action) {
+      case "edit":
+        //TODO: modal de editar board
+        break;
+      case "delete":
+        //TODO: modal de deletar board
+        break;
+      default: 
+        break;
     }
   }
 
@@ -303,50 +323,35 @@ function MenuButtonBoard() {
             : "header__menu-board"
         }
       >
-        <li role="none" className="header__menu-item">
-          <button
-            type="button"
-            className="header__btn-board header__btn-board--edit"
-            role="menuitem"
-            aria-label="Edit current board"
-            title="Edit current board"
-            ref={(btn) => {
-              const refItems = getRefs();
-              if (btn) {
-                refItems.push(btn);
-              } else {
-                refItems.splice(0, 1);
-              }
-            }}
-            onKeyDown={(e) => {
-              handleKeyDown(e);
-            }}
-          >
-            Edit Board
-          </button>
-        </li>
-        <li role="none" className="header__menu-item">
-          <button
-            type="button"
-            className="header__btn-board header__btn-board--delte"
-            role="menuitem"
-            aria-label="Delete current board"
-            title="Delete current board"
-            ref={(btn) => {
-              const refItems = getRefs();
-              if (btn) {
-                refItems.push(btn);
-              } else {
-                refItems.splice(1, 1);
-              }
-            }}
-            onKeyDown={(e) => {
-              handleKeyDown(e);
-            }}
-          >
-            Delete Board
-          </button>
-        </li>
+        {dataButtons.map((data, index) => {
+          return (
+            <li role="none" className="header__menu-item" key={index}>
+              <button
+                type="button"
+                className={`header__btn-board-${data.action}`}
+                role="menuitem"
+                aria-label={`${data.text} current board`}
+                title={`${data.text} current board`}
+                ref={(btn) => {
+                  const refItems = getRefs();
+                  if (btn) {
+                    refItems.push(btn);
+                  } else {
+                    refItems.splice(0, 1);
+                  }
+                }}
+                onPointerDown={(e) => {
+                  handlePointerDownBtnOptionBoard(e, data.action);
+                }}
+                onKeyDown={(e) => {
+                  handleKeyDown(e, data.action);
+                }}
+              >
+                {`${data.text} Board`}
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

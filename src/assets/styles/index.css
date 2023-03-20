@@ -30,10 +30,20 @@
   /**outros**/
   --bg-sidebar: var(--white);
   --box-shadow-sidebar-mobile: rgba(54, 78, 126, 0.25);
+  --bg-menu-options-board: var(--white);
   /**switch**/
   --bg-switch: var(--light-grey);
 }
 
 html {
   font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+/**body L**/
+body{
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 23px;
+  color: var(--medium-grey);
 }

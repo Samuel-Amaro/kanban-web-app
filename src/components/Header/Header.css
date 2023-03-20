@@ -92,3 +92,46 @@
 .header__list-boards{
   margin: 0 0 16px 0;
 }
+
+/***menu board options***/
+
+.header__menu-board{
+  list-style: none;
+  position: absolute;
+  top: 50px;
+  left: -188px;
+  background-color: var(--bg-menu-options-board);
+  border-radius: 8px;
+  box-shadow: 0px 10px 20px rgba(54, 78, 126, 0.25);
+  padding: 16px;
+  width: 192px;
+  height: 94px;
+}
+
+.header__menu-button-board{
+  position: relative;
+}
+
+.header__btn-board-edit, .header__btn-board-delete{
+  display: block;
+  appearance: none;
+  border: none;
+  font-family: inherit;
+  width: 100%;
+  text-align: left;
+  line-height: 23px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.header__btn-board-edit{
+  color: var(--medium-grey);
+}
+
+.header__btn-board-delete{
+  color: var(--red);
+}
+
+.header__menu-item:not(:last-child){
+  margin: 0 0 16px 0;
+}
