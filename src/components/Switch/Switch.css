@@ -15,6 +15,11 @@
     border-radius: 12px;
     background-color: var(--main-purple);
     position: relative;
+    cursor: pointer;
+}
+
+.switch__wrapper:hover, .switch__wrapper:focus{
+    background-color: var(--main-purple-hover);
 }
 
 .switch__wrapper[aria-checked="true"] .switch__controler{

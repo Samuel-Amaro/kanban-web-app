@@ -100,7 +100,7 @@
   position: absolute;
   top: 50px;
   left: -188px;
-  background-color: var(--bg-menu-options-board);
+  background-color: var(--bg-modals-dropdowns);
   border-radius: 8px;
   box-shadow: 0px 10px 20px rgba(54, 78, 126, 0.25);
   padding: 16px;

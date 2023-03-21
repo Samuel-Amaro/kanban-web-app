@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "../Button";
 import BoardIcon from "../Icons/Board";
 import { useDataContext } from "../context/DataContext";
 import { Board } from "../../data";
 import "./ListBoards.css";
 import Heading from "../Heading";
+import BoardModal from "../Modals/BoardModal";
 
 interface PropsListBoards extends React.ComponentPropsWithoutRef<"ul"> {
   onCloseWrapper: () => void;
@@ -15,6 +16,7 @@ export default function ListBoards(props: PropsListBoards) {
   const { onCloseWrapper, setIdItemToFocus, className } = props;
   const dataContext = useDataContext();
   const refsItemsMenu = useRef<HTMLButtonElement[] | null>(null);
+  const [modalCreateBoardIsOpen, setModalCreateBoardIsOpen] = useState(false);
 
   useEffect(() => {
     if (typeof setIdItemToFocus === "number") {
@@ -99,80 +101,91 @@ export default function ListBoards(props: PropsListBoards) {
   }
 
   return (
-    <div
-      className={
-        className
-          ? `list-boards-container ${className}`
-          : "list-boards-container"
-      }
-    >
-      <Heading level={4} className="list-boards__title">
-        ALL BOARDS ({dataContext.datas.length})
-      </Heading>
-      <ul {...props} className="list-boards__list">
-        {dataContext.datas.map((board, index) => {
-          return (
-            <li className="list-boards__item" key={index} role="none">
-              <Button
-                type="button"
-                size="l"
-                className={
-                  board.id === dataContext.currentSelectedBoard.id
-                    ? "list-boards__btn--select-board list-boards__btn--select-board-active"
-                    : "list-boards__btn--select-board"
-                }
-                aria-label={`Select ${board.name} board`}
-                title={`Select ${board.name} board`}
-                onPointerDown={() => {
-                  dataContext.setCurrentSelectedBoard(board);
-                }}
-                onKeyDown={(e) => {
-                  handleKeyDownBtnBoard(e, board);
-                }}
-                role="menuitem"
-                ref={(btn) => {
-                  const refItems = getRefsItemsMenu();
-                  if (btn) {
-                    refItems[index] = btn;
-                  } else {
-                    refItems.splice(index, 1);
-                  }
-                }}
-              >
-                <BoardIcon
+    <>
+      <div
+        className={
+          className
+            ? `list-boards-container ${className}`
+            : "list-boards-container"
+        }
+      >
+        <Heading level={4} className="list-boards__title">
+          ALL BOARDS ({dataContext.datas.length})
+        </Heading>
+        <ul {...props} className="list-boards__list">
+          {dataContext.datas.map((board, index) => {
+            return (
+              <li className="list-boards__item" key={index} role="none">
+                <Button
+                  type="button"
+                  size="l"
                   className={
                     board.id === dataContext.currentSelectedBoard.id
-                      ? "list-boards__icon list-boards__icon-btn-select-board list-boards__icon-btn-select-board--active"
-                      : "list-boards__icon list-boards__icon-btn-select-board"
+                      ? "list-boards__btn--select-board list-boards__btn--select-board-active"
+                      : "list-boards__btn--select-board"
                   }
-                />{" "}
-                {board.name}
-              </Button>
-            </li>
-          );
-        })}
-        <li className="list-boards__item" role="none">
-          <Button
-            type="button"
-            size="l"
-            className="list-boards__btn--create-board"
-            aria-label="create new board"
-            title={`create new board`}
-            onPointerDown={() => {
-              //TODO: chamar function do state do context data para criar um novo board
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
+                  aria-label={`Select ${board.name} board`}
+                  title={`Select ${board.name} board`}
+                  onPointerDown={() => {
+                    dataContext.setCurrentSelectedBoard(board);
+                  }}
+                  onKeyDown={(e) => {
+                    handleKeyDownBtnBoard(e, board);
+                  }}
+                  role="menuitem"
+                  ref={(btn) => {
+                    const refItems = getRefsItemsMenu();
+                    if (btn) {
+                      refItems[index] = btn;
+                    } else {
+                      refItems.splice(index, 1);
+                    }
+                  }}
+                >
+                  <BoardIcon
+                    className={
+                      board.id === dataContext.currentSelectedBoard.id
+                        ? "list-boards__icon list-boards__icon-btn-select-board list-boards__icon-btn-select-board--active"
+                        : "list-boards__icon list-boards__icon-btn-select-board"
+                    }
+                  />{" "}
+                  {board.name}
+                </Button>
+              </li>
+            );
+          })}
+          <li className="list-boards__item" role="none">
+            <Button
+              type="button"
+              size="l"
+              className="list-boards__btn--create-board"
+              aria-label="create new board"
+              title={`create new board`}
+              onPointerDown={() => {
                 //TODO: chamar function do state do context data para criar um novo board
-              }
-            }}
-            role="menuitem"
-          >
-            <BoardIcon className="list-boards__icon list-boards__icon-btn-create-board" />{" "}
-            + Create New Board
-          </Button>
-        </li>
-      </ul>
-    </div>
+                //atualiza state para modal ser renderizado
+                setModalCreateBoardIsOpen(true);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  //TODO: chamar function do state do context data para criar um novo board
+                  //atualiza state para modal ser renderizado
+                  setModalCreateBoardIsOpen(true);
+                }
+              }}
+              role="menuitem"
+            >
+              <BoardIcon className="list-boards__icon list-boards__icon-btn-create-board" />{" "}
+              + Create New Board
+            </Button>
+          </li>
+        </ul>
+      </div>
+      <BoardModal
+        type="add"
+        isOpen={modalCreateBoardIsOpen}
+        onHandleOpen={(isOpen: boolean) => setModalCreateBoardIsOpen(isOpen)}
+      />
+    </>
   );
 }
