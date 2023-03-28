@@ -43,14 +43,14 @@ export default function BoardModal({
   return (
     <div className="backdrop-modal">
       <div
-        className="dialog dialog__add-board"
+        className="dialog"
         role="dialog"
         id="dialog-add-board"
         aria-labelledby="dialog-label"
         aria-modal="true"
       >
         <Heading level={2} className="dialog__label" id="dialog-label">
-          Add New Board
+          {type === "add" ? "Add New Board" : "Edit Board"}
         </Heading>
         <form className="dialog__form" name="add-board">
           <div className="dialog__form-group">
