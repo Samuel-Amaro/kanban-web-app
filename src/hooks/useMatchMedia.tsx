@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 
 type PropsUseMatchMedia = {
-    mobileContent: React.ReactNode;
-    desktopContext: React.ReactNode;
-    mediaQuery: string;
+  mobileContent: JSX.Element | null;
+  desktopContent: JSX.Element | null;
+  mediaQuery: string;
 };
 
-export default function useMatchMedia({mobileContent, desktopContext, mediaQuery} : PropsUseMatchMedia) {
+//trabalhar nesse hook como se fosse um mobile-frist, mobile primeiro depois desktop
+//a media query tem que ser para corresponder desktop
+//a mobile vai ser natural
+export default function useMatchMedia({mobileContent, desktopContent, mediaQuery} : PropsUseMatchMedia) {
     const [isScreenCurrentMatch, setIsScreenCurrentMatch] = useState(false);
 
     useEffect(() => {
@@ -32,5 +35,5 @@ export default function useMatchMedia({mobileContent, desktopContext, mediaQuery
         }
     });
 
-    return isScreenCurrentMatch ? mobileContent : desktopContext;
+    return isScreenCurrentMatch ? desktopContent : mobileContent;
 }

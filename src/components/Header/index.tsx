@@ -7,10 +7,10 @@ import { useDataContext } from "../context/DataContext";
 import { useThemeContext } from "../context/ThemeContext";
 import Logo from "../Icons/Logo";
 import ChevronUp from "../Icons/ChevronUp";
-import Switch from "../Switch";
 import React, { useRef, useState } from "react";
 import iconTaskMobile from "../../assets/images/icon-add-task-mobile.svg";
-import ListBoards from "../ListBoards";
+import useMatchMedia from "../../hooks/useMatchMedia";
+import { SidebarMobile } from "../Sidebar";
 import "./Header.css";
 
 type PropsSidebar = {
@@ -19,24 +19,18 @@ type PropsSidebar = {
 };
 
 export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
-  const dataContext = useDataContext();
-  const themeContext = useThemeContext();
   return (
     <header className="header">
-      {/*//* * IMPORTANT: mostrar somente a partir de dispositivos como tablets e desktops*/}
-      <div className="header__group">
-        <div className="header__logo">
-          <Logo theme={themeContext.theme} />
-        </div>
-        <Heading level={1} className="header__name-board">
-          {dataContext.currentSelectedBoard.name}
-        </Heading>
-      </div>
-      {/*//* IMPORTANT: mostrar somente em layout mobile*/}
-      <MenuButtonSidebar
-        isSidebarHidden={isSidebarHidden}
-        onSidebar={onSidebar}
-      />
+      {useMatchMedia({
+        mobileContent: (
+          <MenuButtonSidebarMobile
+            isSidebarHidden={isSidebarHidden}
+            onSidebar={onSidebar}
+          />
+        ),
+        desktopContent: <DesktopContent />,
+        mediaQuery: "(min-width: 450px)",
+      })}
       <div className="header__container-buttons">
         <Button
           type="button"
@@ -59,14 +53,29 @@ export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
   );
 }
 
+function DesktopContent() {
+  const dataContext = useDataContext();
+  const themeContext = useThemeContext();
+  return (
+    <div className="header__group">
+      <div className="header__logo">
+        <Logo theme={themeContext.theme} />
+      </div>
+      <Heading level={1} className="header__name-board">
+        {dataContext.currentSelectedBoard.name}
+      </Heading>
+    </div>
+  );
+}
+
 //interface PropsMenuButtonSidebar extends PropsSidebar {}
 
-function MenuButtonSidebar({ isSidebarHidden, onSidebar }: PropsSidebar) {
+function MenuButtonSidebarMobile({ isSidebarHidden, onSidebar }: PropsSidebar) {
   const dataContext = useDataContext();
   const btnSideBar = useRef<HTMLDivElement | null>(null);
-  const [indexItemMenuFocus, setIndexItemMenuFocus] = useState<number | null>(
-    null
-  );
+  const [typeActionFocus, setTypeActionFocus] = useState<
+    "first" | "last" | undefined
+  >(undefined);
 
   function handleKeyDownBtnSideBar(e: React.KeyboardEvent<HTMLDivElement>) {
     switch (e.key) {
@@ -77,7 +86,7 @@ function MenuButtonSidebar({ isSidebarHidden, onSidebar }: PropsSidebar) {
         //abre o menu via keys
         onSidebar(false);
         //add o focus ao primeiro item do menu apos abrir
-        setIndexItemMenuFocus(0);
+        setTypeActionFocus("first");
         break;
       case "Esc":
       case "Escape":
@@ -91,14 +100,14 @@ function MenuButtonSidebar({ isSidebarHidden, onSidebar }: PropsSidebar) {
         //abre o menu via keys
         onSidebar(false);
         //apos abrir menu o foco vai para o ultimo item de menu
-        setIndexItemMenuFocus(dataContext.datas.length - 1);
+        setTypeActionFocus("last");
         break;
       default:
         break;
     }
   }
 
-  function onCloseSidebar() {
+  function handleCloseSidebar() {
     btnSideBar.current?.focus();
     onSidebar(true);
   }
@@ -134,32 +143,13 @@ function MenuButtonSidebar({ isSidebarHidden, onSidebar }: PropsSidebar) {
           <ChevronUp className="header__icon header__icon--chevron-up" />
         )}
       </div>
-      <div
-        className={
-          isSidebarHidden
-            ? "header__backdrop-sidebar header__backdrop-sidebar--hidden"
-            : "header__backdrop-sidebar"
-        }
-      >
-        <div className="header__sidebar-mobile">
-          {/*<Heading level={4} className="header__count-boards">
-            All Boards ({dataContext.datas.length})
-          </Heading>
-          */}
-          <ListBoards
-            id="menu-sidebar"
-            aria-labelledby="menubutton-sidebar"
-            onCloseWrapper={onCloseSidebar}
-            setIdItemToFocus={
-              typeof indexItemMenuFocus === "number"
-                ? indexItemMenuFocus
-                : undefined
-            }
-            className="header__list-boards"
-          />
-          <Switch />
-        </div>
-      </div>
+      <SidebarMobile
+        id="menu-sidebar"
+        aria-labelledby="menubutton-sidebar"
+        onCloseWrapper={handleCloseSidebar}
+        isSidebarHidden={isSidebarHidden}
+        typeActionFocusOpenMenu={typeActionFocus}
+      />
     </div>
   );
 }
@@ -249,15 +239,18 @@ function MenuButtonBoard() {
     }
   }
 
-  function handlePointerDownBtnOptionBoard(e: React.PointerEvent<HTMLButtonElement>, action: string) {
-    switch(action) {
+  function handlePointerDownBtnOptionBoard(
+    e: React.PointerEvent<HTMLButtonElement>,
+    action: string
+  ) {
+    switch (action) {
       case "edit":
         //TODO: modal de editar board
         break;
       case "delete":
         //TODO: modal de deletar board
         break;
-      default: 
+      default:
         break;
     }
   }

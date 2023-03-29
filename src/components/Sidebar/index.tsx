@@ -4,11 +4,29 @@ import HideSidebar from "../Icons/HideSidebar";
 import Switch from "../Switch";
 import { useDataContext } from "../context/DataContext";
 import ShowSidebar from "../Icons/ShowSidebar";
-import "./Sidebar.css";
 import React, { useEffect, useRef, useState } from "react";
 import BoardModal from "../Modals/BoardModal";
 import BoardIcon from "../Icons/Board";
 import { Board } from "../../data";
+import "./Sidebar.css";
+
+/*
+interface PropsSidebar extends PropsListBoards {
+  isSidebarHidden: boolean;
+  onSidebar: (isHidden: boolean) => void;
+}
+
+export default function Sidebar(props: PropsSidebar) {
+  const { isSidebarHidden, onSidebar } = props;
+  const content = useMatchMedia({
+    mobileContent: <SidebarMobile {...props} />,
+    desktopContent: (
+      <SidebarDesktop isSidebarHidden={isSidebarHidden} onSidebar={onSidebar} />
+    ),
+    mediaQuery: "(min-width: 450px)",
+  });
+  return content;
+}*/
 
 type PropsSidebarDesktop = {
   isSidebarHidden: boolean;
@@ -74,10 +92,26 @@ export function SidebarDesktop({
   );
 }
 
-export function SidebarMobile(props: PropsListBoards) {
+interface PropsSidebarMobile extends PropsListBoards {
+  isSidebarHidden: boolean;
+}
+
+export function SidebarMobile(props: PropsSidebarMobile) {
+  const { isSidebarHidden } = props;
+
+  if (isSidebarHidden) {
+    return null;
+  }
+
   return (
     <div className="backdrop-sidebar">
-      <div className="sidebar-mobile">
+      <div
+        className="sidebar-mobile"
+        role="dialog"
+        id="dialog-sidebarmobile"
+        aria-label="menu boards"
+        aria-modal="true"
+      >
         <ListBoards {...props} />
         <Switch />
       </div>
@@ -85,13 +119,21 @@ export function SidebarMobile(props: PropsListBoards) {
   );
 }
 
-interface PropsListBoards extends React.ComponentPropsWithoutRef<"ul"> {
+interface PropsListBoards /*extends React.ComponentPropsWithoutRef<"ul">*/ {
+  id?: string;
+  ariaLabelledyWrapper?: string;
   onCloseWrapper?: () => void;
   typeActionFocusOpenMenu?: "first" | "last";
+  className?: string;
 }
 
-function ListBoards(props: PropsListBoards) {
-  const { onCloseWrapper, typeActionFocusOpenMenu, className } = props;
+function ListBoards({
+  id,
+  ariaLabelledyWrapper,
+  onCloseWrapper,
+  typeActionFocusOpenMenu,
+  className,
+}: PropsListBoards) {
   const dataContext = useDataContext();
   const refsItemsMenu = useRef<HTMLButtonElement[] | null>(null);
   const [modalCreateBoardIsOpen, setModalCreateBoardIsOpen] = useState(false);
@@ -102,7 +144,7 @@ function ListBoards(props: PropsListBoards) {
         setToFocus(0);
         break;
       case "last":
-        setToFocus(getRefsItemsMenu().length);
+        setToFocus(getRefsItemsMenu().length - 1);
         break;
       default:
         break;
@@ -156,7 +198,7 @@ function ListBoards(props: PropsListBoards) {
       switch (e.key) {
         case "Esc":
         case "Escape":
-          //fecha o wrraper via teclado se for menu
+          //fecha o wrraper via teclado
           if (onCloseWrapper) onCloseWrapper();
           break;
         case "Up":
@@ -197,7 +239,15 @@ function ListBoards(props: PropsListBoards) {
         <Heading level={4} className="list-boards__title">
           ALL BOARDS ({dataContext.datas.length})
         </Heading>
-        <ul {...props} className="list-boards__list">
+        <ul
+          id={id ? id : undefined}
+          aria-labelledby={
+            ariaLabelledyWrapper ? ariaLabelledyWrapper : undefined
+          }
+          className={
+            className ? `list-boards__list ${className}` : "list-boards__list"
+          }
+        >
           {dataContext.datas.map((board, index) => {
             return (
               <li className="list-boards__item" key={index} role="none">

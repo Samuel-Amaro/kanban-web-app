@@ -1,13 +1,13 @@
 /**mobile-first**/
 
-.header__group:nth-child(1),
-.header__backdrop-sidebar--hidden,
+/*.header__group:nth-child(1),
+.header__backdrop-sidebar--hidden,*/
 .header__menu-board--hide,
 .header__text-btn-add-task {
   display: none;
 }
 
-.header__group:nth-child(2),
+.header__group/*:nth-child(2)*/,
 .header.header,
 .header__container-buttons,
 .header__menu-button-sidebar {
@@ -57,7 +57,7 @@
 
 .header,
 .header__container-buttons,
-.header__group:nth-child(2) {
+.header__group/*:nth-child(2)*/ {
   align-items: center;
   gap: 16px;
 }
@@ -67,33 +67,8 @@
   padding: 16px;
 }
 
-.header__backdrop-sidebar {
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  mix-blend-mode: normal;
-  z-index: 1000;
-  left: 0;
-  top: 64px;
-}
 
-.header__sidebar-mobile {
-  position: absolute;
-  z-index: 1001;
-  top: 16px;
-  left: 54px;
-  background-color: var(--bg-sidebar);
-  border-radius: 8px;
-  box-shadow: 0 10px 20px var(--box-shadow-sidebar-mobile);
-  padding: 16px 0 16px 0;
-}
-
-.header__list-boards{
-  margin: 0 0 16px 0;
-}
-
-/***menu board options***/
+/***MENU BOARD OPTIONS***/
 
 .header__menu-board{
   list-style: none;
