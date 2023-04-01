@@ -10,24 +10,6 @@ import BoardIcon from "../Icons/Board";
 import { Board } from "../../data";
 import "./Sidebar.css";
 
-/*
-interface PropsSidebar extends PropsListBoards {
-  isSidebarHidden: boolean;
-  onSidebar: (isHidden: boolean) => void;
-}
-
-export default function Sidebar(props: PropsSidebar) {
-  const { isSidebarHidden, onSidebar } = props;
-  const content = useMatchMedia({
-    mobileContent: <SidebarMobile {...props} />,
-    desktopContent: (
-      <SidebarDesktop isSidebarHidden={isSidebarHidden} onSidebar={onSidebar} />
-    ),
-    mediaQuery: "(min-width: 450px)",
-  });
-  return content;
-}*/
-
 type PropsSidebarDesktop = {
   isSidebarHidden: boolean;
   onSidebar: (isHidden: boolean) => void;
@@ -37,7 +19,18 @@ export function SidebarDesktop({
   isSidebarHidden,
   onSidebar,
 }: PropsSidebarDesktop) {
-  const dataContext = useDataContext();
+  const refBtnToggleSidebar = useRef<HTMLButtonElement>(null);
+  const [modalCreateBoardIsOpen, setModalCreateBoardIsOpen] = useState(false);
+
+  function handleCloseSidebar() {
+    refBtnToggleSidebar.current?.focus();
+    onSidebar(true);
+  }
+
+  function handleModalIsOpen(isOppen: boolean) {
+    setModalCreateBoardIsOpen(isOppen);
+  }
+
   if (isSidebarHidden) {
     return (
       <Button
@@ -54,6 +47,7 @@ export function SidebarDesktop({
             onSidebar(false);
           }
         }}
+        ref={refBtnToggleSidebar}
       >
         <ShowSidebar />
       </Button>
@@ -61,82 +55,95 @@ export function SidebarDesktop({
   }
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar__container">
-        <Heading level={4} className="sidebar__title">
-          All Boards ({dataContext.datas.length})
-        </Heading>
-        <ListBoards />
-      </div>
-      <div className="sidebar__container">
-        <Switch />
-        <Button
-          type="button"
-          size="l"
-          title="Hide Sidebar"
-          aria-label="Hide Sidebar"
-          className="sidebar__btn-hide"
-          onPointerDown={() => {
-            onSidebar(true);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
+    <>
+      <aside className="sidebar">
+        <div className="sidebar__container">
+          <ListBoards
+            onCloseWrapper={handleCloseSidebar}
+            onModalCreateBoardIsOpen={handleModalIsOpen}
+            typeWrapper="desktop"
+          />
+        </div>
+        <div className="sidebar__container">
+          <Switch />
+          <Button
+            type="button"
+            size="l"
+            title="Hide Sidebar"
+            aria-label="Hide Sidebar"
+            className="sidebar__btn-hide"
+            onPointerDown={() => {
               onSidebar(true);
-            }
-          }}
-        >
-          <HideSidebar /> Hide Sidebar
-        </Button>
-      </div>
-    </aside>
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                onSidebar(true);
+              }
+            }}
+          >
+            <HideSidebar /> Hide Sidebar
+          </Button>
+        </div>
+      </aside>
+      {modalCreateBoardIsOpen && (
+        <BoardModal
+          type="add"
+          isOpen={modalCreateBoardIsOpen}
+          onHandleOpen={(isOpen: boolean) => setModalCreateBoardIsOpen(isOpen)}
+        />
+      )}
+    </>
   );
 }
 
 interface PropsSidebarMobile extends PropsListBoards {
-  isSidebarHidden: boolean;
+  isSidebarHidden?: boolean;
 }
 
 export function SidebarMobile(props: PropsSidebarMobile) {
-  const { isSidebarHidden } = props;
+  const { isSidebarHidden, ...rest } = props;
 
   if (isSidebarHidden) {
     return null;
   }
 
   return (
-    <div className="backdrop-sidebar">
-      <div
-        className="sidebar-mobile"
-        role="dialog"
-        id="dialog-sidebarmobile"
-        aria-label="menu boards"
-        aria-modal="true"
-      >
-        <ListBoards {...props} />
-        <Switch />
+    <>
+      <div className="backdrop-sidebar">
+        <div
+          className="sidebar-mobile"
+          role="dialog"
+          id="dialog-sidebarmobile"
+          aria-label="menu boards"
+          aria-modal="true"
+        >
+          <ListBoards {...rest} typeWrapper="mobile" />
+          <Switch />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
-interface PropsListBoards /*extends React.ComponentPropsWithoutRef<"ul">*/ {
-  id?: string;
-  ariaLabelledyWrapper?: string;
+interface PropsListBoards extends React.ComponentPropsWithoutRef<"ul"> {
   onCloseWrapper?: () => void;
   typeActionFocusOpenMenu?: "first" | "last";
-  className?: string;
+  typeWrapper?: "mobile" | "desktop";
+  onModalCreateBoardIsOpen?: (isOppen: boolean) => void;
 }
 
-function ListBoards({
-  id,
-  ariaLabelledyWrapper,
-  onCloseWrapper,
-  typeActionFocusOpenMenu,
-  className,
-}: PropsListBoards) {
+export function ListBoards(props: PropsListBoards) {
+  const {
+    onCloseWrapper,
+    typeActionFocusOpenMenu,
+    typeWrapper,
+    className,
+    onModalCreateBoardIsOpen,
+    ...rest
+  } = props;
+
   const dataContext = useDataContext();
   const refsItemsMenu = useRef<HTMLButtonElement[] | null>(null);
-  const [modalCreateBoardIsOpen, setModalCreateBoardIsOpen] = useState(false);
 
   useEffect(() => {
     switch (typeActionFocusOpenMenu) {
@@ -240,10 +247,7 @@ function ListBoards({
           ALL BOARDS ({dataContext.datas.length})
         </Heading>
         <ul
-          id={id ? id : undefined}
-          aria-labelledby={
-            ariaLabelledyWrapper ? ariaLabelledyWrapper : undefined
-          }
+          {...rest}
           className={
             className ? `list-boards__list ${className}` : "list-boards__list"
           }
@@ -297,15 +301,29 @@ function ListBoards({
               aria-label="create new board"
               title={`create new board`}
               onPointerDown={() => {
-                //TODO: chamar function do state do context data para criar um novo board
-                //atualiza state para modal ser renderizado
-                setModalCreateBoardIsOpen(true);
+                if (
+                  typeWrapper === "mobile" &&
+                  onCloseWrapper &&
+                  onModalCreateBoardIsOpen
+                ) {
+                  onCloseWrapper();
+                  onModalCreateBoardIsOpen(true);
+                  return;
+                }
+                onModalCreateBoardIsOpen && onModalCreateBoardIsOpen(true);
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
-                  //TODO: chamar function do state do context data para criar um novo board
-                  //atualiza state para modal ser renderizado
-                  setModalCreateBoardIsOpen(true);
+                  if (
+                    typeWrapper === "mobile" &&
+                    onCloseWrapper &&
+                    onModalCreateBoardIsOpen
+                  ) {
+                    onCloseWrapper();
+                    onModalCreateBoardIsOpen(true);
+                    return;
+                  }
+                  onModalCreateBoardIsOpen && onModalCreateBoardIsOpen(true);
                 }
               }}
               role="menuitem"
@@ -316,11 +334,6 @@ function ListBoards({
           </li>
         </ul>
       </div>
-      <BoardModal
-        type="add"
-        isOpen={modalCreateBoardIsOpen}
-        onHandleOpen={(isOpen: boolean) => setModalCreateBoardIsOpen(isOpen)}
-      />
     </>
   );
 }

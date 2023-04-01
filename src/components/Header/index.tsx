@@ -12,6 +12,7 @@ import iconTaskMobile from "../../assets/images/icon-add-task-mobile.svg";
 import useMatchMedia from "../../hooks/useMatchMedia";
 import { SidebarMobile } from "../Sidebar";
 import "./Header.css";
+import BoardModal from "../Modals/BoardModal";
 
 type PropsSidebar = {
   isSidebarHidden: boolean;
@@ -76,6 +77,7 @@ function MenuButtonSidebarMobile({ isSidebarHidden, onSidebar }: PropsSidebar) {
   const [typeActionFocus, setTypeActionFocus] = useState<
     "first" | "last" | undefined
   >(undefined);
+  const [modalCreateBoardIsOpen, setModalCreateBoardIsOpen] = useState(false);
 
   function handleKeyDownBtnSideBar(e: React.KeyboardEvent<HTMLDivElement>) {
     switch (e.key) {
@@ -147,9 +149,19 @@ function MenuButtonSidebarMobile({ isSidebarHidden, onSidebar }: PropsSidebar) {
         id="menu-sidebar"
         aria-labelledby="menubutton-sidebar"
         onCloseWrapper={handleCloseSidebar}
-        isSidebarHidden={isSidebarHidden}
         typeActionFocusOpenMenu={typeActionFocus}
+        isSidebarHidden={isSidebarHidden}
+        onModalCreateBoardIsOpen={(isOpen: boolean) =>
+          setModalCreateBoardIsOpen(isOpen)
+        }
       />
+      {modalCreateBoardIsOpen && (
+        <BoardModal
+          type="add"
+          isOpen={modalCreateBoardIsOpen}
+          onHandleOpen={(isOpen: boolean) => setModalCreateBoardIsOpen(isOpen)}
+        />
+      )}
     </div>
   );
 }

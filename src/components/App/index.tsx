@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import DataContextProvider from "../context/DataContext";
 import { ThemeContextProvider } from "../context/ThemeContext";
 import Header from "../Header";
-import Sidebar, { SidebarDesktop } from "../Sidebar";
+import { SidebarDesktop } from "../Sidebar";
 import "./App.css";
 import useMatchMedia from "../../hooks/useMatchMedia";
 
@@ -33,11 +33,6 @@ function App() {
           ),
           mediaQuery: "(min-width: 450px)",
         })}
-        {/*<Sidebar
-          isSidebarHidden={isSidebarHidden}
-          onSidebar={onSidebar}
-          //setIsSidebarHidden={setIsSidebarHidden}
-          />*/}
       </DataContextProvider>
     </ThemeContextProvider>
   );

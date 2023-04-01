@@ -5,6 +5,7 @@ import "./BoardModal.css";
 import { Board, Column } from "../../../data";
 import { nanoid } from "nanoid";
 import Button from "../../Button";
+import { createPortal } from "react-dom";
 
 type PropsBoardModal = {
   type: "add" | "edit";
@@ -40,7 +41,7 @@ export default function BoardModal({
     return null;
   }
 
-  return (
+  const template = (
     <div className="backdrop-modal">
       <div
         className="dialog"
@@ -119,4 +120,6 @@ export default function BoardModal({
       </div>
     </div>
   );
+
+  return createPortal(template, document.body);
 }
