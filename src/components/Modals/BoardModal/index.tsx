@@ -17,6 +17,7 @@ type PropsBoardModal = {
 //TODO: criar modal que permita criação e edição de boars
 //TODO: criar logica de estado e validação de formulario
 //TODO: tudo no mesmo modal componente
+//TODO: como temos varios manipuladores de eventos vamos criar um reducers para centralizar a logica de atualização de estado para este modal
 
 export default function BoardModal({
   type,
@@ -28,14 +29,84 @@ export default function BoardModal({
     { id: `column-${nanoid(5)}`, name: "Todo", tasks: [] },
     { id: `column-${nanoid(5)}`, name: "Doing", tasks: [] },
   ];
-  const [columnsBoard, setColumnsBoard] = useState<Column[]>(
-    initialData ? initialData.columns : defaultColumns
-  );
+
   const [board, setBoard] = useState<Board>(
     initialData
       ? initialData
-      : { id: `board-${nanoid(5)}`, name: "", columns: columnsBoard }
+      : {
+          id: `board-${nanoid(5)}`,
+          name: "",
+          columns: defaultColumns,
+        }
   );
+
+  function handleChangedNameBoard(e: React.ChangeEvent<HTMLInputElement>) {
+    setBoard({
+      ...board,
+      name: e.target.value,
+    });
+  }
+
+  function handleChangedNameColumn(
+    e: React.ChangeEvent<HTMLInputElement>,
+    column: Column
+  ) {
+    setBoard({
+      ...board,
+      columns: board.columns.map((c) => {
+        if (c.id === column.id) {
+          return {
+            ...c,
+            name: e.target.value,
+          };
+        }
+        return c;
+      }),
+    });
+  }
+
+  function handlePointerOrKeyDownBtnRemoveColumn(
+    e: React.KeyboardEvent<HTMLButtonElement> | undefined,
+    column: Column
+  ) {
+    if (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        setBoard({
+          ...board,
+          columns: board.columns.filter((c) => c.id !== column.id),
+        });
+        return;
+      }
+    }
+    setBoard({
+      ...board,
+      columns: board.columns.filter((c) => c.id !== column.id),
+    });
+  }
+
+  function handlePointerOrKeyDownBtnAddNewColumn(
+    e: React.KeyboardEvent<HTMLButtonElement> | undefined
+  ) {
+    if (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        setBoard({
+          ...board,
+          columns: [
+            ...board.columns,
+            { id: `column-${nanoid(5)}`, name: "", tasks: [] },
+          ],
+        });
+        return;
+      }
+    }
+    setBoard({
+      ...board,
+      columns: [
+        ...board.columns,
+        { id: `column-${nanoid(5)}`, name: "", tasks: [] },
+      ],
+    });
+  }
 
   if (!isOpen) {
     return null;
@@ -65,14 +136,20 @@ export default function BoardModal({
               placeholder="e.g Web Design"
               className="dialog__input"
               title="Board Name"
+              value={board.name}
+              onChange={handleChangedNameBoard}
             />
           </div>
           <div className="dialog__form-group">
-            <label htmlFor="board-columns" className="dialog__label">
+            <label
+              htmlFor="board-columns"
+              className="dialog__label"
+              id="board-columns"
+            >
               Board Columns
             </label>
             <div className="dialog__form-columns">
-              {columnsBoard.map((column) => {
+              {board.columns.map((column) => {
                 return (
                   <div className="dialog__container-column" key={column.id}>
                     <input
@@ -81,15 +158,28 @@ export default function BoardModal({
                         .toLowerCase()
                         .split(" ")
                         .join("")}`}
-                      id="board-columns"
+                      aria-labelledby="board-columns"
                       className="dialog__input"
-                      title="Name to column Board"
+                      title="name column Board"
+                      value={column.name}
+                      onChange={(e) => {
+                        handleChangedNameColumn(e, column);
+                      }}
                     />
                     <button
                       type="button"
                       title="Remove Column Board"
                       className="dialog__btn-remove-column"
                       aria-label="Remove Column Board"
+                      onPointerDown={() => {
+                        handlePointerOrKeyDownBtnRemoveColumn(
+                          undefined,
+                          column
+                        );
+                      }}
+                      onKeyDown={(e) => {
+                        handlePointerOrKeyDownBtnRemoveColumn(e, column);
+                      }}
                     >
                       <CrossIcon className="dialog__icon-btn" />
                     </button>
@@ -103,6 +193,12 @@ export default function BoardModal({
               size="s"
               title="Add New Column"
               aria-label="Add New Column"
+              onPointerDown={() => {
+                handlePointerOrKeyDownBtnAddNewColumn(undefined);
+              }}
+              onKeyDown={(e) => {
+                handlePointerOrKeyDownBtnAddNewColumn(e);
+              }}
             >
               + Add new Column
             </Button>
