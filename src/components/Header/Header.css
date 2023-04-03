@@ -30,7 +30,7 @@
 }
 
 .header__name-board {
-  color: var(--title-name-board);
+  color: var(--color-headings-modals-header-and-texts-inputs);
 }
 
 .header__icon-btn-add-task {

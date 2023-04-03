@@ -1,24 +1,43 @@
-.button{
-    display: block;
-    appearance: none;
-    border: none;
-    font-family: inherit;
+.button {
+  display: block;
+  appearance: none;
+  border: none;
+  font-family: inherit;
 }
 
-.button__l{
-    /*heading M*/
-    font-weight: 700;
-    border-radius: 24px;
-    font-size: 15px;
-    line-height: 19px;
-    font-style: normal;
+/**button larger**/
+.button__l {
+  /*heading M*/
+  font-weight: 700;
+  border-radius: 24px;
+  font-size: 15px;
+  line-height: 19px;
+  font-style: normal;
 }
 
-.button__primary{
-    background-color: var(--bg-primary-l-btn);
-    color: var(--color-primary-l-btn);
+/**button small**/
+.button__s {
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 23px;
 }
 
-.button__primary:hover, .button__primary:focus{
-    background-color: var(--bg-primary-l-btn-hover);
+.button__primary {
+  background-color: var(--bg-primary-l-btn);
+  color: var(--color-primary-l-btn);
+}
+
+.button__primary:hover,
+.button__primary:focus {
+  background-color: var(--bg-primary-l-btn-hover);
+}
+
+.button__secondary {
+  background-color: var(--bg-secondary-s-btn);
+  color: var(--color-text-secondary-s-btn);
+}
+
+.button__secondary:hover,
+.button__secondary:focus {
+  background-color: var(--bg-secondary-s-btn-hover);
 }

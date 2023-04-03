@@ -19,18 +19,27 @@
   --red-hover: #ff9898;
   /**css variables**/
   /**headings**/
-  --title-name-board: var(--black);
+  --color-headings-modals-header-and-texts-inputs: var(--black);
   --color-heading-s: var(--medium-grey);
-  /**buttons**/
+
+  /**BUTTONS**/
+
+  /**primary larger**/
   --bg-primary-l-btn: var(--main-purple);
   --bg-primary-l-btn-hover: var(--main-purple-hover);
   --color-primary-l-btn: var(--white);
   --bg-btn-select-board-hover: rgba(99, 95, 199, 0.1);
   --color-btn-select-board-hover: var(--main-purple);
+  /**secondary small**/
+  --bg-secondary-s-btn: rgba(99, 95, 199, 0.1);
+  --color-text-secondary-s-btn: var(--main-purple);
+  --bg-secondary-s-btn-hover: rgba(99, 95, 199, 0.25);
   /**outros**/
   --bg-sidebar: var(--white);
   --box-shadow-sidebar-mobile: rgba(54, 78, 126, 0.25);
+  /**modals**/
   --bg-modals-dropdowns: var(--white);
+  --color-labels: var(--medium-grey);
   /**switch**/
   --bg-switch: var(--light-grey);
 }
@@ -39,11 +48,11 @@ html {
   font-family: "Plus Jakarta Sans", sans-serif;
 }
 
-/**body L**/
-body{
+/**body M**/
+body {
   font-style: normal;
   font-weight: 500;
-  font-size: 13px;
-  line-height: 23px;
+  font-size: 12px;
+  line-height: 15px;
   color: var(--medium-grey);
 }

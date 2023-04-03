@@ -1,16 +1,106 @@
-.backdrop-modal{
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    left: 0;
-    z-index: 1010;
+.backdrop-modal {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  left: 0;
+  z-index: 1010;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
 }
 
-.dialog{
-    position: absolute;
-    top: 279px;
-    z-index: 1020;
-    background-color: var(--bg-modals-dropdowns);
+.dialog {
+  /*position: absolute;
+  top: 279px;
+  z-index: 1020;*/
+  background-color: var(--bg-modals-dropdowns);
+  padding: 24px;
+  border-radius: 6px;
+  width: 343px;
+  margin: 0 auto;
+}
+
+.dialog__title {
+  color: var(--color-headings-modals-header-and-texts-inputs);
+}
+
+.dialog__label,
+.dialog__form,
+.dialog__input,
+.dialog__btn-remove-column {
+  display: block;
+}
+
+.dialog__label {
+  font-weight: 700;
+  font-style: normal;
+  color: var(--color-labels);
+  margin: 0 0 8px 0;
+}
+
+.dialog__form,
+.dialog__input {
+  width: 100%;
+}
+
+.dialog__btn-remove-column,
+.dialog__input {
+  appearance: none;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.dialog__input {
+  border: 1px solid rgba(130, 143, 163, 0.25);
+  border-radius: 4px;
+  padding: 7px 16px 8px 16px;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 23px;
+  color: var(--color-headings-modals-header-and-texts-inputs);
+}
+
+.dialog__input::placeholder {
+  opacity: 0.25;
+}
+
+.dialog__title,
+.dialog__form-group {
+  margin: 0 0 24px 0;
+}
+
+.dialog__btn-remove-column {
+  background-color: transparent;
+  border: none;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+.dialog__icon-btn {
+  fill: var(--medium-grey);
+}
+
+.dialog__container-column {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.dialog__form-columns,
+.dialog__container-column:not(:last-child) {
+  margin: 0 0 12px 0;
+}
+
+.dialog__btn-add-column,
+.dialog__btn-submit-form {
+  width: 100%;
+  text-align: center;
+  border-radius: 20px;
+  padding: 8px 0 9px 0;
+  cursor: pointer;
 }

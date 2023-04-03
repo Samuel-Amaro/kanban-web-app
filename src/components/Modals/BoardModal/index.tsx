@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Heading from "../../Heading";
 import CrossIcon from "../../Icons/Cross";
 import "./BoardModal.css";
@@ -121,7 +121,7 @@ export default function BoardModal({
         aria-labelledby="dialog-label"
         aria-modal="true"
       >
-        <Heading level={2} className="dialog__label" id="dialog-label">
+        <Heading level={2} className="dialog__title" id="dialog-label">
           {type === "add" ? "Add New Board" : "Edit Board"}
         </Heading>
         <form className="dialog__form" name="add-board">
@@ -199,6 +199,7 @@ export default function BoardModal({
               onKeyDown={(e) => {
                 handlePointerOrKeyDownBtnAddNewColumn(e);
               }}
+              className="dialog__btn-add-column"
             >
               + Add new Column
             </Button>
@@ -209,6 +210,7 @@ export default function BoardModal({
             size="s"
             title={type === "add" ? "Create New Board" : "Save Changes"}
             aria-label={type === "add" ? "Create New Board" : "Save Changes"}
+            className="dialog__btn-submit-form"
           >
             {type === "add" ? "Create New Board" : "Save Changes"}
           </Button>
