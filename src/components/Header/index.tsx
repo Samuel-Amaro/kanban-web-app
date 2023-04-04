@@ -20,6 +20,7 @@ type PropsSidebar = {
 };
 
 export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
+  const dataContext = useDataContext();
   return (
     <header className="header">
       {useMatchMedia({
@@ -39,6 +40,9 @@ export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
           variant="primary"
           title="Add New Task"
           className="header__btn-add-task"
+          disabled={
+            dataContext.currentSelectedBoard.columns.length > 0 ? false : true
+          }
         >
           <span className="header__text-btn-add-task">+ Add New Task</span>
           <img

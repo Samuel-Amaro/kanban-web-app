@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useReducer } from "react";
 import Heading from "../../Heading";
 import CrossIcon from "../../Icons/Cross";
 import "./BoardModal.css";
@@ -6,6 +6,7 @@ import { Board, Column } from "../../../data";
 import { nanoid } from "nanoid";
 import Button from "../../Button";
 import { createPortal } from "react-dom";
+import { boardReducer } from "../../../reducers/boardReducer";
 
 type PropsBoardModal = {
   type: "add" | "edit";
@@ -30,7 +31,8 @@ export default function BoardModal({
     { id: `column-${nanoid(5)}`, name: "Doing", tasks: [] },
   ];
 
-  const [board, setBoard] = useState<Board>(
+  const [board, dispatch] = useReducer(
+    boardReducer,
     initialData
       ? initialData
       : {
@@ -41,27 +43,17 @@ export default function BoardModal({
   );
 
   function handleChangedNameBoard(e: React.ChangeEvent<HTMLInputElement>) {
-    setBoard({
-      ...board,
-      name: e.target.value,
-    });
+    dispatch({ type: "changed_name_board", newNameBoard: e.target.value });
   }
 
   function handleChangedNameColumn(
     e: React.ChangeEvent<HTMLInputElement>,
     column: Column
   ) {
-    setBoard({
-      ...board,
-      columns: board.columns.map((c) => {
-        if (c.id === column.id) {
-          return {
-            ...c,
-            name: e.target.value,
-          };
-        }
-        return c;
-      }),
+    dispatch({
+      type: "changed_name_column",
+      idColumn: column.id,
+      newNameColumn: e.target.value,
     });
   }
 
@@ -71,17 +63,11 @@ export default function BoardModal({
   ) {
     if (e) {
       if (e.key === "Enter" || e.key === " ") {
-        setBoard({
-          ...board,
-          columns: board.columns.filter((c) => c.id !== column.id),
-        });
+        dispatch({ type: "removed_column", idColumn: column.id });
         return;
       }
     }
-    setBoard({
-      ...board,
-      columns: board.columns.filter((c) => c.id !== column.id),
-    });
+    dispatch({ type: "removed_column", idColumn: column.id });
   }
 
   function handlePointerOrKeyDownBtnAddNewColumn(
@@ -89,23 +75,15 @@ export default function BoardModal({
   ) {
     if (e) {
       if (e.key === "Enter" || e.key === " ") {
-        setBoard({
-          ...board,
-          columns: [
-            ...board.columns,
-            { id: `column-${nanoid(5)}`, name: "", tasks: [] },
-          ],
-        });
+        dispatch({ type: "add_new_column" });
         return;
       }
     }
-    setBoard({
-      ...board,
-      columns: [
-        ...board.columns,
-        { id: `column-${nanoid(5)}`, name: "", tasks: [] },
-      ],
-    });
+    dispatch({ type: "add_new_column" });
+  }
+
+  function handleSubmitForm(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
   }
 
   if (!isOpen) {
@@ -124,7 +102,11 @@ export default function BoardModal({
         <Heading level={2} className="dialog__title" id="dialog-label">
           {type === "add" ? "Add New Board" : "Edit Board"}
         </Heading>
-        <form className="dialog__form" name="add-board">
+        <form
+          className="dialog__form"
+          name="add-board"
+          onSubmit={handleSubmitForm}
+        >
           <div className="dialog__form-group">
             <label htmlFor="board-name" className="dialog__label">
               Board Name
