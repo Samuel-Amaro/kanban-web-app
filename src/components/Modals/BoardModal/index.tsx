@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer, useRef } from "react";
 import Heading from "../../Heading";
 import CrossIcon from "../../Icons/Cross";
 import "./BoardModal.css";
@@ -7,6 +7,7 @@ import { nanoid } from "nanoid";
 import Button from "../../Button";
 import { createPortal } from "react-dom";
 import { boardReducer } from "../../../reducers/boardReducer";
+import BackdropModal from "../../BackdropModal";
 
 type PropsBoardModal = {
   type: "add" | "edit";
@@ -15,10 +16,10 @@ type PropsBoardModal = {
   initialData?: Board | null;
 };
 
-//TODO: criar modal que permita criação e edição de boars
-//TODO: criar logica de estado e validação de formulario
-//TODO: tudo no mesmo modal componente
-//TODO: como temos varios manipuladores de eventos vamos criar um reducers para centralizar a logica de atualização de estado para este modal
+//TODO: Gerenciar foco no modal
+//Todo: modal esta sem foco, ao fechar referenciar ultimo elemento com foco, ao abrir focar input board name
+//TODO: ADICIONAR RECURSOS DE ACESSIBILIDADE AQUI
+//TODO: ARRUMAR PARA RECEBER FOCO QUANDO ABRIR E FECHAR VIA TECLADO E MOUSE
 
 export default function BoardModal({
   type,
@@ -26,6 +27,9 @@ export default function BoardModal({
   onHandleOpen,
   initialData,
 }: PropsBoardModal) {
+  const refInputNameBoard = useRef<HTMLInputElement | null>(null);
+  const refDialog = useRef<HTMLDivElement | null>(null);
+
   const defaultColumns = [
     { id: `column-${nanoid(5)}`, name: "Todo", tasks: [] },
     { id: `column-${nanoid(5)}`, name: "Doing", tasks: [] },
@@ -86,18 +90,29 @@ export default function BoardModal({
     e.preventDefault();
   }
 
+  useEffect(() => {
+    //refDialog.current?.focus();
+    //console.log(document.activeElement);
+  }, []);
+
   if (!isOpen) {
     return null;
   }
 
   const template = (
-    <div className="backdrop-modal">
+    <BackdropModal
+      onHandleOpenModal={() => {
+        onHandleOpen(false);
+      }}
+    >
       <div
         className="dialog"
         role="dialog"
         id="dialog-add-board"
         aria-labelledby="dialog-label"
         aria-modal="true"
+        ref={refDialog}
+        /*onPointerDown={handlePointerDownDialog}*/
       >
         <Heading level={2} className="dialog__title" id="dialog-label">
           {type === "add" ? "Add New Board" : "Edit Board"}
@@ -120,6 +135,7 @@ export default function BoardModal({
               title="Board Name"
               value={board.name}
               onChange={handleChangedNameBoard}
+              ref={refInputNameBoard}
             />
           </div>
           <div className="dialog__form-group">
@@ -198,7 +214,7 @@ export default function BoardModal({
           </Button>
         </form>
       </div>
-    </div>
+    </BackdropModal>
   );
 
   return createPortal(template, document.body);
