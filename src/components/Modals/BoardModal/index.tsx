@@ -1,13 +1,14 @@
 import { useEffect, useReducer, useRef } from "react";
 import Heading from "../../Heading";
 import CrossIcon from "../../Icons/Cross";
-import "./BoardModal.css";
 import { Board, Column } from "../../../data";
 import { nanoid } from "nanoid";
 import Button from "../../Button";
 import { createPortal } from "react-dom";
 import { boardReducer } from "../../../reducers/boardReducer";
 import BackdropModal from "../../BackdropModal";
+import "./BoardModal.css";
+import { getFocusableElements, nextFocusable } from "../../../utils";
 
 type PropsBoardModal = {
   type: "add" | "edit";
@@ -90,9 +91,31 @@ export default function BoardModal({
     e.preventDefault();
   }
 
+  function handleKeyDownDialog(e: KeyboardEvent) {
+    switch (e.key) {
+      case "Esc":
+      case "Escape":
+        onHandleOpen(false);
+        break;
+      case "Tab": {
+        e.preventDefault();
+        nextFocusable(getFocusableElements(refDialog.current), !e.shiftKey);
+        break;
+      }
+    }
+  }
+
   useEffect(() => {
-    //refDialog.current?.focus();
-    //console.log(document.activeElement);
+    //ao abrir modal foca primeiro campo
+    refInputNameBoard.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDownDialog);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDownDialog);
+    };
   }, []);
 
   if (!isOpen) {
@@ -112,16 +135,11 @@ export default function BoardModal({
         aria-labelledby="dialog-label"
         aria-modal="true"
         ref={refDialog}
-        /*onPointerDown={handlePointerDownDialog}*/
       >
         <Heading level={2} className="dialog__title" id="dialog-label">
           {type === "add" ? "Add New Board" : "Edit Board"}
         </Heading>
-        <form
-          className="dialog__form"
-          name="add-board"
-          onSubmit={handleSubmitForm}
-        >
+        <form className="dialog__form" onSubmit={handleSubmitForm}>
           <div className="dialog__form-group">
             <label htmlFor="board-name" className="dialog__label">
               Board Name
@@ -139,24 +157,17 @@ export default function BoardModal({
             />
           </div>
           <div className="dialog__form-group">
-            <label
-              htmlFor="board-columns"
-              className="dialog__label"
-              id="board-columns"
-            >
+            <label htmlFor="board-columns" className="dialog__label">
               Board Columns
             </label>
             <div className="dialog__form-columns">
-              {board.columns.map((column) => {
+              {board.columns.map((column, index) => {
                 return (
-                  <div className="dialog__container-column" key={column.id}>
+                  <div className="dialog__container-column" key={index}>
                     <input
                       type="text"
-                      name={`column-${column.name
-                        .toLowerCase()
-                        .split(" ")
-                        .join("")}`}
-                      aria-labelledby="board-columns"
+                      name={`column-${index}`}
+                      aria-label="enter with name column"
                       className="dialog__input"
                       title="name column Board"
                       value={column.name}

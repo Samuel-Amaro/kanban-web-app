@@ -163,7 +163,10 @@ function MenuButtonSidebarMobile({ isSidebarHidden, onSidebar }: PropsSidebar) {
         <BoardModal
           type="add"
           isOpen={modalCreateBoardIsOpen}
-          onHandleOpen={(isOpen: boolean) => setModalCreateBoardIsOpen(isOpen)}
+          onHandleOpen={(isOpen: boolean) => {
+            btnSideBar.current?.focus();
+            setModalCreateBoardIsOpen(isOpen);
+          }}
         />
       )}
     </div>

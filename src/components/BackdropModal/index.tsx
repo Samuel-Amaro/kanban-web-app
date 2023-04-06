@@ -6,11 +6,17 @@ type PropsBackdropModal = {
   onHandleOpenModal: () => void;
 };
 
-export default function BackdropModal({ children, onHandleOpenModal }: PropsBackdropModal) {
+export default function BackdropModal({
+  children,
+  onHandleOpenModal,
+}: PropsBackdropModal) {
   const refBackdropModal = useRef<HTMLDivElement | null>(null);
 
-  function handlePointerDownBackdropModal(e: React.PointerEvent<HTMLDivElement>) {
-    e.preventDefault();
+  function handlePointerDownBackdropModal(
+    e: React.PointerEvent<HTMLDivElement>
+  ) {
+    //e.preventDefault();
+    //e.stopPropagation();
     if (
       refBackdropModal.current?.contains(e.target as Node) &&
       (refBackdropModal.current as HTMLDivElement) !== e.target
