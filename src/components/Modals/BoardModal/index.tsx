@@ -1,10 +1,10 @@
-import { useEffect, useReducer, useRef } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import Heading from "../../Heading";
 import CrossIcon from "../../Icons/Cross";
 import { Board, Column } from "../../../data";
 import { nanoid } from "nanoid";
 import Button from "../../Button";
-import { createPortal } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
 import { boardReducer } from "../../../reducers/boardReducer";
 import BackdropModal from "../../BackdropModal";
 import "./BoardModal.css";
@@ -17,11 +17,6 @@ type PropsBoardModal = {
   initialData?: Board | null;
 };
 
-//TODO: Gerenciar foco no modal
-//Todo: modal esta sem foco, ao fechar referenciar ultimo elemento com foco, ao abrir focar input board name
-//TODO: ADICIONAR RECURSOS DE ACESSIBILIDADE AQUI
-//TODO: ARRUMAR PARA RECEBER FOCO QUANDO ABRIR E FECHAR VIA TECLADO E MOUSE
-
 export default function BoardModal({
   type,
   isOpen,
@@ -30,6 +25,10 @@ export default function BoardModal({
 }: PropsBoardModal) {
   const refInputNameBoard = useRef<HTMLInputElement | null>(null);
   const refDialog = useRef<HTMLDivElement | null>(null);
+  const refsInputColumns = useRef<Map<number, HTMLInputElement> | null>(null);
+  /*const refsButtonRemoveColumns = useRef<Map<number, HTMLButtonElement> | null>(
+    null
+  );*/
 
   const defaultColumns = [
     { id: `column-${nanoid(5)}`, name: "Todo", tasks: [] },
@@ -46,6 +45,24 @@ export default function BoardModal({
           columns: defaultColumns,
         }
   );
+
+  //TODO: generalizar functions para obter buttons e inputs elementos para foco
+  //TODO: ao adicionar uma nova column via teclado adicionar foco no input da ultima column adicionada
+  //TODO: ao remover column via teclado add foco para o proxumo btn de remover foco acima ou abaixo verificar qual
+  //TODO: verificar porque o foco apos add new column via teclado esta indo para o penultimo input ao inves do ultimo
+
+  function getMap() {
+    if (!refsInputColumns.current) {
+      refsInputColumns.current = new Map();
+    }
+    return refsInputColumns.current;
+  }
+
+  function focusToId(itemId: number) {
+    const map = getMap();
+    const node = map.get(itemId);
+    node?.focus();
+  }
 
   function handleChangedNameBoard(e: React.ChangeEvent<HTMLInputElement>) {
     dispatch({ type: "changed_name_board", newNameBoard: e.target.value });
@@ -72,7 +89,7 @@ export default function BoardModal({
         return;
       }
     }
-    dispatch({ type: "removed_column", idColumn: column.id });
+    if (!e) dispatch({ type: "removed_column", idColumn: column.id });
   }
 
   function handlePointerOrKeyDownBtnAddNewColumn(
@@ -80,11 +97,14 @@ export default function BoardModal({
   ) {
     if (e) {
       if (e.key === "Enter" || e.key === " ") {
-        dispatch({ type: "add_new_column" });
+        flushSync(() => {
+          dispatch({ type: "add_new_column" });
+        });
+        focusToId(board.columns.length - 1);
         return;
       }
     }
-    dispatch({ type: "add_new_column" });
+    if (!e) dispatch({ type: "add_new_column" });
   }
 
   function handleSubmitForm(e: React.FormEvent<HTMLFormElement>) {
@@ -102,6 +122,8 @@ export default function BoardModal({
         nextFocusable(getFocusableElements(refDialog.current), !e.shiftKey);
         break;
       }
+      default:
+        break;
     }
   }
 
@@ -173,6 +195,14 @@ export default function BoardModal({
                       value={column.name}
                       onChange={(e) => {
                         handleChangedNameColumn(e, column);
+                      }}
+                      ref={(node) => {
+                        const map = getMap();
+                        if (node) {
+                          map.set(index, node);
+                        } else {
+                          map.delete(index);
+                        }
                       }}
                     />
                     <button
