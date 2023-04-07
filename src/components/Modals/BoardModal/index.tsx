@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import Heading from "../../Heading";
 import CrossIcon from "../../Icons/Cross";
 import { Board, Column } from "../../../data";
@@ -8,7 +8,12 @@ import { createPortal, flushSync } from "react-dom";
 import { boardReducer } from "../../../reducers/boardReducer";
 import BackdropModal from "../../BackdropModal";
 import "./BoardModal.css";
-import { getFocusableElements, nextFocusable } from "../../../utils";
+import {
+  DataError,
+  getFocusableElements,
+  nextFocusable,
+  validationForm,
+} from "../../../utils";
 
 type PropsBoardModal = {
   type: "add" | "edit";
@@ -16,6 +21,8 @@ type PropsBoardModal = {
   onHandleOpen: (isOpen: boolean) => void;
   initialData?: Board | null;
 };
+
+//TODO: validar form do modal antes de salvar o board no context
 
 export default function BoardModal({
   type,
@@ -26,9 +33,7 @@ export default function BoardModal({
   const refInputNameBoard = useRef<HTMLInputElement | null>(null);
   const refDialog = useRef<HTMLDivElement | null>(null);
   const refsInputColumns = useRef<Map<number, HTMLInputElement> | null>(null);
-  /*const refsButtonRemoveColumns = useRef<Map<number, HTMLButtonElement> | null>(
-    null
-  );*/
+  const [errors, setErrors] = useState<DataError>({ columns: [] });
 
   const defaultColumns = [
     { id: `column-${nanoid(5)}`, name: "Todo", tasks: [] },
@@ -45,11 +50,6 @@ export default function BoardModal({
           columns: defaultColumns,
         }
   );
-
-  //TODO: generalizar functions para obter buttons e inputs elementos para foco
-  //TODO: ao adicionar uma nova column via teclado adicionar foco no input da ultima column adicionada
-  //TODO: ao remover column via teclado add foco para o proxumo btn de remover foco acima ou abaixo verificar qual
-  //TODO: verificar porque o foco apos add new column via teclado esta indo para o penultimo input ao inves do ultimo
 
   function getMap() {
     if (!refsInputColumns.current) {
@@ -109,6 +109,8 @@ export default function BoardModal({
 
   function handleSubmitForm(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    console.log(validationForm(board));
+    setErrors(validationForm(board));
   }
 
   function handleKeyDownDialog(e: KeyboardEvent) {
@@ -166,17 +168,36 @@ export default function BoardModal({
             <label htmlFor="board-name" className="dialog__label">
               Board Name
             </label>
-            <input
-              type="text"
-              name="board-name"
-              id="board-name"
-              placeholder="e.g Web Design"
-              className="dialog__input"
-              title="Board Name"
-              value={board.name}
-              onChange={handleChangedNameBoard}
-              ref={refInputNameBoard}
-            />
+            {errors["nameBoard"] ? (
+              <div className="dialog__form-group-error">
+                <input
+                  type="text"
+                  name="board-name"
+                  id="board-name"
+                  placeholder="e.g Web Design"
+                  className="dialog__input"
+                  title="Board Name"
+                  value={board.name}
+                  onChange={handleChangedNameBoard}
+                  ref={refInputNameBoard}
+                />
+                <span className="dialog__error-input" aria-live="polite">
+                  {`${errors["nameBoard"]}`}
+                </span>
+              </div>
+            ) : (
+              <input
+                type="text"
+                name="board-name"
+                id="board-name"
+                placeholder="e.g Web Design"
+                className="dialog__input"
+                title="Board Name"
+                value={board.name}
+                onChange={handleChangedNameBoard}
+                ref={refInputNameBoard}
+              />
+            )}
           </div>
           <div className="dialog__form-group">
             <label htmlFor="board-columns" className="dialog__label">
@@ -184,27 +205,66 @@ export default function BoardModal({
             </label>
             <div className="dialog__form-columns">
               {board.columns.map((column, index) => {
+                //TODO: filter pelo id para ver que esta com error, qual column esta com error
+                //TODO: arrumar aqui, escolher uma forma de mostrar as mensagens de validações para os campos de name de columns invalidas
                 return (
                   <div className="dialog__container-column" key={index}>
-                    <input
-                      type="text"
-                      name={`column-${index}`}
-                      aria-label="enter with name column"
-                      className="dialog__input"
-                      title="name column Board"
-                      value={column.name}
-                      onChange={(e) => {
-                        handleChangedNameColumn(e, column);
-                      }}
-                      ref={(node) => {
-                        const map = getMap();
-                        if (node) {
-                          map.set(index, node);
-                        } else {
-                          map.delete(index);
-                        }
-                      }}
-                    />
+                    {errors["columns"].length > 0 ? (
+                      errors["columns"].filter((def) => def.id === column.id)
+                        .length > 0 && (
+                        <div className="dialog__form-group-errors">
+                          <input
+                            type="text"
+                            name={`column-${index}`}
+                            aria-label="enter with name column"
+                            className="dialog__input"
+                            title="name column Board"
+                            value={column.name}
+                            onChange={(e) => {
+                              handleChangedNameColumn(e, column);
+                            }}
+                            ref={(node) => {
+                              const map = getMap();
+                              if (node) {
+                                map.set(index, node);
+                              } else {
+                                map.delete(index);
+                              }
+                            }}
+                          />
+                          <span
+                            className="dialog__error-input"
+                            aria-live="polite"
+                          >
+                            {`${
+                              errors.columns.filter(
+                                (def) => def.id === column.id
+                              )[0].error
+                            }`}
+                          </span>
+                        </div>
+                      )
+                    ) : (
+                      <input
+                        type="text"
+                        name={`column-${index}`}
+                        aria-label="enter with name column"
+                        className="dialog__input"
+                        title="name column Board"
+                        value={column.name}
+                        onChange={(e) => {
+                          handleChangedNameColumn(e, column);
+                        }}
+                        ref={(node) => {
+                          const map = getMap();
+                          if (node) {
+                            map.set(index, node);
+                          } else {
+                            map.delete(index);
+                          }
+                        }}
+                      />
+                    )}
                     <button
                       type="button"
                       title="Remove Column Board"
