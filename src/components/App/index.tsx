@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import DataContextProvider from "../context/DataContext";
-import { ThemeContextProvider } from "../context/ThemeContext";
+import DataContextProvider from "../../context/DataContext";
+import { ThemeContextProvider } from "../../context/ThemeContext";
 import Header from "../Header";
 import { SidebarDesktop } from "../Sidebar";
 import "./App.css";

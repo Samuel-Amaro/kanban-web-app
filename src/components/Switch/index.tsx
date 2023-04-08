@@ -1,6 +1,6 @@
 import DarkTheme from "../Icons/DarkTheme";
 import LightTheme from "../Icons/LightTheme";
-import { useThemeContext } from "../context/ThemeContext";
+import { useThemeContext } from "../../context/ThemeContext";
 import "./Switch.css";
 
 export default function Switch() {
@@ -30,7 +30,7 @@ export default function Switch() {
           aria-checked={themeContext.theme === "light" ? false : true}
           onPointerDown={(event) => {
             toggleStatus(event);
-            themeContext.setTheme(
+            themeContext.toggleTheme(
               event.currentTarget.getAttribute("aria-checked") === "true"
                 ? "dark"
                 : "light"
@@ -40,7 +40,7 @@ export default function Switch() {
           onKeyDown={(event) => {
             if (event.key === "Enter" || event.key === " ") {
               toggleStatus(event);
-              themeContext.setTheme(
+              themeContext.toggleTheme(
                 event.currentTarget.getAttribute("aria-checked") === "true"
                   ? "dark"
                   : "light"

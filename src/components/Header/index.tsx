@@ -3,8 +3,8 @@ import Heading from "../Heading";
 import ChevronDown from "../Icons/ChevronDown";
 import LogoMobile from "../Icons/LogoMobile";
 import VerticalEllipsis from "../Icons/VerticalEllipsis";
-import { useDataContext } from "../context/DataContext";
-import { useThemeContext } from "../context/ThemeContext";
+import { useDataContext } from "../../context/DataContext";
+import { useThemeContext } from "../../context/ThemeContext";
 import Logo from "../Icons/Logo";
 import ChevronUp from "../Icons/ChevronUp";
 import React, { useRef, useState } from "react";
@@ -21,6 +21,7 @@ type PropsSidebar = {
 
 export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
   const dataContext = useDataContext();
+
   return (
     <header className="header">
       {useMatchMedia({
@@ -41,7 +42,7 @@ export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
           title="Add New Task"
           className="header__btn-add-task"
           disabled={
-            dataContext.currentSelectedBoard.columns.length > 0 ? false : true
+            dataContext.selectedBoard.columns.length > 0 ? false : true
           }
         >
           <span className="header__text-btn-add-task">+ Add New Task</span>
@@ -67,7 +68,7 @@ function DesktopContent() {
         <Logo theme={themeContext.theme} />
       </div>
       <Heading level={1} className="header__name-board">
-        {dataContext.currentSelectedBoard.name}
+        {dataContext.selectedBoard.name}
       </Heading>
     </div>
   );
@@ -141,7 +142,7 @@ function MenuButtonSidebarMobile({ isSidebarHidden, onSidebar }: PropsSidebar) {
         }}
       >
         <Heading level={2} className="header__name-board">
-          {dataContext.currentSelectedBoard.name}
+          {dataContext.selectedBoard.name}
         </Heading>
         {isSidebarHidden ? (
           <ChevronDown className="header__icon header__icon--chevron-down" />

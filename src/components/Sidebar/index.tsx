@@ -2,7 +2,7 @@ import Button from "../Button";
 import Heading from "../Heading";
 import HideSidebar from "../Icons/HideSidebar";
 import Switch from "../Switch";
-import { useDataContext } from "../context/DataContext";
+import { useDataContext } from "../../context/DataContext";
 import ShowSidebar from "../Icons/ShowSidebar";
 import React, { useEffect, useRef, useState } from "react";
 import BoardModal from "../Modals/BoardModal";
@@ -226,7 +226,7 @@ export function ListBoards(props: PropsListBoards) {
           break;
         case "Enter":
         case " ":
-          dataContext.setCurrentSelectedBoard(board);
+          dataContext.updateSelectedBoard(board);
           break;
         default:
           break;
@@ -259,14 +259,14 @@ export function ListBoards(props: PropsListBoards) {
                   type="button"
                   size="l"
                   className={
-                    board.id === dataContext.currentSelectedBoard.id
+                    board.id === dataContext.selectedBoard.id
                       ? "list-boards__btn--select-board list-boards__btn--select-board-active"
                       : "list-boards__btn--select-board"
                   }
                   aria-label={`Select ${board.name} board`}
                   title={`Select ${board.name} board`}
                   onPointerDown={() => {
-                    dataContext.setCurrentSelectedBoard(board);
+                    dataContext.updateSelectedBoard(board);
                   }}
                   onKeyDown={(e) => {
                     handleKeyDownBtnBoard(e, board);
@@ -283,7 +283,7 @@ export function ListBoards(props: PropsListBoards) {
                 >
                   <BoardIcon
                     className={
-                      board.id === dataContext.currentSelectedBoard.id
+                      board.id === dataContext.selectedBoard.id
                         ? "list-boards__icon list-boards__icon-btn-select-board list-boards__icon-btn-select-board--active"
                         : "list-boards__icon list-boards__icon-btn-select-board"
                     }
