@@ -51,32 +51,33 @@ export function nextFocusable(elements: HTMLElement[], forward = true) {
   elements[nextIndex]?.focus();
 }
 
-type DataErrorField = {
+type DataErrorFieldColumn = {
   id: string;
   error: string;
 };
 
-export type DataError = {
-  [key: string]: string | DataErrorField[];
-  columns: DataErrorField[];
+export type DataErrorBoard = {
+  nameBoard: string | undefined;
+  columns: DataErrorFieldColumn[];
 };
 
-export function validationForm(fields: Board) {
-  const errors: DataError = {columns: []};
+export function validationFormBoard(fields: Board) {
+  const errors: DataErrorBoard = { nameBoard: undefined, columns: []};
 
   if(fields.name.trim() === "") {
-    errors["nameBoard"] = "Can’t be empty";
+    errors.nameBoard = "Can’t be empty";
   }
-
-  const errorsColumns = [];
   
   for(const value of fields.columns) {
     if(value.name.trim() === "") {
-      errorsColumns.push({id: value.id, error: "Can’t be empty"});
+      errors.columns.push({id: value.id, error: "Can’t be empty"});
     }
   }
 
-  errors["columns"] = errorsColumns;
-
   return errors;
+}
+
+export function formBoardIsValid(errors: DataErrorBoard) {
+  if (errors.nameBoard || errors.columns.length > 0) return false;
+  return true;
 }

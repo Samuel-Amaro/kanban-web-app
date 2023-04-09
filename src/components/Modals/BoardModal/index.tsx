@@ -9,11 +9,13 @@ import { boardReducer } from "../../../reducers/boardReducer";
 import BackdropModal from "../../BackdropModal";
 import "./BoardModal.css";
 import {
-  DataError,
+  DataErrorBoard,
+  formBoardIsValid,
   getFocusableElements,
   nextFocusable,
-  validationForm,
+  validationFormBoard,
 } from "../../../utils";
+import { useDataContext, useDatasDispatch } from "../../../context/DataContext";
 
 type PropsBoardModal = {
   type: "add" | "edit";
@@ -31,7 +33,12 @@ export default function BoardModal({
   const refInputNameBoard = useRef<HTMLInputElement | null>(null);
   const refDialog = useRef<HTMLDivElement | null>(null);
   const refsInputColumns = useRef<Map<number, HTMLInputElement> | null>(null);
-  const [errors, setErrors] = useState<DataError>({ columns: [] });
+  const [errorsForm, setErrorsForm] = useState<DataErrorBoard>({
+    nameBoard: undefined,
+    columns: [],
+  });
+  const dispatchDatasContext = useDatasDispatch();
+  const datasContext = useDataContext();
 
   const defaultColumns = [
     { id: `column-${nanoid(5)}`, name: "Todo", tasks: [] },
@@ -107,8 +114,31 @@ export default function BoardModal({
 
   function handleSubmitForm(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    //console.log(validationForm(board));
-    setErrors(validationForm(board));
+    const er = validationFormBoard(board);
+    setErrorsForm(er);
+    if (formBoardIsValid(er)) {
+      switch (type) {
+        case "add": {
+          dispatchDatasContext({
+            type: "save_new_board",
+            board: board,
+          });
+          datasContext.updateSelectedBoard(board);
+          onHandleOpen(false);
+          break;
+        }
+        case "edit": {
+          dispatchDatasContext({
+            type: "edit_board",
+            board: board,
+          });
+          onHandleOpen(false);
+          break;
+        }
+        default:
+          break;
+      }
+    }
   }
 
   function handleKeyDownDialog(e: KeyboardEvent) {
@@ -166,7 +196,7 @@ export default function BoardModal({
             <label htmlFor="board-name" className="dialog__label">
               Board Name
             </label>
-            {errors["nameBoard"] ? (
+            {errorsForm.nameBoard ? (
               <div className="dialog__form-group-error">
                 <input
                   type="text"
@@ -180,7 +210,7 @@ export default function BoardModal({
                   ref={refInputNameBoard}
                 />
                 <span className="dialog__error-input" aria-live="polite">
-                  {`${errors["nameBoard"]}`}
+                  {`${errorsForm.nameBoard}`}
                 </span>
               </div>
             ) : (
@@ -205,7 +235,7 @@ export default function BoardModal({
               {board.columns.map((column, index) => {
                 return (
                   <div className="dialog__container-column" key={index}>
-                    {errors["columns"].filter((def) => def.id === column.id)
+                    {errorsForm.columns.filter((def) => def.id === column.id)
                       .length > 0 ? (
                       <>
                         <div className="dialog__form-group-error">
@@ -233,7 +263,7 @@ export default function BoardModal({
                             aria-live="polite"
                           >
                             {`${
-                              errors.columns.filter(
+                              errorsForm.columns.filter(
                                 (def) => def.id === column.id
                               )[0].error
                             }`}
