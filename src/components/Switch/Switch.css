@@ -1,8 +1,9 @@
 .switch{
     padding: 14px 0 14px 0;
-    background-color: var(--bg-switch);
+    background-color: var(--bg-body-switch);
     border-radius: 6px;
     margin: 0 13px 0 16px;
+    transition: all 0.30s ease-in-out;
 }
 
 .switch__icon{

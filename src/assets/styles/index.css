@@ -17,32 +17,65 @@
   --white: #ffffff;
   --red: #ea5555;
   --red-hover: #ff9898;
-  /**css variables**/
-  /**headings**/
+
+  /**CSS VARIABLES COLORS**/
+
+  /**HEADINGS**/
   --color-headings-modals-header-and-texts-inputs: var(--black);
   --color-heading-s: var(--medium-grey);
 
   /**BUTTONS**/
 
-  /**primary larger**/
+  /**PRIMARY LARGER**/
   --bg-primary-l-btn: var(--main-purple);
   --bg-primary-l-btn-hover: var(--main-purple-hover);
   --color-primary-l-btn: var(--white);
   --bg-btn-select-board-hover: rgba(99, 95, 199, 0.1);
   --color-btn-select-board-hover: var(--main-purple);
-  /**secondary small**/
+
+  /**SECONDARY SMALL**/
   --bg-secondary-s-btn: rgba(99, 95, 199, 0.1);
   --color-text-secondary-s-btn: var(--main-purple);
   --bg-secondary-s-btn-hover: rgba(99, 95, 199, 0.25);
-  /**outros**/
-  --bg-sidebar: var(--white);
+  
+  /**OUTROS**/
   --box-shadow-sidebar-mobile: rgba(54, 78, 126, 0.25);
-  /**modals**/
-  --bg-modals-dropdowns: var(--white);
+  
+  /**MODALS**/
+  --bg-dropdown: var(--white);
   --color-labels: var(--medium-grey);
-  /**switch**/
-  --bg-switch: var(--light-grey);
+
+  /**HEADER AND SIDEBAR(MOBILE/DESKTOP) AND MODALS**/
+  --bg-sidebar_header_modals: var(--white);
+
+  /**BODY AND SWITCH**/
+  --bg-body-switch: var(--light-grey);
 }
+
+[data-theme="dark"] {
+  /**BUTTONS**/
+
+  /**PRIMARY LARGER**/
+  --bg-btn-select-board-hover: var(--white);
+
+  /**SECONDARY SMALL**/
+  --bg-secondary-s-btn: var(--white);
+  --bg-secondary-s-btn-hover: var(--white);
+
+  /**DROPDOWNS AND MODALS**/
+  --bg-dropdown: var(--very-dark-grey);
+  --color-labels: var(--white);
+
+  /**HEADER**/
+  --color-headings-modals-header-and-texts-inputs: var(--white);
+
+  /**HEADER AND SIDEBAR(MOBILE/DESKTOP) AND MODALS**/
+  --bg-sidebar_header_modals: var(--dark-grey);
+
+  /**BODY AND SWITCH**/
+  --bg-body-switch: var(--very-dark-grey);
+}
+
 
 html {
   font-family: "Plus Jakarta Sans", sans-serif;
@@ -55,4 +88,6 @@ body {
   font-size: 12px;
   line-height: 15px;
   color: var(--medium-grey);
+  background-color: var(--bg-body-switch);
+  transition: all 0.30s ease-in-out;
 }

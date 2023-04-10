@@ -41,9 +41,7 @@ export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
           variant="primary"
           title="Add New Task"
           className="header__btn-add-task"
-          disabled={
-            dataContext.selectedBoard.columns.length > 0 ? false : true
-          }
+          disabled={dataContext.selectedBoard.columns.length > 0 ? false : true}
         >
           <span className="header__text-btn-add-task">+ Add New Task</span>
           <img
@@ -65,7 +63,7 @@ function DesktopContent() {
   return (
     <div className="header__group">
       <div className="header__logo">
-        <Logo theme={themeContext.theme} />
+        <Logo theme={themeContext.theme} className="header__icon-logo-desktop" />
       </div>
       <Heading level={1} className="header__name-board">
         {dataContext.selectedBoard.name}
@@ -174,6 +172,7 @@ function MenuButtonSidebarMobile({ isSidebarHidden, onSidebar }: PropsSidebar) {
   );
 }
 
+//TODO: ao clicar fora fechar este dropdown
 function MenuButtonBoard() {
   const [isHiddenMenuBoard, setIsHiddenMenuBoard] = useState(true);
   const refsButtons = useRef<HTMLButtonElement[] | null>(null);

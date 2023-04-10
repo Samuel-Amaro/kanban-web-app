@@ -1,4 +1,3 @@
-
 /***SIDEBAR MOBILE***/
 
 .backdrop-sidebar {
@@ -17,10 +16,15 @@
   z-index: 1001;
   top: 16px;
   left: 54px;
-  background-color: var(--bg-sidebar);
   border-radius: 8px;
   box-shadow: 0 10px 20px var(--box-shadow-sidebar-mobile);
   padding: 16px 0 16px 0;
+}
+
+.sidebar,
+.sidebar-mobile {
+  background-color: var(--bg-sidebar_header_modals);
+  transition: all 0.3s ease-in-out;
 }
 
 /***LIST BOARDS***/

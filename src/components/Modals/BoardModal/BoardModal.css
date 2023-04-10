@@ -1,8 +1,5 @@
 .dialog {
-  /*position: absolute;
-  top: 279px;
-  z-index: 1020;*/
-  background-color: var(--bg-modals-dropdowns);
+  background-color: var(--bg-sidebar_header_modals);
   padding: 24px;
   border-radius: 6px;
   width: 343px;
@@ -47,6 +44,7 @@
   font-size: 13px;
   line-height: 23px;
   color: var(--color-headings-modals-header-and-texts-inputs);
+  background-color: transparent;
 }
 
 .dialog__input::placeholder {

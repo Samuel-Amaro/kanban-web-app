@@ -8,7 +8,7 @@
 }
 
 .header__group/*:nth-child(2)*/,
-.header.header,
+.header,
 .header__container-buttons,
 .header__menu-button-sidebar {
   display: flex;
@@ -31,6 +31,7 @@
 
 .header__name-board {
   color: var(--color-headings-modals-header-and-texts-inputs);
+  transition: all 0.30s ease-in-out;
 }
 
 .header__icon-btn-add-task {
@@ -65,6 +66,12 @@
 .header {
   justify-content: space-between;
   padding: 16px;
+  background-color: var(--bg-sidebar_header_modals);
+  transition: all 0.30s ease-in-out;
+}
+
+.header__icon-logo-desktop{
+  transition: all 0.30s ease-in-out;
 }
 
 
@@ -75,12 +82,13 @@
   position: absolute;
   top: 50px;
   left: -188px;
-  background-color: var(--bg-modals-dropdowns);
+  background-color: var(--bg-dropdown);
   border-radius: 8px;
   box-shadow: 0px 10px 20px rgba(54, 78, 126, 0.25);
   padding: 16px;
   width: 192px;
   height: 94px;
+  transition: all 0.30s ease-in-out;
 }
 
 .header__menu-button-board{
