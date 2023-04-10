@@ -15,8 +15,6 @@ export default function BackdropModal({
   function handlePointerDownBackdropModal(
     e: React.PointerEvent<HTMLDivElement>
   ) {
-    //e.preventDefault();
-    //e.stopPropagation();
     if (
       refBackdropModal.current?.contains(e.target as Node) &&
       (refBackdropModal.current as HTMLDivElement) !== e.target

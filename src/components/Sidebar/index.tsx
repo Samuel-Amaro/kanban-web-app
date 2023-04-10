@@ -102,6 +102,16 @@ interface PropsSidebarMobile extends PropsListBoards {
 
 export function SidebarMobile(props: PropsSidebarMobile) {
   const { isSidebarHidden, ...rest } = props;
+  const refBackdrop = useRef<HTMLDivElement | null>(null);
+
+  function handlePointerDownBackdrop(e: React.PointerEvent<HTMLDivElement>) {
+    if (
+      refBackdrop.current?.contains(e.target as Node) &&
+      (refBackdrop.current as HTMLDivElement) !== e.target
+    )
+      return;
+    if (rest.onCloseWrapper) rest.onCloseWrapper();
+  }
 
   if (isSidebarHidden) {
     return null;
@@ -109,7 +119,11 @@ export function SidebarMobile(props: PropsSidebarMobile) {
 
   return (
     <>
-      <div className="backdrop-sidebar">
+      <div
+        className="backdrop-sidebar"
+        ref={refBackdrop}
+        onPointerDown={handlePointerDownBackdrop}
+      >
         <div
           className="sidebar-mobile"
           role="dialog"

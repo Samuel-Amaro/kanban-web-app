@@ -173,6 +173,7 @@ function MenuButtonSidebarMobile({ isSidebarHidden, onSidebar }: PropsSidebar) {
 }
 
 //TODO: ao clicar fora fechar este dropdown
+//TODO: FOCAR AQUI AGORA PARA CHAMAR NOVOS MODAIS
 function MenuButtonBoard() {
   const [isHiddenMenuBoard, setIsHiddenMenuBoard] = useState(true);
   const refsButtons = useRef<HTMLButtonElement[] | null>(null);
