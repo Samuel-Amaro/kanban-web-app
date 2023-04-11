@@ -9,6 +9,7 @@ import BoardModal from "../Modals/BoardModal";
 import BoardIcon from "../Icons/Board";
 import { Board } from "../../data";
 import "./Sidebar.css";
+import useOnClickOutside from "../../hooks/useOnClickOutside";
 
 type PropsSidebarDesktop = {
   isSidebarHidden: boolean;

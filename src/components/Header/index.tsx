@@ -7,12 +7,14 @@ import { useDataContext } from "../../context/DataContext";
 import { useThemeContext } from "../../context/ThemeContext";
 import Logo from "../Icons/Logo";
 import ChevronUp from "../Icons/ChevronUp";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import iconTaskMobile from "../../assets/images/icon-add-task-mobile.svg";
 import useMatchMedia from "../../hooks/useMatchMedia";
 import { SidebarMobile } from "../Sidebar";
 import "./Header.css";
 import BoardModal from "../Modals/BoardModal";
+import useOnClickOutside from "../../hooks/useOnClickOutside";
+import { getFocusableElements, nextFocusable } from "../../utils";
 
 type PropsSidebar = {
   isSidebarHidden: boolean;
@@ -63,7 +65,10 @@ function DesktopContent() {
   return (
     <div className="header__group">
       <div className="header__logo">
-        <Logo theme={themeContext.theme} className="header__icon-logo-desktop" />
+        <Logo
+          theme={themeContext.theme}
+          className="header__icon-logo-desktop"
+        />
       </div>
       <Heading level={1} className="header__name-board">
         {dataContext.selectedBoard.name}
@@ -174,28 +179,43 @@ function MenuButtonSidebarMobile({ isSidebarHidden, onSidebar }: PropsSidebar) {
 
 //TODO: ao clicar fora fechar este dropdown
 //TODO: FOCAR AQUI AGORA PARA CHAMAR NOVOS MODAIS
+
+type DataButton = {
+  text: string;
+  action: "edit" | "delete";
+};
+
 function MenuButtonBoard() {
   const [isHiddenMenuBoard, setIsHiddenMenuBoard] = useState(true);
-  const refsButtons = useRef<HTMLButtonElement[] | null>(null);
+  //const refsButtons = useRef<HTMLButtonElement[] | null>(null);
   const refBtnBoadMenu = useRef<HTMLButtonElement>(null);
-  const dataButtons = [
+  const refBtnDropdow = useRef<HTMLDivElement | null>(null);
+  const dataButtons: DataButton[] = [
     { text: "Edit", action: "edit" },
     { text: "Delete", action: "delete" },
   ];
+  const [typeActionFocus, setTypeActionFocus] = useState<
+    "first" | "last" | undefined
+  >(undefined);
 
-  function getRefs() {
+  function handleOnCloseWrapper() {
+    refBtnBoadMenu.current?.focus();
+    setIsHiddenMenuBoard(true);
+  }
+
+  /*function getRefs() {
     if (!refsButtons.current) {
       refsButtons.current = [];
     }
     return refsButtons.current;
-  }
+  }*/
 
-  function setToFocus(itemId: number) {
+  /*function setToFocus(itemId: number) {
     const refsBtns = getRefs();
     refsBtns[itemId].focus();
-  }
+  }*/
 
-  function setToFocusPreviousItem(itemCurrent: HTMLButtonElement) {
+  /*function setToFocusPreviousItem(itemCurrent: HTMLButtonElement) {
     const refItems = getRefs();
     let menuItemSelected = null;
     if (itemCurrent === refItems[0]) {
@@ -218,8 +238,9 @@ function MenuButtonBoard() {
     }
     menuItemSelected.focus();
   }
+  */
 
-  function handleKeyDown(
+  /*function handleKeyDown(
     e: React.KeyboardEvent<HTMLButtonElement>,
     action: string
   ) {
@@ -258,8 +279,9 @@ function MenuButtonBoard() {
       }
     }
   }
+  */
 
-  function handlePointerDownBtnOptionBoard(
+  /*function handlePointerDownBtnOptionBoard(
     e: React.PointerEvent<HTMLButtonElement>,
     action: string
   ) {
@@ -273,10 +295,37 @@ function MenuButtonBoard() {
       default:
         break;
     }
+  }*/
+
+  /*function handlePointerDownDropdown(e: PointerEvent) {
+    if (
+      refBtnDropdow.current?.contains(e.target as Node) &&
+      (refBtnDropdow.current as HTMLElement) !== e.target
+    ) {
+      return;
+    }
+    setIsHiddenMenuBoard(true);
   }
 
+  useEffect(() => {
+    console.log("montagem");
+    document.addEventListener("pointerdown", handlePointerDownDropdown);
+
+    return () => {
+      console.log("desmontage");
+      document.removeEventListener("pointerdown", handlePointerDownDropdown);
+    };
+  }, []);
+  */
+
+  //useOnClickOutside(refBtnDropdow, handlePointerDownDropdown);
+
   return (
-    <div className="header__menu-button-board">
+    <div
+      className="header__menu-button-board"
+      ref={refBtnDropdow}
+      /*onPointerDown={handlePointerDownDropdown}*/
+    >
       <Button
         type="button"
         className="header__btn-board"
@@ -302,13 +351,15 @@ function MenuButtonBoard() {
               //abre o menu via keys
               setIsHiddenMenuBoard(false);
               //add o focus ao primeiro item do menu apos abrir
-              setToFocus(0);
+              //setToFocus(0);
+              setTypeActionFocus("first");
               break;
             case "Esc":
             case "Escape":
               //fecha o menu via keys
               setIsHiddenMenuBoard(true);
               //add o focus para o button sidebar apos fechar o menu
+              setTypeActionFocus(undefined);
               if (refBtnBoadMenu.current) refBtnBoadMenu.current.focus();
               break;
             case "Up":
@@ -316,7 +367,8 @@ function MenuButtonBoard() {
               //abre o menu via keys
               setIsHiddenMenuBoard(false);
               //apos abrir menu o foco vai para o ultimo item de menu
-              setToFocus(getRefs().length - 1);
+              //setToFocus(getRefs().length - 1);
+              setTypeActionFocus("last");
               break;
             default:
               break;
@@ -326,7 +378,7 @@ function MenuButtonBoard() {
       >
         <VerticalEllipsis className="header__icon" />
       </Button>
-      <ul
+      {/*<ul
         id="menu1"
         role="menu"
         aria-labelledby="menubutton1"
@@ -365,7 +417,195 @@ function MenuButtonBoard() {
             </li>
           );
         })}
-      </ul>
+      </ul>*/}
+      {!isHiddenMenuBoard && (
+        <ListButtonsMenuBoard
+          id="menu1"
+          role="menu"
+          aria-labelledby="menubutton1"
+          className="header__menu-board"
+          datasButtons={dataButtons}
+          onCloseWrapper={handleOnCloseWrapper}
+          typeActionFocusOpenMenu={typeActionFocus}
+          onMenuBoardHidden={(isHidden: boolean) =>
+            setIsHiddenMenuBoard(isHidden)
+          }
+          refWrapper={refBtnDropdow}
+        />
+      )}
     </div>
+  );
+}
+
+interface PropsListButtonsMenuBoard
+  extends React.ComponentPropsWithoutRef<"ul"> {
+  onCloseWrapper?: () => void;
+  datasButtons: DataButton[];
+  typeActionFocusOpenMenu?: "first" | "last";
+  onMenuBoardHidden?: (isHidden: boolean) => void;
+  refWrapper: React.MutableRefObject<HTMLElement | null>;
+}
+
+function ListButtonsMenuBoard(props: PropsListButtonsMenuBoard) {
+  const {
+    className,
+    datasButtons,
+    onCloseWrapper,
+    typeActionFocusOpenMenu,
+    onMenuBoardHidden,
+    refWrapper,
+    ...rest
+  } = props;
+  const refsButtons = useRef<HTMLButtonElement[] | null>(null);
+  const refList = useRef<HTMLUListElement | null>(null);
+
+  function getRefs() {
+    if (!refsButtons.current) {
+      refsButtons.current = [];
+    }
+    return refsButtons.current;
+  }
+
+  function setToFocus(itemId: number) {
+    const refsBtns = getRefs();
+    refsBtns[itemId].focus();
+  }
+
+  function setToFocusPreviousItem(itemCurrent: HTMLButtonElement) {
+    const refItems = getRefs();
+    let menuItemSelected = null;
+    if (itemCurrent === refItems[0]) {
+      menuItemSelected = itemCurrent;
+    } else {
+      const index = refItems.indexOf(itemCurrent);
+      menuItemSelected = refItems[index - 1];
+    }
+    menuItemSelected.focus();
+  }
+
+  function setFocusNextItem(itemCurrent: HTMLButtonElement) {
+    const refItems = getRefs();
+    let menuItemSelected = null;
+    if (itemCurrent === refItems[refItems.length - 1]) {
+      menuItemSelected = itemCurrent;
+    } else {
+      const index = refItems.indexOf(itemCurrent);
+      menuItemSelected = refItems[index + 1];
+    }
+    menuItemSelected.focus();
+  }
+
+  function handlePointerDownDropdown() {
+    if (onMenuBoardHidden) onMenuBoardHidden(true);
+  }
+
+  function handleKeyDown(
+    e: React.KeyboardEvent<HTMLButtonElement>,
+    action: string
+  ) {
+    if (e.ctrlKey || e.altKey || e.metaKey) {
+      return;
+    } else {
+      switch (e.key) {
+        case "Esc":
+        case "Escape":
+          if (onCloseWrapper) onCloseWrapper();
+          break;
+        case "Up":
+        case "ArrowUp":
+          setToFocusPreviousItem(e.currentTarget);
+          break;
+        case "ArrowDown":
+        case "Down":
+          setFocusNextItem(e.currentTarget);
+          break;
+        case "Home":
+        case "PageUp":
+          setToFocus(0);
+          break;
+        case "End":
+        case "PageDown":
+          setToFocus(getRefs().length - 1);
+          break;
+        case "Tab":
+          e.preventDefault();
+          nextFocusable(getFocusableElements(refList.current), !e.shiftKey);
+          break;
+        case "Enter":
+        case " ":
+          //TODO: chama o modal necessario de acordo com o button clicado da option
+          //TODO: modal para deletar ou editar board
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  function handlePointerDownBtnOptionBoard(
+    e: React.PointerEvent<HTMLButtonElement>,
+    action: string
+  ) {
+    switch (action) {
+      case "edit":
+        //TODO: modal de editar board
+        break;
+      case "delete":
+        //TODO: modal de deletar board
+        break;
+      default:
+        break;
+    }
+  }
+
+  useEffect(() => {
+    switch (typeActionFocusOpenMenu) {
+      case "first": {
+        setToFocus(0);
+        break;
+      }
+      case "last": {
+        setToFocus(getRefs().length - 1);
+        break;
+      }
+      default:
+        break;
+    }
+  }, [typeActionFocusOpenMenu]);
+
+  useOnClickOutside({ ref: refWrapper, handle: handlePointerDownDropdown });
+
+  return (
+    <ul {...rest} className={className ? className : undefined} ref={refList}>
+      {datasButtons.map((data, index) => {
+        return (
+          <li role="none" className="header__menu-item" key={index}>
+            <button
+              type="button"
+              className={`header__btn-board-${data.action}`}
+              role="menuitem"
+              aria-label={`${data.text} current board`}
+              title={`${data.text} current board`}
+              ref={(btn) => {
+                const refItems = getRefs();
+                if (btn) {
+                  refItems.push(btn);
+                } else {
+                  refItems.splice(0, 1);
+                }
+              }}
+              onPointerDown={(e) => {
+                handlePointerDownBtnOptionBoard(e, data.action);
+              }}
+              onKeyDown={(e) => {
+                handleKeyDown(e, data.action);
+              }}
+            >
+              {`${data.text} Board`}
+            </button>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
