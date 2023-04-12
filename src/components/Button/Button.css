@@ -20,6 +20,8 @@
   font-weight: 700;
   font-size: 13px;
   line-height: 23px;
+  font-style: normal;
+  border-radius: 20px;
 }
 
 .button__primary {
@@ -40,4 +42,13 @@
 .button__secondary:hover,
 .button__secondary:focus {
   background-color: var(--bg-secondary-s-btn-hover);
+}
+
+.button__destructive{
+  background-color: var(--bg-destructive-s-btn);
+  color: var(--color-text-btn-destructive);
+}
+
+.button__destructive:is(:hover, :focus){
+  background-color: var(--bg-destructive-s-btn-hover);
 }

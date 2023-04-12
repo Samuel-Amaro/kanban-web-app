@@ -15,6 +15,7 @@ import "./Header.css";
 import BoardModal from "../Modals/BoardModal";
 import useOnClickOutside from "../../hooks/useOnClickOutside";
 import { getFocusableElements, nextFocusable } from "../../utils";
+import DeleteModal from "../Modals/Delete";
 
 type PropsSidebar = {
   isSidebarHidden: boolean;
@@ -177,16 +178,17 @@ function MenuButtonSidebarMobile({ isSidebarHidden, onSidebar }: PropsSidebar) {
   );
 }
 
-//TODO: ao clicar fora fechar este dropdown
-//TODO: FOCAR AQUI AGORA PARA CHAMAR NOVOS MODAIS
-
+type DataActionButton = "edit" | "delete";
 type DataButton = {
   text: string;
-  action: "edit" | "delete";
+  action: DataActionButton;
 };
 
 function MenuButtonBoard() {
+  const dataContext = useDataContext();
   const [isHiddenMenuBoard, setIsHiddenMenuBoard] = useState(true);
+  const [modalEditBoardIsOpen, setModalEditBoardIsOpen] = useState(false);
+  const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
   //const refsButtons = useRef<HTMLButtonElement[] | null>(null);
   const refBtnBoadMenu = useRef<HTMLButtonElement>(null);
   const refBtnDropdow = useRef<HTMLDivElement | null>(null);
@@ -203,237 +205,106 @@ function MenuButtonBoard() {
     setIsHiddenMenuBoard(true);
   }
 
-  /*function getRefs() {
-    if (!refsButtons.current) {
-      refsButtons.current = [];
-    }
-    return refsButtons.current;
-  }*/
-
-  /*function setToFocus(itemId: number) {
-    const refsBtns = getRefs();
-    refsBtns[itemId].focus();
-  }*/
-
-  /*function setToFocusPreviousItem(itemCurrent: HTMLButtonElement) {
-    const refItems = getRefs();
-    let menuItemSelected = null;
-    if (itemCurrent === refItems[0]) {
-      menuItemSelected = itemCurrent;
-    } else {
-      const index = refItems.indexOf(itemCurrent);
-      menuItemSelected = refItems[index - 1];
-    }
-    menuItemSelected.focus();
-  }
-
-  function setFocusNextItem(itemCurrent: HTMLButtonElement) {
-    const refItems = getRefs();
-    let menuItemSelected = null;
-    if (itemCurrent === refItems[refItems.length - 1]) {
-      menuItemSelected = itemCurrent;
-    } else {
-      const index = refItems.indexOf(itemCurrent);
-      menuItemSelected = refItems[index + 1];
-    }
-    menuItemSelected.focus();
-  }
-  */
-
-  /*function handleKeyDown(
-    e: React.KeyboardEvent<HTMLButtonElement>,
-    action: string
-  ) {
-    if (e.ctrlKey || e.altKey || e.metaKey) {
-      return;
-    } else {
-      switch (e.key) {
-        case "Esc":
-        case "Escape":
-          refBtnBoadMenu.current?.focus();
-          setIsHiddenMenuBoard(true);
-          break;
-        case "Up":
-        case "ArrowUp":
-          setToFocusPreviousItem(e.currentTarget);
-          break;
-        case "ArrowDown":
-        case "Down":
-          setFocusNextItem(e.currentTarget);
-          break;
-        case "Home":
-        case "PageUp":
-          setToFocus(0);
-          break;
-        case "End":
-        case "PageDown":
-          setToFocus(getRefs().length - 1);
-          break;
-        case "Enter":
-        case " ":
-          //TODO: chama o modal necessario de acordo com o button clicado da option
-          //TODO: modal para deletar ou editar board
-          break;
-        default:
-          break;
-      }
-    }
-  }
-  */
-
-  /*function handlePointerDownBtnOptionBoard(
-    e: React.PointerEvent<HTMLButtonElement>,
-    action: string
-  ) {
-    switch (action) {
-      case "edit":
-        //TODO: modal de editar board
-        break;
-      case "delete":
-        //TODO: modal de deletar board
-        break;
-      default:
-        break;
-    }
-  }*/
-
-  /*function handlePointerDownDropdown(e: PointerEvent) {
-    if (
-      refBtnDropdow.current?.contains(e.target as Node) &&
-      (refBtnDropdow.current as HTMLElement) !== e.target
-    ) {
-      return;
-    }
-    setIsHiddenMenuBoard(true);
-  }
-
-  useEffect(() => {
-    console.log("montagem");
-    document.addEventListener("pointerdown", handlePointerDownDropdown);
-
-    return () => {
-      console.log("desmontage");
-      document.removeEventListener("pointerdown", handlePointerDownDropdown);
-    };
-  }, []);
-  */
-
-  //useOnClickOutside(refBtnDropdow, handlePointerDownDropdown);
-
   return (
-    <div
-      className="header__menu-button-board"
-      ref={refBtnDropdow}
-      /*onPointerDown={handlePointerDownDropdown}*/
-    >
-      <Button
-        type="button"
-        className="header__btn-board"
-        title={
-          isHiddenMenuBoard
-            ? "Show options for current board"
-            : "Hidden options board"
-        }
-        id="menubutton1"
-        aria-haspopup="true"
-        aria-controls="menu1"
-        aria-expanded={isHiddenMenuBoard ? true : false}
-        aria-label="Options to actions in boards"
-        onPointerDown={() => {
-          setIsHiddenMenuBoard(!isHiddenMenuBoard);
-        }}
-        onKeyDown={(e) => {
-          switch (e.key) {
-            case " ":
-            case "Enter":
-            case "ArrowDown":
-            case "Down":
-              //abre o menu via keys
-              setIsHiddenMenuBoard(false);
-              //add o focus ao primeiro item do menu apos abrir
-              //setToFocus(0);
-              setTypeActionFocus("first");
-              break;
-            case "Esc":
-            case "Escape":
-              //fecha o menu via keys
-              setIsHiddenMenuBoard(true);
-              //add o focus para o button sidebar apos fechar o menu
-              setTypeActionFocus(undefined);
-              if (refBtnBoadMenu.current) refBtnBoadMenu.current.focus();
-              break;
-            case "Up":
-            case "ArrowUp":
-              //abre o menu via keys
-              setIsHiddenMenuBoard(false);
-              //apos abrir menu o foco vai para o ultimo item de menu
-              //setToFocus(getRefs().length - 1);
-              setTypeActionFocus("last");
-              break;
-            default:
-              break;
+    <>
+      <div className="header__menu-button-board" ref={refBtnDropdow}>
+        <Button
+          type="button"
+          className="header__btn-board"
+          title={
+            isHiddenMenuBoard
+              ? "Show options for current board"
+              : "Hidden options board"
           }
-        }}
-        ref={refBtnBoadMenu}
-      >
-        <VerticalEllipsis className="header__icon" />
-      </Button>
-      {/*<ul
-        id="menu1"
-        role="menu"
-        aria-labelledby="menubutton1"
-        className={
-          isHiddenMenuBoard
-            ? "header__menu-board header__menu-board--hide"
-            : "header__menu-board"
-        }
-      >
-        {dataButtons.map((data, index) => {
-          return (
-            <li role="none" className="header__menu-item" key={index}>
-              <button
-                type="button"
-                className={`header__btn-board-${data.action}`}
-                role="menuitem"
-                aria-label={`${data.text} current board`}
-                title={`${data.text} current board`}
-                ref={(btn) => {
-                  const refItems = getRefs();
-                  if (btn) {
-                    refItems.push(btn);
-                  } else {
-                    refItems.splice(0, 1);
-                  }
-                }}
-                onPointerDown={(e) => {
-                  handlePointerDownBtnOptionBoard(e, data.action);
-                }}
-                onKeyDown={(e) => {
-                  handleKeyDown(e, data.action);
-                }}
-              >
-                {`${data.text} Board`}
-              </button>
-            </li>
-          );
-        })}
-      </ul>*/}
-      {!isHiddenMenuBoard && (
-        <ListButtonsMenuBoard
-          id="menu1"
-          role="menu"
-          aria-labelledby="menubutton1"
-          className="header__menu-board"
-          datasButtons={dataButtons}
-          onCloseWrapper={handleOnCloseWrapper}
-          typeActionFocusOpenMenu={typeActionFocus}
-          onMenuBoardHidden={(isHidden: boolean) =>
-            setIsHiddenMenuBoard(isHidden)
-          }
-          refWrapper={refBtnDropdow}
+          id="menubutton1"
+          aria-haspopup="true"
+          aria-controls="menu1"
+          aria-expanded={isHiddenMenuBoard ? true : false}
+          aria-label="Options to actions in boards"
+          onPointerDown={() => {
+            setIsHiddenMenuBoard(!isHiddenMenuBoard);
+          }}
+          onKeyDown={(e) => {
+            switch (e.key) {
+              case " ":
+              case "Enter":
+              case "ArrowDown":
+              case "Down":
+                //abre o menu via keys
+                setIsHiddenMenuBoard(false);
+                //add o focus ao primeiro item do menu apos abrir
+                setTypeActionFocus("first");
+                break;
+              case "Esc":
+              case "Escape":
+                //fecha o menu via keys
+                setIsHiddenMenuBoard(true);
+                //add o focus para o button sidebar apos fechar o menu
+                setTypeActionFocus(undefined);
+                if (refBtnBoadMenu.current) refBtnBoadMenu.current.focus();
+                break;
+              case "Up":
+              case "ArrowUp":
+                //abre o menu via keys
+                setIsHiddenMenuBoard(false);
+                //apos abrir menu o foco vai para o ultimo item de menu
+                setTypeActionFocus("last");
+                break;
+              default:
+                break;
+            }
+          }}
+          ref={refBtnBoadMenu}
+        >
+          <VerticalEllipsis className="header__icon" />
+        </Button>
+        {!isHiddenMenuBoard && (
+          <ListButtonsMenuBoard
+            id="menu1"
+            role="menu"
+            aria-labelledby="menubutton1"
+            className="header__menu-board"
+            datasButtons={dataButtons}
+            onCloseWrapper={handleOnCloseWrapper}
+            typeActionFocusOpenMenu={typeActionFocus}
+            onMenuBoardHidden={(isHidden: boolean) =>
+              setIsHiddenMenuBoard(isHidden)
+            }
+            refWrapper={refBtnDropdow}
+            handleModalEditBoardIsOppen={(isOppen: boolean) =>
+              setModalEditBoardIsOpen(isOppen)
+            }
+            handleModalDeleteIsOppen={(isOppen: boolean) =>
+              setModalDeleteIsOpen(isOppen)
+            }
+          />
+        )}
+      </div>
+      {/*//TODO: AO ABRIR MODAIS FECHAR O BOARD MENU DROPDOWN PRIMEIRO, VERIFICAR SE ESTA FAZENDO ISSO, PRIMEIRO FECHAR O DROPDOWN DEPOIS ABRIR MODAL CORRESPONDENTE*/}
+      {modalEditBoardIsOpen && (
+        <BoardModal
+          type="edit"
+          isOpen={modalEditBoardIsOpen}
+          onHandleOpen={(isOppen: boolean) => {
+            handleOnCloseWrapper();
+            setModalEditBoardIsOpen(isOppen);
+          }}
+          initialData={dataContext.selectedBoard}
         />
       )}
-    </div>
+      {modalDeleteIsOpen && (
+        <DeleteModal
+          typeDelete="board"
+          isOpen={modalDeleteIsOpen}
+          onHandleOpen={(isOppen: boolean) => {
+            handleOnCloseWrapper();
+            setModalDeleteIsOpen(isOppen);
+          }}
+          title_or_name={dataContext.selectedBoard.name}
+          id={dataContext.selectedBoard.id}
+        />
+      )}
+    </>
   );
 }
 
@@ -444,6 +315,8 @@ interface PropsListButtonsMenuBoard
   typeActionFocusOpenMenu?: "first" | "last";
   onMenuBoardHidden?: (isHidden: boolean) => void;
   refWrapper: React.MutableRefObject<HTMLElement | null>;
+  handleModalEditBoardIsOppen?: (isOppen: boolean) => void;
+  handleModalDeleteIsOppen?: (isOppen: boolean) => void;
 }
 
 function ListButtonsMenuBoard(props: PropsListButtonsMenuBoard) {
@@ -454,6 +327,8 @@ function ListButtonsMenuBoard(props: PropsListButtonsMenuBoard) {
     typeActionFocusOpenMenu,
     onMenuBoardHidden,
     refWrapper,
+    handleModalEditBoardIsOppen,
+    handleModalDeleteIsOppen,
     ...rest
   } = props;
   const refsButtons = useRef<HTMLButtonElement[] | null>(null);
@@ -499,9 +374,9 @@ function ListButtonsMenuBoard(props: PropsListButtonsMenuBoard) {
     if (onMenuBoardHidden) onMenuBoardHidden(true);
   }
 
-  function handleKeyDown(
+  function handleKeyDownBtnOptionBoard(
     e: React.KeyboardEvent<HTMLButtonElement>,
-    action: string
+    action: DataActionButton
   ) {
     if (e.ctrlKey || e.altKey || e.metaKey) {
       return;
@@ -531,10 +406,19 @@ function ListButtonsMenuBoard(props: PropsListButtonsMenuBoard) {
           e.preventDefault();
           nextFocusable(getFocusableElements(refList.current), !e.shiftKey);
           break;
-        case "Enter":
         case " ":
+        case "Enter":
           //TODO: chama o modal necessario de acordo com o button clicado da option
           //TODO: modal para deletar ou editar board
+          e.preventDefault();
+          if (action === "edit" && handleModalEditBoardIsOppen) {
+            handleModalEditBoardIsOppen(true);
+            return;
+          }
+          if (action === "delete" && handleModalDeleteIsOppen) {
+            handleModalDeleteIsOppen(true);
+            return;
+          }
           break;
         default:
           break;
@@ -544,14 +428,16 @@ function ListButtonsMenuBoard(props: PropsListButtonsMenuBoard) {
 
   function handlePointerDownBtnOptionBoard(
     e: React.PointerEvent<HTMLButtonElement>,
-    action: string
+    action: DataActionButton
   ) {
     switch (action) {
       case "edit":
         //TODO: modal de editar board
+        if (handleModalEditBoardIsOppen) handleModalEditBoardIsOppen(true);
         break;
       case "delete":
         //TODO: modal de deletar board
+        if (handleModalDeleteIsOppen) handleModalDeleteIsOppen(true);
         break;
       default:
         break;
@@ -598,7 +484,7 @@ function ListButtonsMenuBoard(props: PropsListButtonsMenuBoard) {
                 handlePointerDownBtnOptionBoard(e, data.action);
               }}
               onKeyDown={(e) => {
-                handleKeyDown(e, data.action);
+                handleKeyDownBtnOptionBoard(e, data.action);
               }}
             >
               {`${data.text} Board`}

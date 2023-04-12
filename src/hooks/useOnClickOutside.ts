@@ -17,11 +17,9 @@ export default function useOnClickOutside({ref, handle} : ParamsUseClickOutside)
     }
     
     useEffect(() => {
-        console.log("montagem");
         window.addEventListener("pointerdown", handlePointerDown);
 
         return () => {
-            console.log("desmontagem");
             window.removeEventListener("pointerdown", handlePointerDown);
         };
     });

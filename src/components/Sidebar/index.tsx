@@ -132,7 +132,7 @@ export function SidebarMobile(props: PropsSidebarMobile) {
           aria-label="menu boards"
           aria-modal="true"
         >
-          <ListBoards {...rest} typeWrapper="mobile" />
+          <ListBoards {...rest} typeWrapper="mobile" className="sidebar-mobile__list"/>
           <Switch />
         </div>
       </div>

@@ -37,10 +37,15 @@
   --bg-secondary-s-btn: rgba(99, 95, 199, 0.1);
   --color-text-secondary-s-btn: var(--main-purple);
   --bg-secondary-s-btn-hover: rgba(99, 95, 199, 0.25);
-  
+
+  /**DESTRUCTIVE SMALL**/
+  --bg-destructive-s-btn: var(--red);
+  --color-text-btn-destructive: var(--white);
+  --bg-destructive-s-btn-hover: var(--red-hover);
+
   /**OUTROS**/
   --box-shadow-sidebar-mobile: rgba(54, 78, 126, 0.25);
-  
+
   /**MODALS**/
   --bg-dropdown: var(--white);
   --color-labels: var(--medium-grey);
@@ -76,7 +81,6 @@
   --bg-body-switch: var(--very-dark-grey);
 }
 
-
 html {
   font-family: "Plus Jakarta Sans", sans-serif;
 }
@@ -85,9 +89,9 @@ html {
 body {
   font-style: normal;
   font-weight: 500;
-  font-size: 12px;
-  line-height: 15px;
+  font-size: 13px;
+  line-height: 23px;
   color: var(--medium-grey);
   background-color: var(--bg-body-switch);
-  transition: all 0.30s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }

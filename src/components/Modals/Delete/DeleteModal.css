@@ -1,0 +1,26 @@
+.dialog-delete {
+  background-color: var(--bg-sidebar_header_modals);
+  padding: 24px;
+  width: 343px;
+  border-radius: 6px;
+}
+
+.dialog-delete__title {
+  color: var(--red);
+}
+
+.dialog-delete__title,
+.dialog-delete__message {
+  margin: 0 0 24px 0;
+}
+
+.dialog-delete__btn-delete,
+.dialog-delete__btn-cancel {
+  cursor: pointer;
+  padding: 8px 0 9px 0;
+  width: 100%;
+}
+
+.dialog-delete__btn-delete{
+    margin: 0 0 16px 0;
+}
