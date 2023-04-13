@@ -9,7 +9,7 @@ import BoardModal from "../Modals/BoardModal";
 import BoardIcon from "../Icons/Board";
 import { Board } from "../../data";
 import "./Sidebar.css";
-import useOnClickOutside from "../../hooks/useOnClickOutside";
+import { getRefs, setFocusNextItem, setToFocus, setToFocusPreviousItem } from "../../utils";
 
 type PropsSidebarDesktop = {
   isSidebarHidden: boolean;
@@ -163,52 +163,15 @@ export function ListBoards(props: PropsListBoards) {
   useEffect(() => {
     switch (typeActionFocusOpenMenu) {
       case "first":
-        setToFocus(0);
+        setToFocus(0, refsItemsMenu);
         break;
       case "last":
-        setToFocus(getRefsItemsMenu().length - 1);
+        setToFocus(getRefs(refsItemsMenu).length - 1, refsItemsMenu);
         break;
       default:
         break;
     }
   }, [typeActionFocusOpenMenu]);
-
-  function getRefsItemsMenu() {
-    if (!refsItemsMenu.current) {
-      refsItemsMenu.current = [];
-    }
-    return refsItemsMenu.current;
-  }
-
-  function setToFocus(itemId: number) {
-    const refItems = getRefsItemsMenu();
-    const item = refItems[itemId];
-    item.focus();
-  }
-
-  function setToFocusPreviousItem(itemCurrent: HTMLButtonElement) {
-    const refItems = getRefsItemsMenu();
-    let menuItemSelected = null;
-    if (itemCurrent === refItems[0]) {
-      menuItemSelected = itemCurrent;
-    } else {
-      const index = refItems.indexOf(itemCurrent);
-      menuItemSelected = refItems[index - 1];
-    }
-    menuItemSelected.focus();
-  }
-
-  function setFocusNextItem(itemCurrent: HTMLButtonElement) {
-    const refItems = getRefsItemsMenu();
-    let menuItemSelected = null;
-    if (itemCurrent === refItems[refItems.length - 1]) {
-      menuItemSelected = itemCurrent;
-    } else {
-      const index = refItems.indexOf(itemCurrent);
-      menuItemSelected = refItems[index + 1];
-    }
-    menuItemSelected.focus();
-  }
 
   function handleKeyDownBtnBoard(
     e: React.KeyboardEvent<HTMLButtonElement>,
@@ -225,19 +188,19 @@ export function ListBoards(props: PropsListBoards) {
           break;
         case "Up":
         case "ArrowUp":
-          setToFocusPreviousItem(e.currentTarget);
+          setToFocusPreviousItem(e.currentTarget, refsItemsMenu);
           break;
         case "ArrowDown":
         case "Down":
-          setFocusNextItem(e.currentTarget);
+          setFocusNextItem(e.currentTarget, refsItemsMenu);
           break;
         case "Home":
         case "PageUp":
-          setToFocus(0);
+          setToFocus(0, refsItemsMenu);
           break;
         case "End":
         case "PageDown":
-          setToFocus(getRefsItemsMenu().length - 1);
+          setToFocus(getRefs(refsItemsMenu).length - 1, refsItemsMenu);
           break;
         case "Enter":
         case " ":
@@ -288,7 +251,7 @@ export function ListBoards(props: PropsListBoards) {
                   }}
                   role="menuitem"
                   ref={(btn) => {
-                    const refItems = getRefsItemsMenu();
+                    const refItems = getRefs(refsItemsMenu);
                     if (btn) {
                       refItems[index] = btn;
                     } else {

@@ -1,4 +1,3 @@
-import { MutableRefObject } from "react";
 import { Board } from "./data";
 
 /**
