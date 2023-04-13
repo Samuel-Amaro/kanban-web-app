@@ -1,7 +1,11 @@
 import { nanoid } from "nanoid";
 import { Board } from "../data";
 
-export type ActionType = {type: "changed_name_board", newNameBoard: string} | {type: "changed_name_column", idColumn: string, newNameColumn: string} | {type: "removed_column", idColumn: string} | {type: "add_new_column"};
+export type ActionType =
+    | { type: "changed_name_board"; newNameBoard: string }
+    | { type: "changed_name_column"; idColumn: string; newNameColumn: string }
+    | { type: "removed_column"; idColumn: string }
+    | { type: "add_new_column" }
 
 export function boardReducer(state: Board, action: ActionType) {
     switch(action.type) {

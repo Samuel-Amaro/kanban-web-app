@@ -4,8 +4,10 @@ import Heading from "../../Heading";
 import Button from "../../Button";
 import "./DeleteModal.css";
 import { useEffect, useRef } from "react";
-import { getFocusableElements, nextFocusable } from "../../../utils";
-import { useDataContext, useDatasDispatch } from "../../../context/DataContext";
+import { getFocusableElements, getRefs, nextFocusable, setFocusNextItem, setToFocus, setToFocusPreviousItem } from "../../../utils";
+import {
+  /*useDataContext,*/ useDatasDispatch,
+} from "../../../context/DataContext";
 
 type PropsDeleteModal = {
   isOpen: boolean;
@@ -22,47 +24,114 @@ export default function DeleteModal({
   title_or_name,
   id,
 }: PropsDeleteModal) {
-  const refBtnDelete = useRef<HTMLButtonElement | null>(null);
   const refDialog = useRef<HTMLDivElement | null>(null);
+  const refBtns = useRef<HTMLButtonElement[] | null>(null);
 
   const dispatchDatasContext = useDatasDispatch();
-  const datasContext = useDataContext();
 
   function handleKeyDownDialog(e: KeyboardEvent) {
+    e.stopPropagation();
     switch (e.key) {
       case "Esc":
       case "Escape":
         onHandleOpen(false);
         break;
-      case "Tab": {
-        e.preventDefault();
-        nextFocusable(getFocusableElements(refDialog.current), !e.shiftKey);
-        break;
-      }
       default:
         break;
     }
   }
 
   function handlePointerDownBtnDelete(/*e: React.PointerEvent<HTMLButtonElement>*/) {
-    //TODO: IMPLEMENTAR LOGICA PARA CHAMAR UM DISPATCH CONTEXT PARA EXCLUIR UM BOARD, OU TASK DEPENDENDO DO TYPE DELETE PROP, APOS DELETAR FECHAR MODAL
+    if (typeDelete === "board") {
+      dispatchDatasContext({
+        type: "delete_board",
+        idBoard: id,
+      });
+    }
+    if (typeDelete === "task") {
+      //TODO: IMPLEMENTAR LOGICA PARA CHAMAR DISPATCH DATAS CONTEXT PARA EXCLUIR UMA TASK, IMPLEMENTAR CASE NO REDUCER DATAS REDUCER
+    }
+    onHandleOpen(false);
   }
 
   function handleKeyDownBtnDelete(e: React.KeyboardEvent<HTMLButtonElement>) {
-    //TODO: IMPLEMENTAR LOGICA PARA CHAMAR UM DISPATCH CONTEXT PARA EXCLUIR UM BOARD, OU TASK DEPENDENDO DO TYPE DELETE PROP  APOS DELETAR FECHAR MODAL E VOLTAR FOCO PARA O ULTIMO ELEMENTO ANTERIOR ANTES DO MODAL SER ABERTO
+    switch (e.key) {
+      case "Enter":
+      case " ":
+        if (typeDelete === "board") {
+          dispatchDatasContext({
+            type: "delete_board",
+            idBoard: id,
+          });
+        }
+        if (typeDelete === "task") {
+          //TODO: IMPLEMENTAR LOGICA PARA CHAMAR DISPATCH DATAS CONTEXT PARA EXCLUIR UMA TASK, IMPLEMENTAR CASE NO REDUCER DATAS REDUCER
+        }
+        onHandleOpen(false);
+        break;
+      case "Up":
+      case "ArrowUp":
+        setToFocusPreviousItem(e.currentTarget, refBtns);
+        break;
+      case "ArrowDown":
+      case "Down":
+        setFocusNextItem(e.currentTarget, refBtns);
+        break;
+      case "Home":
+      case "PageUp":
+        setToFocus(0, refBtns);
+        break;
+      case "End":
+      case "PageDown":
+        setToFocus(getRefs(refBtns).length - 1, refBtns);
+        break;
+      case "Tab":
+        e.preventDefault();
+        nextFocusable(getFocusableElements(refDialog.current), !e.shiftKey);
+        break;
+      default:
+        break;
+    }
   }
 
   function handlePointerDownBtnCancel() {
-    //TODO: FECHAR MODAL
+    onHandleOpen(false);
   }
 
   function handleKeyDownBtnCancel(e: React.KeyboardEvent<HTMLButtonElement>) {
-    //TODO: FECHAR MODAL E VOLTAR FOCO PARA O ELEMENTO ANTERIOR ANTES DE ABRIR O MODAL
+    switch (e.key) {
+      case "Enter":
+      case " ":
+        onHandleOpen(false);
+        break;
+      case "Up":
+      case "ArrowUp":
+        setToFocusPreviousItem(e.currentTarget, refBtns);
+        break;
+      case "ArrowDown":
+      case "Down":
+        setFocusNextItem(e.currentTarget, refBtns);
+        break;
+      case "Home":
+      case "PageUp":
+        setToFocus(0, refBtns);
+        break;
+      case "End":
+      case "PageDown":
+        setToFocus(getRefs(refBtns).length - 1, refBtns);
+        break;
+      case "Tab":
+        e.preventDefault();
+        nextFocusable(getFocusableElements(refDialog.current), !e.shiftKey);
+        break;
+      default:
+        break;
+    }
   }
 
   useEffect(() => {
     //ao abrir modal foca no btn delete
-    refBtnDelete.current?.focus();
+    if (refBtns.current) refBtns.current[0].focus();
   }, []);
 
   useEffect(() => {
@@ -109,10 +178,17 @@ export default function DeleteModal({
             title={`Delete ${typeDelete === "board" ? "board" : "task"}?`}
             aria-label={`Delete ${typeDelete === "board" ? "board" : "task"}?`}
             className="dialog-delete__btn-delete"
-            ref={refBtnDelete}
             onPointerDown={handlePointerDownBtnDelete}
             onKeyDown={(e) => {
               handleKeyDownBtnDelete(e);
+            }}
+            ref={(btn) => {
+              const refItems = getRefs(refBtns);
+              if (btn) {
+                refItems.push(btn);
+              } else {
+                refItems.splice(0, 1);
+              }
             }}
           >
             Delete
@@ -131,6 +207,14 @@ export default function DeleteModal({
             onPointerDown={handlePointerDownBtnCancel}
             onKeyDown={(e) => {
               handleKeyDownBtnCancel(e);
+            }}
+            ref={(btn) => {
+              const refItems = getRefs(refBtns);
+              if (btn) {
+                refItems.push(btn);
+              } else {
+                refItems.splice(1, 1);
+              }
             }}
           >
             Cancel

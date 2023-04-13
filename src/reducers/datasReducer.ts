@@ -1,9 +1,9 @@
 import { Board } from "../data";
 
-export type ActionTypeDatasReducer = {
-    type: "save_new_board",
-    board: Board
-} | {type: "edit_board", board: Board};
+export type ActionTypeDatasReducer = 
+    {type: "save_new_board", board: Board} 
+    | {type: "edit_board", board: Board} 
+    | { type: "delete_board"; idBoard: string };;
 
 export function datasReducer(datas: Board[], action: ActionTypeDatasReducer) {
     switch(action.type) {
@@ -19,6 +19,11 @@ export function datasReducer(datas: Board[], action: ActionTypeDatasReducer) {
                     return action.board;
                 }
                 return b;
+            });
+        };
+        case "delete_board": {
+            return datas.filter((b) => {
+                return b.id !== action.idBoard
             });
         };
         default: {

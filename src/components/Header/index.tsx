@@ -408,14 +408,14 @@ function ListButtonsMenuBoard(props: PropsListButtonsMenuBoard) {
           break;
         case " ":
         case "Enter":
-          //TODO: chama o modal necessario de acordo com o button clicado da option
-          //TODO: modal para deletar ou editar board
           e.preventDefault();
-          if (action === "edit" && handleModalEditBoardIsOppen) {
+          if (action === "edit" && handleModalEditBoardIsOppen && onMenuBoardHidden) {
+            onMenuBoardHidden(true);
             handleModalEditBoardIsOppen(true);
             return;
           }
-          if (action === "delete" && handleModalDeleteIsOppen) {
+          if (action === "delete" && handleModalDeleteIsOppen && onMenuBoardHidden) {
+            onMenuBoardHidden(true);
             handleModalDeleteIsOppen(true);
             return;
           }
@@ -432,11 +432,9 @@ function ListButtonsMenuBoard(props: PropsListButtonsMenuBoard) {
   ) {
     switch (action) {
       case "edit":
-        //TODO: modal de editar board
         if (handleModalEditBoardIsOppen) handleModalEditBoardIsOppen(true);
         break;
       case "delete":
-        //TODO: modal de deletar board
         if (handleModalDeleteIsOppen) handleModalDeleteIsOppen(true);
         break;
       default:
