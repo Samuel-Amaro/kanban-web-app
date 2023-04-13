@@ -14,7 +14,14 @@ import { SidebarMobile } from "../Sidebar";
 import "./Header.css";
 import BoardModal from "../Modals/BoardModal";
 import useOnClickOutside from "../../hooks/useOnClickOutside";
-import { getFocusableElements, nextFocusable } from "../../utils";
+import {
+  getFocusableElements,
+  getRefs,
+  nextFocusable,
+  setFocusNextItem,
+  setToFocus,
+  setToFocusPreviousItem,
+} from "../../utils";
 import DeleteModal from "../Modals/Delete";
 
 type PropsSidebar = {
@@ -189,7 +196,6 @@ function MenuButtonBoard() {
   const [isHiddenMenuBoard, setIsHiddenMenuBoard] = useState(true);
   const [modalEditBoardIsOpen, setModalEditBoardIsOpen] = useState(false);
   const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
-  //const refsButtons = useRef<HTMLButtonElement[] | null>(null);
   const refBtnBoadMenu = useRef<HTMLButtonElement>(null);
   const refBtnDropdow = useRef<HTMLDivElement | null>(null);
   const dataButtons: DataButton[] = [
@@ -280,7 +286,6 @@ function MenuButtonBoard() {
           />
         )}
       </div>
-      {/*//TODO: AO ABRIR MODAIS FECHAR O BOARD MENU DROPDOWN PRIMEIRO, VERIFICAR SE ESTA FAZENDO ISSO, PRIMEIRO FECHAR O DROPDOWN DEPOIS ABRIR MODAL CORRESPONDENTE*/}
       {modalEditBoardIsOpen && (
         <BoardModal
           type="edit"
@@ -334,42 +339,6 @@ function ListButtonsMenuBoard(props: PropsListButtonsMenuBoard) {
   const refsButtons = useRef<HTMLButtonElement[] | null>(null);
   const refList = useRef<HTMLUListElement | null>(null);
 
-  function getRefs() {
-    if (!refsButtons.current) {
-      refsButtons.current = [];
-    }
-    return refsButtons.current;
-  }
-
-  function setToFocus(itemId: number) {
-    const refsBtns = getRefs();
-    refsBtns[itemId].focus();
-  }
-
-  function setToFocusPreviousItem(itemCurrent: HTMLButtonElement) {
-    const refItems = getRefs();
-    let menuItemSelected = null;
-    if (itemCurrent === refItems[0]) {
-      menuItemSelected = itemCurrent;
-    } else {
-      const index = refItems.indexOf(itemCurrent);
-      menuItemSelected = refItems[index - 1];
-    }
-    menuItemSelected.focus();
-  }
-
-  function setFocusNextItem(itemCurrent: HTMLButtonElement) {
-    const refItems = getRefs();
-    let menuItemSelected = null;
-    if (itemCurrent === refItems[refItems.length - 1]) {
-      menuItemSelected = itemCurrent;
-    } else {
-      const index = refItems.indexOf(itemCurrent);
-      menuItemSelected = refItems[index + 1];
-    }
-    menuItemSelected.focus();
-  }
-
   function handlePointerDownDropdown() {
     if (onMenuBoardHidden) onMenuBoardHidden(true);
   }
@@ -388,19 +357,19 @@ function ListButtonsMenuBoard(props: PropsListButtonsMenuBoard) {
           break;
         case "Up":
         case "ArrowUp":
-          setToFocusPreviousItem(e.currentTarget);
+          setToFocusPreviousItem(e.currentTarget, refsButtons);
           break;
         case "ArrowDown":
         case "Down":
-          setFocusNextItem(e.currentTarget);
+          setFocusNextItem(e.currentTarget, refsButtons);
           break;
         case "Home":
         case "PageUp":
-          setToFocus(0);
+          setToFocus(0, refsButtons);
           break;
         case "End":
         case "PageDown":
-          setToFocus(getRefs().length - 1);
+          setToFocus(getRefs(refsButtons).length - 1, refsButtons);
           break;
         case "Tab":
           e.preventDefault();
@@ -409,12 +378,20 @@ function ListButtonsMenuBoard(props: PropsListButtonsMenuBoard) {
         case " ":
         case "Enter":
           e.preventDefault();
-          if (action === "edit" && handleModalEditBoardIsOppen && onMenuBoardHidden) {
+          if (
+            action === "edit" &&
+            handleModalEditBoardIsOppen &&
+            onMenuBoardHidden
+          ) {
             onMenuBoardHidden(true);
             handleModalEditBoardIsOppen(true);
             return;
           }
-          if (action === "delete" && handleModalDeleteIsOppen && onMenuBoardHidden) {
+          if (
+            action === "delete" &&
+            handleModalDeleteIsOppen &&
+            onMenuBoardHidden
+          ) {
             onMenuBoardHidden(true);
             handleModalDeleteIsOppen(true);
             return;
@@ -445,11 +422,11 @@ function ListButtonsMenuBoard(props: PropsListButtonsMenuBoard) {
   useEffect(() => {
     switch (typeActionFocusOpenMenu) {
       case "first": {
-        setToFocus(0);
+        setToFocus(0, refsButtons);
         break;
       }
       case "last": {
-        setToFocus(getRefs().length - 1);
+        setToFocus(getRefs(refsButtons).length - 1, refsButtons);
         break;
       }
       default:
@@ -471,7 +448,7 @@ function ListButtonsMenuBoard(props: PropsListButtonsMenuBoard) {
               aria-label={`${data.text} current board`}
               title={`${data.text} current board`}
               ref={(btn) => {
-                const refItems = getRefs();
+                const refItems = getRefs(refsButtons);
                 if (btn) {
                   refItems.push(btn);
                 } else {
