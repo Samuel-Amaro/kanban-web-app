@@ -8,6 +8,7 @@
 .main-content__btn-add-column{
     padding: 15px 18px 14px 17px;
     margin: 0 auto;
+    cursor: pointer;
 }
 
 .main-content__container{
