@@ -1,13 +1,11 @@
 /**mobile-first**/
 
-/*.header__group:nth-child(1),
-.header__backdrop-sidebar--hidden,*/
 .header__menu-board--hide,
 .header__text-btn-add-task {
   display: none;
 }
 
-.header__group/*:nth-child(2)*/,
+.header__group,
 .header,
 .header__container-buttons,
 .header__menu-button-sidebar {
@@ -32,6 +30,10 @@
 .header__name-board {
   color: var(--color-headings-modals-header-and-texts-inputs);
   transition: all 0.30s ease-in-out;
+  max-width: 180px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .header__icon-btn-add-task {

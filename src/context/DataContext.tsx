@@ -1,11 +1,5 @@
-import React, {
-  useState,
-  useContext,
-  createContext,
-  useReducer,
-  useEffect,
-} from "react";
-import { Board, DataContextType } from "../data";
+import React, { useState, useContext, createContext, useReducer } from "react";
+import { DataContextType } from "../data";
 import data from "../data.json";
 import { ActionTypeDatasReducer, datasReducer } from "../reducers/datasReducer";
 
@@ -22,7 +16,6 @@ export default function DataContextProvider({
   children: React.ReactNode;
 }) {
   //todos os boards estão aqui para primeiro carregamento
-  //const [datas, setDatas] = useState<Board[]>(data.boards);
   const [datas, dispatch] = useReducer(datasReducer, data.boards);
 
   //TODO: SE TIVER OUTRA FORMA DE ESCOLHER O BOARD SELECTED NO PRIMEIRO CARREGAMENTO ESPECIFICAR AQUI
@@ -32,19 +25,10 @@ export default function DataContextProvider({
   //TODO: AU ATUAILIZAR BOARD SELECTED TEMOS QUE ATUALIZAR EM DATAS E SELECTED BOARD PARA ESTAR SINCRONIZAZDO
   //TODO: COLOCAR NESTE STATE SOMENTE PARA RECEBER O ID, DO BOARD SELECTED, E ATUALIZAR O BOARD SEMPRE EM DATAS, E NÃO AQUI, AQUI SO VAMOS MANTER O ID DO BOARD SELECTED PARA NÃO TER QUE SINCRONIZAR OS DOIS STATES
   //obtem o primeiro board via codigo, mas se tiver uma outra maneira de escolha so adpatar
-  /*const [selectedBoard, setCurrentSelectedBoard] = useState<Board>(
-    datas[0]
-  );*/
-  const [selectedIdBoard, setSelectedIdBoard] = useState<string>(datas[0].id);
+  const [selectedIdBoard, setSelectedIdBoard] = useState<string>(
+    datas.length > 0 ? datas[0].id : ""
+  );
 
-  /*useEffect(() => {
-
-  }, [datas]);
-  */
-
-  /*function updateSelectedBoard(boardToSelect: Board) {
-    setCurrentSelectedBoard(boardToSelect);
-  }*/
   function updateIdSelectedBoard(idBoard: string) {
     setSelectedIdBoard(idBoard);
   }
@@ -53,8 +37,8 @@ export default function DataContextProvider({
     <DataContext.Provider
       value={{
         datas,
-        /*selectedBoard*/ selectedIdBoard,
-        updateIdSelectedBoard /*updateSelectedBoard*/,
+        selectedIdBoard,
+        updateIdSelectedBoard,
       }}
     >
       <DataDispatchContext.Provider value={dispatch}>

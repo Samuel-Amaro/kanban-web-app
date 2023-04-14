@@ -26,8 +26,6 @@ export interface Subtask {
 
 export type DataContextType = {
     datas: Board[];
-    /*selectedBoard: Board;*/
     selectedIdBoard: string;
-    /*updateSelectedBoard: (boardToSelected: Board) => void;*/
     updateIdSelectedBoard: (idBoard: string) => void;
 };

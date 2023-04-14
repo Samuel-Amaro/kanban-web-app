@@ -64,6 +64,14 @@
   color: var(--medium-grey);
 }
 
+.list-boards__btn--text{
+  display: inline-block;
+  max-width: 276px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .list-boards__btn--create-board {
   color: var(--main-purple);
 }
@@ -71,6 +79,7 @@
 .list-boards__icon {
   display: block;
   fill: var(--medium-grey);
+  flex: 0 0 16px;
 }
 
 .list-boards__icon-btn-create-board {

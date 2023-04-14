@@ -17,7 +17,6 @@ import {
   setToFocus,
   setToFocusPreviousItem,
 } from "../../utils";
-import useOnClickOutside from "../../hooks/useOnClickOutside";
 
 type PropsSidebarDesktop = {
   isSidebarHidden: boolean;
@@ -228,12 +227,6 @@ export function ListBoards(props: PropsListBoards) {
       return;
     } else {
       switch (e.key) {
-        /*case "Esc":
-        case "Escape":
-          //fecha o wrraper via teclado
-          if (onCloseWrapper) onCloseWrapper();
-          break;
-        */
         case "Up":
         case "ArrowUp":
           setToFocusPreviousItem(e.currentTarget, refsItemsMenu);
@@ -313,8 +306,10 @@ export function ListBoards(props: PropsListBoards) {
                         ? "list-boards__icon list-boards__icon-btn-select-board list-boards__icon-btn-select-board--active"
                         : "list-boards__icon list-boards__icon-btn-select-board"
                     }
-                  />{" "}
-                  {board.name}
+                  />
+                  <span className="list-boards__btn--text">
+                    {board.name}
+                  </span>
                 </Button>
               </li>
             );
