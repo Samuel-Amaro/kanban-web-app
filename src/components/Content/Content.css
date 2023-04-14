@@ -1,0 +1,23 @@
+/**MOBILE FIRST**/
+
+.main-content__message{
+    margin: 0 0 25px 0;
+    text-align: center;
+}
+
+.main-content__btn-add-column{
+    padding: 15px 18px 14px 17px;
+    margin: 0 auto;
+}
+
+.main-content__container{
+    margin: 0 16px;
+}
+
+.main-content--empty{
+    min-height: calc(100vh - 64px);
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}

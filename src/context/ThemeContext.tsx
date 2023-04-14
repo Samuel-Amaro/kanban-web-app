@@ -3,9 +3,7 @@ import React, { useState, useContext, useEffect } from "react";
 type Theme = "light" | "dark";
 type ThemeContextType = {
   theme: Theme;
-  toggleTheme: (
-    theme: Theme
-  ) => void /*React.Dispatch<React.SetStateAction<string>>*/;
+  toggleTheme: (theme: Theme) => void;
 };
 
 //TODO: VALOR INICIAL DO TEMA PARA CONTEXT VEM DO LOCALSTORAGE DO BROWSER
