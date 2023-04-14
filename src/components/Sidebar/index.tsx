@@ -270,6 +270,8 @@ export function ListBoards(props: PropsListBoards) {
           className={
             className ? `list-boards__list ${className}` : "list-boards__list"
           }
+          aria-live="polite"
+          aria-atomic="true"
         >
           {dataContext.datas.map((board, index) => {
             return (

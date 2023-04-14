@@ -92,7 +92,7 @@ function DesktopContent() {
           className="header__icon-logo-desktop"
         />
       </div>
-      <Heading level={1} className="header__name-board">
+      <Heading level={1} className="header__name-board" aria-live="polite" aria-atomic="true">
         {selectedBoard ? selectedBoard.name : "Select a board"}
       </Heading>
     </div>
@@ -169,7 +169,12 @@ function MenuButtonSidebarMobile({ isSidebarHidden, onSidebar }: PropsSidebar) {
           handleKeyDownBtnSideBar(e);
         }}
       >
-        <Heading level={2} className="header__name-board">
+        <Heading
+          level={2}
+          className="header__name-board"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           {selectedBoard ? selectedBoard.name : "Select a board"}
         </Heading>
         {isSidebarHidden ? (

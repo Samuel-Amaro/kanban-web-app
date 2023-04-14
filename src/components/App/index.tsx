@@ -5,6 +5,7 @@ import Header from "../Header";
 import { SidebarDesktop } from "../Sidebar";
 import "./App.css";
 import useMatchMedia from "../../hooks/useMatchMedia";
+import Content from "../Content";
 
 //TODO: refatorar css de tudo para colors dark porque theme ja esta ativo
 //TODO: implementar funcionalidade de salvas datas no localstorage criar function para isso
@@ -37,6 +38,7 @@ function App() {
           ),
           mediaQuery: "(min-width: 450px)",
         })}
+        <Content />
       </DataContextProvider>
     </ThemeContextProvider>
   );

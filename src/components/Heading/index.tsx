@@ -1,7 +1,7 @@
 import React from "react";
 import "./Heading.css";
 
-interface PropsTypeHeadings {
+interface PropsTypeHeadings extends React.HTMLAttributes<HTMLHeadingElement> {
   level: number;
   className?: string;
   children: React.ReactNode;
