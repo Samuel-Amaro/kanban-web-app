@@ -31,6 +31,9 @@ type PropsSidebar = {
 
 export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
   const dataContext = useDataContext();
+  const selectedBoard = dataContext.datas.find(
+    (b) => b.id === dataContext.selectedIdBoard
+  );
 
   return (
     <header className="header">
@@ -51,7 +54,13 @@ export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
           variant="primary"
           title="Add New Task"
           className="header__btn-add-task"
-          disabled={dataContext.selectedBoard.columns.length > 0 ? false : true}
+          disabled={
+            selectedBoard
+              ? selectedBoard.columns.length > 0
+                ? false
+                : true
+              : true
+          }
         >
           <span className="header__text-btn-add-task">+ Add New Task</span>
           <img
@@ -61,7 +70,8 @@ export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
             className="header__icon-btn-add-task"
           />
         </Button>
-        <MenuButtonBoard />
+        {/*//TODO:  so mostrar options de editar quadro se possuir um quadro selecionado*/}
+        {selectedBoard && <MenuButtonBoard />}
       </div>
     </header>
   );
@@ -70,6 +80,10 @@ export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
 function DesktopContent() {
   const dataContext = useDataContext();
   const themeContext = useThemeContext();
+  const selectedBoard = dataContext.datas.find(
+    (b) => b.id === dataContext.selectedIdBoard
+  );
+
   return (
     <div className="header__group">
       <div className="header__logo">
@@ -79,7 +93,7 @@ function DesktopContent() {
         />
       </div>
       <Heading level={1} className="header__name-board">
-        {dataContext.selectedBoard.name}
+        {selectedBoard ? selectedBoard.name : "Select a board"}
       </Heading>
     </div>
   );
@@ -89,6 +103,9 @@ function DesktopContent() {
 
 function MenuButtonSidebarMobile({ isSidebarHidden, onSidebar }: PropsSidebar) {
   const dataContext = useDataContext();
+  const selectedBoard = dataContext.datas.find(
+    (b) => b.id === dataContext.selectedIdBoard
+  );
   const btnSideBar = useRef<HTMLDivElement | null>(null);
   const [typeActionFocus, setTypeActionFocus] = useState<
     "first" | "last" | undefined
@@ -153,7 +170,7 @@ function MenuButtonSidebarMobile({ isSidebarHidden, onSidebar }: PropsSidebar) {
         }}
       >
         <Heading level={2} className="header__name-board">
-          {dataContext.selectedBoard.name}
+          {selectedBoard ? selectedBoard.name : "Select a board"}
         </Heading>
         {isSidebarHidden ? (
           <ChevronDown className="header__icon header__icon--chevron-down" />
@@ -161,16 +178,18 @@ function MenuButtonSidebarMobile({ isSidebarHidden, onSidebar }: PropsSidebar) {
           <ChevronUp className="header__icon header__icon--chevron-up" />
         )}
       </div>
-      <SidebarMobile
-        id="menu-sidebar"
-        aria-labelledby="menubutton-sidebar"
-        onCloseWrapper={handleCloseSidebar}
-        typeActionFocusOpenMenu={typeActionFocus}
-        isSidebarHidden={isSidebarHidden}
-        onModalCreateBoardIsOpen={(isOpen: boolean) =>
-          setModalCreateBoardIsOpen(isOpen)
-        }
-      />
+      {!isSidebarHidden && (
+        <SidebarMobile
+          id="menu-sidebar"
+          aria-labelledby="menubutton-sidebar"
+          onCloseWrapper={handleCloseSidebar}
+          typeActionFocusOpenMenu={typeActionFocus}
+          isSidebarHidden={isSidebarHidden}
+          onModalCreateBoardIsOpen={(isOpen: boolean) =>
+            setModalCreateBoardIsOpen(isOpen)
+          }
+        />
+      )}
       {modalCreateBoardIsOpen && (
         <BoardModal
           type="add"
@@ -193,6 +212,9 @@ type DataButton = {
 
 function MenuButtonBoard() {
   const dataContext = useDataContext();
+  const selectedBoard = dataContext.datas.find(
+    (b) => b.id === dataContext.selectedIdBoard
+  );
   const [isHiddenMenuBoard, setIsHiddenMenuBoard] = useState(true);
   const [modalEditBoardIsOpen, setModalEditBoardIsOpen] = useState(false);
   const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
@@ -286,7 +308,8 @@ function MenuButtonBoard() {
           />
         )}
       </div>
-      {modalEditBoardIsOpen && (
+      {/*//TODO: SE NÃO TIVER O STATE DO MODAL PERMITIDO PARA ABRIR E NÃO TIVER BOARD SELECTED, MOSTRAR UM MODAL DE ERROR INFORMANDO PORQUE NÃO ABRIU, O MODAL DE EDITAR OU DELETAR BOARD*/}
+      {modalEditBoardIsOpen && selectedBoard && (
         <BoardModal
           type="edit"
           isOpen={modalEditBoardIsOpen}
@@ -294,10 +317,10 @@ function MenuButtonBoard() {
             handleOnCloseWrapper();
             setModalEditBoardIsOpen(isOppen);
           }}
-          initialData={dataContext.selectedBoard}
+          initialData={selectedBoard}
         />
       )}
-      {modalDeleteIsOpen && (
+      {modalDeleteIsOpen && selectedBoard && (
         <DeleteModal
           typeDelete="board"
           isOpen={modalDeleteIsOpen}
@@ -305,8 +328,8 @@ function MenuButtonBoard() {
             handleOnCloseWrapper();
             setModalDeleteIsOpen(isOppen);
           }}
-          title_or_name={dataContext.selectedBoard.name}
-          id={dataContext.selectedBoard.id}
+          title_or_name={selectedBoard.name}
+          id={selectedBoard.id}
         />
       )}
     </>
@@ -409,10 +432,16 @@ function ListButtonsMenuBoard(props: PropsListButtonsMenuBoard) {
   ) {
     switch (action) {
       case "edit":
-        if (handleModalEditBoardIsOppen) handleModalEditBoardIsOppen(true);
+        if (handleModalEditBoardIsOppen) {
+          if (onMenuBoardHidden) onMenuBoardHidden(true);
+          handleModalEditBoardIsOppen(true);
+        }
         break;
       case "delete":
-        if (handleModalDeleteIsOppen) handleModalDeleteIsOppen(true);
+        if (handleModalDeleteIsOppen) {
+          if (onMenuBoardHidden) onMenuBoardHidden(true);
+          handleModalDeleteIsOppen(true);
+        }
         break;
       default:
         break;

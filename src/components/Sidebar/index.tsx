@@ -9,7 +9,15 @@ import BoardModal from "../Modals/BoardModal";
 import BoardIcon from "../Icons/Board";
 import { Board } from "../../data";
 import "./Sidebar.css";
-import { getRefs, setFocusNextItem, setToFocus, setToFocusPreviousItem } from "../../utils";
+import {
+  getFocusableElements,
+  getRefs,
+  nextFocusable,
+  setFocusNextItem,
+  setToFocus,
+  setToFocusPreviousItem,
+} from "../../utils";
+import useOnClickOutside from "../../hooks/useOnClickOutside";
 
 type PropsSidebarDesktop = {
   isSidebarHidden: boolean;
@@ -104,6 +112,7 @@ interface PropsSidebarMobile extends PropsListBoards {
 export function SidebarMobile(props: PropsSidebarMobile) {
   const { isSidebarHidden, ...rest } = props;
   const refBackdrop = useRef<HTMLDivElement | null>(null);
+  const refSideBarMobile = useRef<HTMLDivElement | null>(null);
 
   function handlePointerDownBackdrop(e: React.PointerEvent<HTMLDivElement>) {
     if (
@@ -114,9 +123,39 @@ export function SidebarMobile(props: PropsSidebarMobile) {
     if (rest.onCloseWrapper) rest.onCloseWrapper();
   }
 
-  if (isSidebarHidden) {
-    return null;
+  function handleKeyDownDropdown(e: KeyboardEvent) {
+    console.log(e.key);
+    e.stopPropagation();
+    switch (e.key) {
+      case "Esc":
+      case "Escape":
+        if (rest.onCloseWrapper) {
+          rest.onCloseWrapper();
+        }
+        break;
+      case "Tab": {
+        e.preventDefault();
+        nextFocusable(
+          getFocusableElements(refSideBarMobile.current),
+          !e.shiftKey
+        );
+        break;
+      }
+      default:
+        break;
+    }
   }
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDownDropdown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDownDropdown);
+    };
+  }, [isSidebarHidden]);
+
+  /*if (isSidebarHidden) {
+    return null;
+  }*/
 
   return (
     <>
@@ -131,8 +170,13 @@ export function SidebarMobile(props: PropsSidebarMobile) {
           id="dialog-sidebarmobile"
           aria-label="menu boards"
           aria-modal="true"
+          ref={refSideBarMobile}
         >
-          <ListBoards {...rest} typeWrapper="mobile" className="sidebar-mobile__list"/>
+          <ListBoards
+            {...rest}
+            typeWrapper="mobile"
+            className="sidebar-mobile__list"
+          />
           <Switch />
         </div>
       </div>
@@ -158,6 +202,9 @@ export function ListBoards(props: PropsListBoards) {
   } = props;
 
   const dataContext = useDataContext();
+  const selectedBoard = dataContext.datas.find(
+    (b) => b.id === dataContext.selectedIdBoard
+  );
   const refsItemsMenu = useRef<HTMLButtonElement[] | null>(null);
 
   useEffect(() => {
@@ -181,11 +228,12 @@ export function ListBoards(props: PropsListBoards) {
       return;
     } else {
       switch (e.key) {
-        case "Esc":
+        /*case "Esc":
         case "Escape":
           //fecha o wrraper via teclado
           if (onCloseWrapper) onCloseWrapper();
           break;
+        */
         case "Up":
         case "ArrowUp":
           setToFocusPreviousItem(e.currentTarget, refsItemsMenu);
@@ -204,7 +252,7 @@ export function ListBoards(props: PropsListBoards) {
           break;
         case "Enter":
         case " ":
-          dataContext.updateSelectedBoard(board);
+          dataContext.updateIdSelectedBoard(board.id);
           break;
         default:
           break;
@@ -237,14 +285,14 @@ export function ListBoards(props: PropsListBoards) {
                   type="button"
                   size="l"
                   className={
-                    board.id === dataContext.selectedBoard.id
+                    board.id === selectedBoard?.id
                       ? "list-boards__btn--select-board list-boards__btn--select-board-active"
                       : "list-boards__btn--select-board"
                   }
                   aria-label={`Select ${board.name} board`}
                   title={`Select ${board.name} board`}
                   onPointerDown={() => {
-                    dataContext.updateSelectedBoard(board);
+                    dataContext.updateIdSelectedBoard(board.id);
                   }}
                   onKeyDown={(e) => {
                     handleKeyDownBtnBoard(e, board);
@@ -261,7 +309,7 @@ export function ListBoards(props: PropsListBoards) {
                 >
                   <BoardIcon
                     className={
-                      board.id === dataContext.selectedBoard.id
+                      board.id === selectedBoard?.id
                         ? "list-boards__icon list-boards__icon-btn-select-board list-boards__icon-btn-select-board--active"
                         : "list-boards__icon list-boards__icon-btn-select-board"
                     }

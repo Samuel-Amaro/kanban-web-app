@@ -44,6 +44,10 @@
   padding: 10px 18px 10px 18px;
 }
 
+.header__btn-add-task:disabled{
+  opacity: 0.25;
+}
+
 .header__btn-add-task,
 .header__btn-board,
 .header__menu-button-sidebar {

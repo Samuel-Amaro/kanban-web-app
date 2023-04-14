@@ -26,9 +26,8 @@ export interface Subtask {
 
 export type DataContextType = {
     datas: Board[];
-    selectedBoard: Board;
-    updateSelectedBoard: (boardToSelected: Board) => void;
-    //TODO: functions de atualizar quadro, tarefas, subtarefas, criar novos quadros, criar novas tarefas, subtarefas, editar , aqui somente especificamos a declarações das functions, e oque elas retornar
-    //TODO 1: primeira function a criar e a de criar novo board, e apos criar ele o seleciona-lo para ser atualmente preenchido
-    //saveBoard: (board: Board) => void;
+    /*selectedBoard: Board;*/
+    selectedIdBoard: string;
+    /*updateSelectedBoard: (boardToSelected: Board) => void;*/
+    updateIdSelectedBoard: (idBoard: string) => void;
 };

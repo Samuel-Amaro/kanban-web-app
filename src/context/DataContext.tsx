@@ -1,4 +1,10 @@
-import React, { useState, useContext, createContext, useReducer } from "react";
+import React, {
+  useState,
+  useContext,
+  createContext,
+  useReducer,
+  useEffect,
+} from "react";
 import { Board, DataContextType } from "../data";
 import data from "../data.json";
 import { ActionTypeDatasReducer, datasReducer } from "../reducers/datasReducer";
@@ -18,25 +24,39 @@ export default function DataContextProvider({
   //todos os boards estão aqui para primeiro carregamento
   //const [datas, setDatas] = useState<Board[]>(data.boards);
   const [datas, dispatch] = useReducer(datasReducer, data.boards);
-  
-  //obtem o primeiro board via codigo, mas se tiver uma outra maneira de escolha so adpatar
-  const [selectedBoard, setCurrentSelectedBoard] = useState<Board>(
-    datas[0]
-  );
 
-  function updateSelectedBoard(boardToSelect: Board) {
+  //TODO: SE TIVER OUTRA FORMA DE ESCOLHER O BOARD SELECTED NO PRIMEIRO CARREGAMENTO ESPECIFICAR AQUI
+  //TODO: AO ATUALIZAR DATAS, TEM QUE REFLETIR EM SELECTED BOARD, SÃO DOIS ESTADOS DIFERENTES MAS TEM QUE ESTAR SINCRONIZADOS
+  //TODO: AO REMOVER UM BOARD DE DATAS TEMOS QUE VERIFICAR SE NÃO REMOVEMOS O ATUAL SELECIONADO
+  //TODO: AO REMOVER UM BOARD TEMOS QUE AUTOMATICAMENTE JA SELECIONAR OUTRO INSTANTANEMANTE E DEIXAR SINCRONIZADO COM A UI
+  //TODO: AU ATUAILIZAR BOARD SELECTED TEMOS QUE ATUALIZAR EM DATAS E SELECTED BOARD PARA ESTAR SINCRONIZAZDO
+  //TODO: COLOCAR NESTE STATE SOMENTE PARA RECEBER O ID, DO BOARD SELECTED, E ATUALIZAR O BOARD SEMPRE EM DATAS, E NÃO AQUI, AQUI SO VAMOS MANTER O ID DO BOARD SELECTED PARA NÃO TER QUE SINCRONIZAR OS DOIS STATES
+  //obtem o primeiro board via codigo, mas se tiver uma outra maneira de escolha so adpatar
+  /*const [selectedBoard, setCurrentSelectedBoard] = useState<Board>(
+    datas[0]
+  );*/
+  const [selectedIdBoard, setSelectedIdBoard] = useState<string>(datas[0].id);
+
+  /*useEffect(() => {
+
+  }, [datas]);
+  */
+
+  /*function updateSelectedBoard(boardToSelect: Board) {
     setCurrentSelectedBoard(boardToSelect);
+  }*/
+  function updateIdSelectedBoard(idBoard: string) {
+    setSelectedIdBoard(idBoard);
   }
 
-  //TODO: implementar as functions do DataContextType declaradas aqui, criar o corpo delas aqui, e especificar no value do provider
-  //TODO: as functions de atualizar, deletar, e criar, tarefas, boards, subtaskas, columns, editar as mesmas, implementar cada uma delas aqui, especificando os paramentros, e atualizar o datas state com novo objetos com novos dados
-
-  //function saveBoard(board: Board) {
-    //TODO: implementar logica para criar um novo board e add no contexto, e seleciona-lo para ser editado
-  //}
-
   return (
-    <DataContext.Provider value={{ datas, selectedBoard, updateSelectedBoard }}>
+    <DataContext.Provider
+      value={{
+        datas,
+        /*selectedBoard*/ selectedIdBoard,
+        updateIdSelectedBoard /*updateSelectedBoard*/,
+      }}
+    >
       <DataDispatchContext.Provider value={dispatch}>
         {children}
       </DataDispatchContext.Provider>
@@ -56,7 +76,7 @@ export function useDataContext() {
 
 export function useDatasDispatch() {
   const dispacthContext = useContext(DataDispatchContext);
-  if(!dispacthContext) {
+  if (!dispacthContext) {
     throw Error("Context dispatch datas error");
   }
   return dispacthContext;

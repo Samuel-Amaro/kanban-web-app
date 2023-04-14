@@ -123,7 +123,7 @@ export default function BoardModal({
             type: "save_new_board",
             board: board,
           });
-          datasContext.updateSelectedBoard(board);
+          datasContext.updateIdSelectedBoard(board.id);
           onHandleOpen(false);
           break;
         }
