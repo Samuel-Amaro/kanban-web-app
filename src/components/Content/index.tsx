@@ -4,6 +4,7 @@ import Button from "../Button";
 import Heading from "../Heading";
 import "./Content.css";
 import BoardModal from "../Modals/BoardModal";
+import { Column, Task } from "../../data";
 
 export default function Main() {
   const [modalEditBoardIsOppen, setModalEditBoardIsOppen] = useState(false);
@@ -30,6 +31,21 @@ export default function Main() {
             }}
           />
         )}
+        {selectedBoard?.columns && selectedBoard.columns.length > 0 && (
+          <div className="main-content__container-columns">
+            {selectedBoard.columns.map((column) => {
+              return <ColumnBoard dataColumn={column} key={column.id} />;
+            })}
+            <button
+              type="button"
+              className="main-content__btn-column"
+              title="+ New Column"
+              aria-label="+ New Column"
+            >
+              + New Column
+            </button>
+          </div>
+        )}
       </main>
       {modalEditBoardIsOppen && (
         <BoardModal
@@ -42,6 +58,67 @@ export default function Main() {
         />
       )}
     </>
+  );
+}
+
+type PropsColumnBoard = {
+  dataColumn: Column;
+};
+
+function ColumnBoard({ dataColumn }: PropsColumnBoard) {
+  return (
+    <section className="main-content__column">
+      <div className="main-content__container-heading">
+        <span className="main-content__color-marking"></span>
+        <Heading level={4}>
+          {`${dataColumn.name} (${dataColumn.tasks.length})`}
+        </Heading>
+      </div>
+      {dataColumn.tasks.length > 0 && <TaskList tasks={dataColumn.tasks} />}
+    </section>
+  );
+}
+
+type PropsTaskList = {
+  tasks: Task[];
+};
+
+function TaskList({ tasks }: PropsTaskList) {
+  return (
+    <ul className="main-content__tasks">
+      {tasks.map((t) => {
+        return (
+          <li className="main-content__task-item" key={t.id}>
+            <CardTask dataTask={t} />
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+type PropsCardTask = {
+  dataTask: Task;
+};
+
+function CardTask({ dataTask }: PropsCardTask) {
+  const totalSubtasks = dataTask.subtasks.length;
+  const totalSubtasksCompleteds = dataTask.subtasks.filter(
+    (st) => st.isCompleted
+  ).length;
+
+  return (
+    <button
+      type="button"
+      className="main-content__card-task"
+      title={`View Task ${dataTask.title}`}
+      aria-label={`View Task ${dataTask.title}`}
+    >
+      <span className="main-content__task-title">{dataTask.title}</span>
+      <span className="main-content__stat-subtasks">
+        {`${totalSubtasksCompleteds} of ${totalSubtasks} substasks`}
+      </span>
+    </button>
   );
 }
 
@@ -58,8 +135,10 @@ function BoardIsEmpty({ onModalEditBoardIsOppen }: PropsBoardIsEmpty) {
     e: React.KeyboardEvent<HTMLButtonElement>
   ) {
     if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
       onModalEditBoardIsOppen(true);
     }
+    return;
   }
   return (
     <div className="main-content__container">
@@ -73,6 +152,8 @@ function BoardIsEmpty({ onModalEditBoardIsOppen }: PropsBoardIsEmpty) {
         className="main-content__btn-add-column"
         onPointerDown={handlePointerDownBtnAddColumn}
         onKeyDown={handleKeyDownBtnAddColumn}
+        title="+ Add New Column"
+        aria-label="+ Add New Column"
       >
         + Add New Column
       </Button>
