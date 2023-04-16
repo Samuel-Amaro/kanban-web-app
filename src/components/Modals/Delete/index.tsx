@@ -4,7 +4,14 @@ import Heading from "../../Heading";
 import Button from "../../Button";
 import "./DeleteModal.css";
 import { useEffect, useRef } from "react";
-import { getFocusableElements, getRefs, nextFocusable, setFocusNextItem, setToFocus, setToFocusPreviousItem } from "../../../utils";
+import {
+  getFocusableElements,
+  getRefs,
+  nextFocusable,
+  setFocusNextItem,
+  setToFocus,
+  setToFocusPreviousItem,
+} from "../../../utils";
 import {
   /*useDataContext,*/ useDatasDispatch,
 } from "../../../context/DataContext";
@@ -139,6 +146,14 @@ export default function DeleteModal({
 
     return () => {
       window.removeEventListener("keydown", handleKeyDownDialog);
+    };
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.add("has-dialog");
+
+    return () => {
+      document.body.classList.remove("has-dialog");
     };
   }, []);
 

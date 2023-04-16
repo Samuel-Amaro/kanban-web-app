@@ -152,6 +152,14 @@ export function SidebarMobile(props: PropsSidebarMobile) {
     };
   }, [isSidebarHidden]);
 
+  useEffect(() => {
+    document.body.classList.add("has-dialog");
+
+    return () => {
+      document.body.classList.remove("has-dialog");
+    };
+  }, []);
+
   /*if (isSidebarHidden) {
     return null;
   }*/

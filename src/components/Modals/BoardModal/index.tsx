@@ -170,6 +170,14 @@ export default function BoardModal({
     };
   }, []);
 
+  useEffect(() => {
+    document.body.classList.add("has-dialog");
+
+    return () => {
+      document.body.classList.remove("has-dialog");
+    };
+  }, []);
+
   if (!isOpen) {
     return null;
   }
