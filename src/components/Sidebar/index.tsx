@@ -17,6 +17,8 @@ import {
   setToFocus,
   setToFocusPreviousItem,
 } from "../../utils";
+import useNoScroll from "../../hooks/useNoScroll";
+import useKeydownWindow from "../../hooks/useKeydownWindow";
 
 type PropsSidebarDesktop = {
   isSidebarHidden: boolean;
@@ -123,7 +125,6 @@ export function SidebarMobile(props: PropsSidebarMobile) {
   }
 
   function handleKeyDownDropdown(e: KeyboardEvent) {
-    console.log(e.key);
     e.stopPropagation();
     switch (e.key) {
       case "Esc":
@@ -144,25 +145,10 @@ export function SidebarMobile(props: PropsSidebarMobile) {
         break;
     }
   }
+  
+  useKeydownWindow(handleKeyDownDropdown);
 
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyDownDropdown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDownDropdown);
-    };
-  }, [isSidebarHidden]);
-
-  useEffect(() => {
-    document.body.classList.add("has-dialog");
-
-    return () => {
-      document.body.classList.remove("has-dialog");
-    };
-  }, []);
-
-  /*if (isSidebarHidden) {
-    return null;
-  }*/
+  useNoScroll();
 
   return (
     <>

@@ -15,6 +15,8 @@ import {
 import {
   /*useDataContext,*/ useDatasDispatch,
 } from "../../../context/DataContext";
+import useNoScroll from "../../../hooks/useNoScroll";
+import useKeydownWindow from "../../../hooks/useKeydownWindow";
 
 type PropsDeleteModal = {
   isOpen: boolean;
@@ -141,21 +143,9 @@ export default function DeleteModal({
     if (refBtns.current) refBtns.current[0].focus();
   }, []);
 
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyDownDialog);
+  useKeydownWindow(handleKeyDownDialog);
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyDownDialog);
-    };
-  }, []);
-
-  useEffect(() => {
-    document.body.classList.add("has-dialog");
-
-    return () => {
-      document.body.classList.remove("has-dialog");
-    };
-  }, []);
+  useNoScroll();
 
   if (!isOpen) {
     return null;

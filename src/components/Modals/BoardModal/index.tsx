@@ -16,6 +16,8 @@ import {
   validationFormBoard,
 } from "../../../utils";
 import { useDataContext, useDatasDispatch } from "../../../context/DataContext";
+import useNoScroll from "../../../hooks/useNoScroll";
+import useKeydownWindow from "../../../hooks/useKeydownWindow";
 
 type PropsBoardModal = {
   type: "add" | "edit";
@@ -162,21 +164,9 @@ export default function BoardModal({
     refInputNameBoard.current?.focus();
   }, []);
 
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyDownDialog);
+  useKeydownWindow(handleKeyDownDialog);
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyDownDialog);
-    };
-  }, []);
-
-  useEffect(() => {
-    document.body.classList.add("has-dialog");
-
-    return () => {
-      document.body.classList.remove("has-dialog");
-    };
-  }, []);
+  useNoScroll();
 
   if (!isOpen) {
     return null;
