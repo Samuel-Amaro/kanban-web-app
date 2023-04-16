@@ -23,7 +23,7 @@
 
 .sidebar,
 .sidebar-mobile {
-  background-color: var(--bg-sidebar_header_modals);
+  background-color: var(--bg-sidebar_header_modals_card-task);
   transition: all 0.3s ease-in-out;
 }
 

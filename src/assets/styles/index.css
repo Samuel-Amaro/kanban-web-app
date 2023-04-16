@@ -20,8 +20,8 @@
 
   /**CSS VARIABLES COLORS**/
 
-  /**HEADINGS**/
-  --color-headings-modals-header-and-texts-inputs: var(--black);
+  /**COLOR TEXT FROM HEADINGS, MODALS, HEADER, INPUTS, NAME COLUMN CARD TASK**/
+  --color-text-general: var(--black);
   --color-heading-s: var(--medium-grey);
 
   /**BUTTONS**/
@@ -50,11 +50,14 @@
   --bg-dropdown: var(--white);
   --color-labels: var(--medium-grey);
 
-  /**HEADER AND SIDEBAR(MOBILE/DESKTOP) AND MODALS**/
-  --bg-sidebar_header_modals: var(--white);
+  /**HEADER AND SIDEBAR(MOBILE/DESKTOP) AND MODALS AND CARD TASK**/
+  --bg-sidebar_header_modals_card-task: var(--white);
 
   /**BODY AND SWITCH**/
   --bg-body-switch: var(--light-grey);
+
+  /**CONTENT MAIN**/
+  --bg-card-task: var(--white);
 }
 
 [data-theme="dark"] {
@@ -71,14 +74,16 @@
   --bg-dropdown: var(--very-dark-grey);
   --color-labels: var(--white);
 
-  /**HEADER**/
-  --color-headings-modals-header-and-texts-inputs: var(--white);
+  /**COLOR TEXT FROM HEADINGS, MODALS, HEADER, INPUTS, NAME COLUMN CARD TASK**/
+  --color-text-general: var(--white);
 
-  /**HEADER AND SIDEBAR(MOBILE/DESKTOP) AND MODALS**/
-  --bg-sidebar_header_modals: var(--dark-grey);
+  /**HEADER AND SIDEBAR(MOBILE/DESKTOP) AND MODALS AND CARD TASK**/
+  --bg-sidebar_header_modals_card-task: var(--dark-grey);
 
   /**BODY AND SWITCH**/
   --bg-body-switch: var(--very-dark-grey);
+
+  
 }
 
 html {

@@ -28,7 +28,7 @@
 }
 
 .header__name-board {
-  color: var(--color-headings-modals-header-and-texts-inputs);
+  color: var(--color-text-general);
   transition: all 0.30s ease-in-out;
   max-width: 180px;
   overflow: hidden;
@@ -72,7 +72,7 @@
 .header {
   justify-content: space-between;
   padding: 16px;
-  background-color: var(--bg-sidebar_header_modals);
+  background-color: var(--bg-sidebar_header_modals_card-task);
   transition: all 0.30s ease-in-out;
 }
 

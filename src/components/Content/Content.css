@@ -1,24 +1,101 @@
 /**MOBILE FIRST**/
 
-.main-content__message{
-    margin: 0 0 25px 0;
-    text-align: center;
+.main-content__message {
+  margin: 0 0 25px 0;
+  text-align: center;
 }
 
-.main-content__btn-add-column{
-    padding: 15px 18px 14px 17px;
-    margin: 0 auto;
-    cursor: pointer;
+.main-content__btn-add-column {
+  padding: 15px 18px 14px 17px;
+  margin: 0 auto;
+  cursor: pointer;
 }
 
-.main-content__container{
-    margin: 0 16px;
+.main-content__container {
+  margin: 0 16px;
 }
 
-.main-content--empty{
-    min-height: calc(100vh - 64px);
+.main-content--empty {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-content__container-heading {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 24px 0;
+}
+
+.main-content__color-marking {
+  content: "";
+  display: block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  transition: all 0.3s ease-in-out;
+}
+
+.main-content {
+  padding: 24px 24px 50px 24px;
+}
+
+.main-content__name-column {
+  color: var(--medium-grey);
+}
+
+.main-content__tasks-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.main-content__task-item:not(:last-child){
+    margin: 0 0 20px 0;
+}
+
+.main-content__card-task {
+  display: block;
+  appearance: none;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--bg-sidebar_header_modals_card-task);
+  padding: 23px 16px;
+  width: 280px;
+  box-shadow: 0px 4px 6px rgba(54, 78, 126, 0.101545);
+  transition: all 0.3s ease-in-out;
+}
+
+.main-content__task-title,
+.main-content__stat-subtasks {
+  display: block;
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 700;
+  text-align: left;
+  transition: all 0.3s ease-in-out;
+}
+
+.main-content__task-title {
+  font-size: 15px;
+  line-height: 19px;
+  margin: 0 0 8px 0;
+  color: var(--color-text-general);
+}
+
+.main-content__stat-subtasks {
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--medium-grey);
+}
+
+.main-content__container-columns{
     display: flex;
     flex-flow: row nowrap;
-    justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    gap: 24px;
 }

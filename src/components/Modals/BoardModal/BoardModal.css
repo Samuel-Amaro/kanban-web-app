@@ -1,5 +1,5 @@
 .dialog {
-  background-color: var(--bg-sidebar_header_modals);
+  background-color: var(--bg-sidebar_header_modals_card-task);
   padding: 24px;
   border-radius: 6px;
   width: 343px;
@@ -7,7 +7,7 @@
 }
 
 .dialog__title {
-  color: var(--color-headings-modals-header-and-texts-inputs);
+  color: var(--color-text-general);
 }
 
 .dialog__label,
@@ -43,7 +43,7 @@
   font-weight: 500;
   font-size: 13px;
   line-height: 23px;
-  color: var(--color-headings-modals-header-and-texts-inputs);
+  color: var(--color-text-general);
   background-color: transparent;
 }
 

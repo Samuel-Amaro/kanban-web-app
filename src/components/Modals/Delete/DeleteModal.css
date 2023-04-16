@@ -1,5 +1,5 @@
 .dialog-delete {
-  background-color: var(--bg-sidebar_header_modals);
+  background-color: var(--bg-sidebar_header_modals_card-task);
   padding: 24px;
   width: 343px;
   border-radius: 6px;

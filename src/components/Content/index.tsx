@@ -5,6 +5,7 @@ import Heading from "../Heading";
 import "./Content.css";
 import BoardModal from "../Modals/BoardModal";
 import { Column, Task } from "../../data";
+import { random } from "../../utils";
 
 export default function Main() {
   const [modalEditBoardIsOppen, setModalEditBoardIsOppen] = useState(false);
@@ -61,6 +62,9 @@ export default function Main() {
   );
 }
 
+//TODO: ADD STYLES MOBILE-FIRST
+//TODO: ADD EVENTS E STATES NECESSARIOS PARA MOSTRAR MODAIS CORRESPONDENTES
+
 type PropsColumnBoard = {
   dataColumn: Column;
 };
@@ -69,9 +73,17 @@ function ColumnBoard({ dataColumn }: PropsColumnBoard) {
   return (
     <section className="main-content__column">
       <div className="main-content__container-heading">
-        <span className="main-content__color-marking"></span>
-        <Heading level={4}>
-          {`${dataColumn.name} (${dataColumn.tasks.length})`}
+        <span
+          className="main-content__color-marking"
+          style={{
+            backgroundColor: `rgb(${random(0, 255)} ${random(0, 255)} ${random(
+              0,
+              255
+            )})`,
+          }}
+        ></span>
+        <Heading level={4} className="main-content__name-column">
+          {`${dataColumn.name} (${dataColumn.tasks.length})`.toUpperCase()}
         </Heading>
       </div>
       {dataColumn.tasks.length > 0 && <TaskList tasks={dataColumn.tasks} />}
@@ -85,7 +97,7 @@ type PropsTaskList = {
 
 function TaskList({ tasks }: PropsTaskList) {
   return (
-    <ul className="main-content__tasks">
+    <ul className="main-content__tasks-list">
       {tasks.map((t) => {
         return (
           <li className="main-content__task-item" key={t.id}>

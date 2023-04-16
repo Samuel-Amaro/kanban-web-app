@@ -118,3 +118,7 @@ export function setFocusNextItem<T extends HTMLElement>(itemCurrent: T, refs: Re
   }
   itemSelected.focus();
 }
+
+export function random(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
