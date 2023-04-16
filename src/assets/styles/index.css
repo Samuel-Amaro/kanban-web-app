@@ -57,7 +57,8 @@
   --bg-body-switch: var(--light-grey);
 
   /**CONTENT MAIN**/
-  --bg-card-task: var(--white);
+  --color-01-gradiente-btn-add-column: #e9effa;
+  --color-02-gradiente-btn-add-column: rgba(233, 239, 250, 0.5);
 }
 
 [data-theme="dark"] {
@@ -83,7 +84,9 @@
   /**BODY AND SWITCH**/
   --bg-body-switch: var(--very-dark-grey);
 
-  
+  /**CONTENT MAIN AND BTN ADD COLUMN**/
+  --color-01-gradiente-btn-add-column: rgba(43, 44, 55, 0.25);
+  --color-02-gradiente-btn-add-column: rgba(43, 44, 55, 0.125);
 }
 
 html {
