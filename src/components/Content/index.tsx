@@ -14,6 +14,9 @@ export default function Main() {
     (b) => b.id === dataContext.selectedIdBoard
   );
 
+  //TODO: ARRUMAR COMO ESCOLHER A MELHOR FORMA DE ADICIONAR O SCROLL PARA VER AS COLUMNS
+  //TODO: ADD EVENTS E STATES NECESSARIOS PARA MOSTRAR MODAIS CORRESPONDENTES
+  
   return (
     <>
       <main
@@ -62,16 +65,19 @@ export default function Main() {
   );
 }
 
-//TODO: ADD STYLES MOBILE-FIRST
-//TODO: ADD EVENTS E STATES NECESSARIOS PARA MOSTRAR MODAIS CORRESPONDENTES
-
 type PropsColumnBoard = {
   dataColumn: Column;
 };
 
 function ColumnBoard({ dataColumn }: PropsColumnBoard) {
   return (
-    <section className="main-content__column">
+    <section
+      className={
+        dataColumn.tasks.length > 0
+          ? "main-content__column"
+          : "main-content__column main-content__column--empty"
+      }
+    >
       <div className="main-content__container-heading">
         <span
           className="main-content__color-marking"

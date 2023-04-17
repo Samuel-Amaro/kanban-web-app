@@ -189,7 +189,6 @@ function MenuButtonSidebarMobile({ isSidebarHidden, onSidebar }: PropsSidebar) {
           aria-labelledby="menubutton-sidebar"
           onCloseWrapper={handleCloseSidebar}
           typeActionFocusOpenMenu={typeActionFocus}
-          isSidebarHidden={isSidebarHidden}
           onModalCreateBoardIsOpen={(isOpen: boolean) =>
             setModalCreateBoardIsOpen(isOpen)
           }

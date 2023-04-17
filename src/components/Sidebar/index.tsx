@@ -111,7 +111,7 @@ interface PropsSidebarMobile extends PropsListBoards {
 }
 
 export function SidebarMobile(props: PropsSidebarMobile) {
-  const { isSidebarHidden, ...rest } = props;
+  const {...rest } = props;
   const refBackdrop = useRef<HTMLDivElement | null>(null);
   const refSideBarMobile = useRef<HTMLDivElement | null>(null);
 
@@ -145,7 +145,7 @@ export function SidebarMobile(props: PropsSidebarMobile) {
         break;
     }
   }
-  
+
   useKeydownWindow(handleKeyDownDropdown);
 
   useNoScroll();
