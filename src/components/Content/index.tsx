@@ -14,15 +14,15 @@ export default function Main() {
     (b) => b.id === dataContext.selectedIdBoard
   );
 
-  //TODO: ARRUMAR COMO ESCOLHER A MELHOR FORMA DE ADICIONAR O SCROLL PARA VER AS COLUMNS
   //TODO: ADD EVENTS E STATES NECESSARIOS PARA MOSTRAR MODAIS CORRESPONDENTES
-  
+  //TODO: ADD STATE E CHAMAR MODAL VIEW TASK
+
   return (
     <>
       <main
         className={
           !selectedBoard?.columns.length
-            ? "main-content main-content--empty"
+            ? "main-content main-content--empty "
             : "main-content"
         }
         aria-live="polite"
@@ -36,7 +36,7 @@ export default function Main() {
           />
         )}
         {selectedBoard?.columns && selectedBoard.columns.length > 0 && (
-          <div className="main-content__container-columns">
+          <>
             {selectedBoard.columns.map((column) => {
               return <ColumnBoard dataColumn={column} key={column.id} />;
             })}
@@ -48,7 +48,7 @@ export default function Main() {
             >
               + New Column
             </button>
-          </div>
+          </>
         )}
       </main>
       {modalEditBoardIsOppen && (
