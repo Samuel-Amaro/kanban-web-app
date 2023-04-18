@@ -2,6 +2,7 @@ import { createPortal } from "react-dom";
 import { Task } from "../../../data";
 import BackdropModal from "../../BackdropModal";
 import Heading from "../../Heading";
+import "./ViewTask.css";
 
 type PropsViewTaskModal = {
   isOpen: boolean;

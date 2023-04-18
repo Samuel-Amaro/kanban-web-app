@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDataContext } from "../../context/DataContext";
 import Button from "../Button";
 import Heading from "../Heading";
@@ -6,6 +6,7 @@ import "./Content.css";
 import BoardModal from "../Modals/BoardModal";
 import { Column, Task } from "../../data";
 import { random } from "../../utils";
+import ViewTask from "../Modals/ViewTask";
 
 export default function Main() {
   const [modalEditBoardIsOppen, setModalEditBoardIsOppen] = useState(false);
@@ -120,23 +121,51 @@ type PropsCardTask = {
 };
 
 function CardTask({ dataTask }: PropsCardTask) {
+  const [modalViewTaskIsOppen, setModalViewTaskIsOppen] = useState(false);
+  const refCardBtn = useRef<HTMLButtonElement | null>(null);
   const totalSubtasks = dataTask.subtasks.length;
   const totalSubtasksCompleteds = dataTask.subtasks.filter(
     (st) => st.isCompleted
   ).length;
 
+  function handlePointerDown() {
+    setModalViewTaskIsOppen(true);
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    if (e.key === "Enter" || e.key === " ") {
+      setModalViewTaskIsOppen(true);
+    }
+  }
+
   return (
-    <button
-      type="button"
-      className="main-content__card-task"
-      title={`View Task ${dataTask.title}`}
-      aria-label={`View Task ${dataTask.title}`}
-    >
-      <span className="main-content__task-title">{dataTask.title}</span>
-      <span className="main-content__stat-subtasks">
-        {`${totalSubtasksCompleteds} of ${totalSubtasks} substasks`}
-      </span>
-    </button>
+    <>
+      <button
+        type="button"
+        className="main-content__card-task"
+        title={`View Task ${dataTask.title}`}
+        aria-label={`View Task ${dataTask.title}`}
+        onPointerDown={handlePointerDown}
+        onKeyDown={handleKeyDown}
+        ref={refCardBtn}
+      >
+        <span className="main-content__task-title">{dataTask.title}</span>
+        <span className="main-content__stat-subtasks">
+          {`${totalSubtasksCompleteds} of ${totalSubtasks} substasks`}
+        </span>
+      </button>
+      {modalViewTaskIsOppen && (
+        <ViewTask
+          isOpen={modalViewTaskIsOppen}
+          onHandleOpen={(isOppen: boolean) => {
+            refCardBtn.current?.focus();
+            setModalViewTaskIsOppen(isOppen);
+          }}
+          data={dataTask}
+        />
+      )}
+    </>
   );
 }
 
