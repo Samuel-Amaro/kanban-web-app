@@ -23,6 +23,7 @@ import {
   setToFocusPreviousItem,
 } from "../../utils";
 import DeleteModal from "../Modals/Delete";
+import Dropdown, { Option } from "../Dropdown";
 
 type PropsSidebar = {
   isSidebarHidden: boolean;
@@ -34,46 +35,85 @@ export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
   const selectedBoard = dataContext.datas.find(
     (b) => b.id === dataContext.selectedIdBoard
   );
+  const optionsDropdown = [
+    { value: "edit", label: "Edit board" },
+    { value: "delete", label: "Delete Board" },
+  ];
+  const [selectedOptionDropdown, setSelectedOptionDropdown] =
+    useState<string>("");
 
   return (
-    <header className="header">
-      {useMatchMedia({
-        mobileContent: (
-          <MenuButtonSidebarMobile
-            isSidebarHidden={isSidebarHidden}
-            onSidebar={onSidebar}
-          />
-        ),
-        desktopContent: <DesktopContent />,
-        mediaQuery: "(min-width: 450px)",
-      })}
-      <div className="header__container-buttons">
-        <Button
-          type="button"
-          size="l"
-          variant="primary"
-          title="Add New Task"
-          className="header__btn-add-task"
-          disabled={
-            selectedBoard
-              ? selectedBoard.columns.length > 0
-                ? false
+    <>
+      <header className="header">
+        {useMatchMedia({
+          mobileContent: (
+            <MenuButtonSidebarMobile
+              isSidebarHidden={isSidebarHidden}
+              onSidebar={onSidebar}
+            />
+          ),
+          desktopContent: <DesktopContent />,
+          mediaQuery: "(min-width: 450px)",
+        })}
+        <div className="header__container-buttons">
+          <Button
+            type="button"
+            size="l"
+            variant="primary"
+            title="Add New Task"
+            className="header__btn-add-task"
+            disabled={
+              selectedBoard
+                ? selectedBoard.columns.length > 0
+                  ? false
+                  : true
                 : true
-              : true
+            }
+          >
+            <span className="header__text-btn-add-task">+ Add New Task</span>
+            <img
+              src={iconTaskMobile}
+              alt=""
+              aria-hidden="true"
+              className="header__icon-btn-add-task"
+            />
+          </Button>
+          {/*//TODO:  so mostrar options de editar quadro se possuir um quadro selecionado*/}
+          {
+            selectedBoard && (
+              <Dropdown
+                options={optionsDropdown}
+                onChange={(value: string) => setSelectedOptionDropdown(value)}
+              />
+            ) /*<MenuButtonBoard />*/
           }
-        >
-          <span className="header__text-btn-add-task">+ Add New Task</span>
-          <img
-            src={iconTaskMobile}
-            alt=""
-            aria-hidden="true"
-            className="header__icon-btn-add-task"
-          />
-        </Button>
-        {/*//TODO:  so mostrar options de editar quadro se possuir um quadro selecionado*/}
-        {selectedBoard && <MenuButtonBoard />}
-      </div>
-    </header>
+        </div>
+      </header>
+      {/*//TODO: ADICIONAR REF NO DROPDOWN PARA REFERENCIAR O ELEMENTO AO FECHAR MODAL TER FOCO NO DROPDOWN*/}
+      {/*selectedOptionDropdown === "edit" && selectedBoard && (
+        <BoardModal
+          type="edit"
+          isOpen={modalEditBoardIsOpen}
+          onHandleOpen={(isOppen: boolean) => {
+            handleOnCloseWrapper();
+            setModalEditBoardIsOpen(isOppen);
+          }}
+          initialData={selectedBoard}
+        />
+        )*/}
+      {/*modalDeleteIsOpen && selectedBoard && (
+        <DeleteModal
+          typeDelete="board"
+          isOpen={modalDeleteIsOpen}
+          onHandleOpen={(isOppen: boolean) => {
+            handleOnCloseWrapper();
+            setModalDeleteIsOpen(isOppen);
+          }}
+          title_or_name={selectedBoard.name}
+          id={selectedBoard.id}
+        />
+        )*/}
+    </>
   );
 }
 
@@ -92,7 +132,12 @@ function DesktopContent() {
           className="header__icon-logo-desktop"
         />
       </div>
-      <Heading level={1} className="header__name-board" aria-live="polite" aria-atomic="true">
+      <Heading
+        level={1}
+        className="header__name-board"
+        aria-live="polite"
+        aria-atomic="true"
+      >
         {selectedBoard ? selectedBoard.name : "Select a board"}
       </Heading>
     </div>
@@ -209,7 +254,7 @@ function MenuButtonSidebarMobile({ isSidebarHidden, onSidebar }: PropsSidebar) {
 }
 
 //TODO: REFATORAR ESTE COMPONENTE PARA SER MAIS GENERICO, PARA PODERMOS USAR O MESMO COMPONENTE EM VARIOS LUGARES COM REUTILIZAÇÃO
-
+/*
 type DataActionButton = "edit" | "delete";
 type DataButton = {
   text: string;
@@ -314,7 +359,7 @@ function MenuButtonBoard() {
           />
         )}
       </div>
-      {/*//TODO: SE NÃO TIVER O STATE DO MODAL PERMITIDO PARA ABRIR E NÃO TIVER BOARD SELECTED, MOSTRAR UM MODAL DE ERROR INFORMANDO PORQUE NÃO ABRIU, O MODAL DE EDITAR OU DELETAR BOARD*/}
+      //TODO: SE NÃO TIVER O STATE DO MODAL PERMITIDO PARA ABRIR E NÃO TIVER BOARD SELECTED, MOSTRAR UM MODAL DE ERROR INFORMANDO PORQUE NÃO ABRIU, O MODAL DE EDITAR OU DELETAR BOARD
       {modalEditBoardIsOpen && selectedBoard && (
         <BoardModal
           type="edit"
@@ -507,3 +552,4 @@ function ListButtonsMenuBoard(props: PropsListButtonsMenuBoard) {
     </ul>
   );
 }
+*/

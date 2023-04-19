@@ -92,7 +92,7 @@ export function getRefs<T extends HTMLElement>(refs: React.MutableRefObject<T[] 
 export function setToFocus<T extends HTMLElement>(itemId: number, refs: React.MutableRefObject<T[] | null>) {
   const refsItems = getRefs(refs);
   const refItem = refsItems[itemId];
-  refItem.focus();
+  refItem?.focus();
 }
 
 export function setToFocusPreviousItem<T extends HTMLElement>(itemCurrent: T, refs: React.MutableRefObject<T[] | null>) {
