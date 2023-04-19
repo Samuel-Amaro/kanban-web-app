@@ -208,6 +208,8 @@ function MenuButtonSidebarMobile({ isSidebarHidden, onSidebar }: PropsSidebar) {
   );
 }
 
+//TODO: REFATORAR ESTE COMPONENTE PARA SER MAIS GENERICO, PARA PODERMOS USAR O MESMO COMPONENTE EM VARIOS LUGARES COM REUTILIZAÇÃO
+
 type DataActionButton = "edit" | "delete";
 type DataButton = {
   text: string;
@@ -339,6 +341,8 @@ function MenuButtonBoard() {
     </>
   );
 }
+
+//TODO: REFATORAR ESTE COMPONENTE PARA SER MAIS GENERICO, PARA PODERMOS USAR O MESMO COMPONENTE EM VARIOS LUGARES COM REUTILIZAÇÃO
 
 interface PropsListButtonsMenuBoard
   extends React.ComponentPropsWithoutRef<"ul"> {
