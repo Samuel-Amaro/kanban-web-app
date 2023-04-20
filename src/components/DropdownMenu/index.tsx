@@ -23,8 +23,8 @@ interface PropsDropdown {
   onChange: (value: string) => void; //esta function sera chamada quando um valor do dropdown for selecionado
 }
 
-const Dropdown = React.forwardRef<HTMLButtonElement, PropsDropdown>(
-  function Dropdown(props, ref) {
+const DropdownMenu = React.forwardRef<HTMLButtonElement, PropsDropdown>(
+  function DropdownMenu(props, ref) {
     const [menuDropdownIsOppen, setMenuDropdownIsOppen] = useState(false);
     //const refBtnDropdow = useRef<HTMLButtonElement | null>(null);
     const refsButtonsOptions = useRef<HTMLButtonElement[] | null>(null);
@@ -32,6 +32,7 @@ const Dropdown = React.forwardRef<HTMLButtonElement, PropsDropdown>(
     const refContainerDropdown = useRef<HTMLDivElement | null>(null);
 
     function handleOnCloseDropdown() {
+      //TODO: QUANDO FECHAMOS O DROPDOWM VIA TECLADO QUANDO O FOCO ESTA EM UMA OPTION NÃO CONSEGUIMOS RETORNA O FOCO PARA O BTN DROPDOWN POIS NÃO TEMOS REF PARA ELE, VER COMO RESOLVER ISSO
       //refBtnDropdow.current?.focus();
       setMenuDropdownIsOppen(false);
     }
@@ -191,7 +192,7 @@ const Dropdown = React.forwardRef<HTMLButtonElement, PropsDropdown>(
   }
 );
 
-export default Dropdown;
+export default DropdownMenu;
 
 /*export default function Dropdown({ options, onChange }: PropsDropdown) {
   const [menuDropdownIsOppen, setMenuDropdownIsOppen] = useState(false);

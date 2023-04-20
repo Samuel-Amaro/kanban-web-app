@@ -24,7 +24,7 @@ import {
 } from "../../utils";
 */
 import DeleteModal from "../Modals/Delete";
-import Dropdown from "../Dropdown";
+import Dropdown from "../DropdownMenu";
 
 type PropsSidebar = {
   isSidebarHidden: boolean;
@@ -38,25 +38,20 @@ export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
     (b) => b.id === dataContext.selectedIdBoard
   );
   const optionsDropdown = [
-    { value: "edit", label: "Edit board" },
+    { value: "edit", label: "Edit Board" },
     { value: "delete", label: "Delete Board" },
   ];
   const [modalEditBoardIsOppen, setModalEditBoardIsOpen] = useState(false);
   const [modalDeleteBoardIsOppen, setModalDeleteBoardIsOppen] = useState(false);
 
   function handleChangeDropdownOption(value: string) {
-    if(value === "edit") {
+    if (value === "edit") {
       setModalEditBoardIsOpen(true);
     }
-    if(value === "delete") {
+    if (value === "delete") {
       setModalDeleteBoardIsOppen(true);
     }
   }
-
-  //TODO: ADD STATES PARA MODAIS DELETE E EDIT BOARD
-  //TODO: STATE PARA ESCOLHER A OPTION DO DROPDOWN
-  //TODO: FUNCTION HANDLER PARA FECHAR MODAIS E VOLTAR FOCO PARA O DROPDOWN
-  //TODO: VERIFICAR ACTIONS ACIMA PARA REFATOR O HEADER COMPONENTE
 
   return (
     <>
