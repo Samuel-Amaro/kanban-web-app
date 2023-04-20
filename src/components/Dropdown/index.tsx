@@ -26,14 +26,13 @@ interface PropsDropdown {
 const Dropdown = React.forwardRef<HTMLButtonElement, PropsDropdown>(
   function Dropdown(props, ref) {
     const [menuDropdownIsOppen, setMenuDropdownIsOppen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState<Option | null>(null);
-    const refBtnDropdow = useRef<HTMLButtonElement | null>(null);
+    //const refBtnDropdow = useRef<HTMLButtonElement | null>(null);
     const refsButtonsOptions = useRef<HTMLButtonElement[] | null>(null);
     const refDropdown = useRef<HTMLUListElement | null>(null);
     const refContainerDropdown = useRef<HTMLDivElement | null>(null);
 
     function handleOnCloseDropdown() {
-      refBtnDropdow.current?.focus();
+      //refBtnDropdow.current?.focus();
       setMenuDropdownIsOppen(false);
     }
 
@@ -55,7 +54,7 @@ const Dropdown = React.forwardRef<HTMLButtonElement, PropsDropdown>(
           //fecha o menu via keys
           setMenuDropdownIsOppen(false);
           //add o focus para o button sidebar apos fechar o menu
-          refBtnDropdow.current?.focus();
+          //refBtnDropdow.current?.focus();
           break;
         case "Up":
         case "ArrowUp":
@@ -73,8 +72,6 @@ const Dropdown = React.forwardRef<HTMLButtonElement, PropsDropdown>(
     }
 
     function handleSelect(option: Option) {
-      //seleciona um button option
-      setSelectedOption(option);
       //atualiza o onChange manipulador do componente pai para estar ciente de qual option action o user escolheu
       props.onChange(option.value);
       //fecha o dropdown

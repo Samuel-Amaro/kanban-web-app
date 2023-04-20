@@ -2,18 +2,18 @@ import Button from "../Button";
 import Heading from "../Heading";
 import ChevronDown from "../Icons/ChevronDown";
 import LogoMobile from "../Icons/LogoMobile";
-import VerticalEllipsis from "../Icons/VerticalEllipsis";
+//import VerticalEllipsis from "../Icons/VerticalEllipsis";
 import { useDataContext } from "../../context/DataContext";
 import { useThemeContext } from "../../context/ThemeContext";
 import Logo from "../Icons/Logo";
 import ChevronUp from "../Icons/ChevronUp";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import iconTaskMobile from "../../assets/images/icon-add-task-mobile.svg";
 import useMatchMedia from "../../hooks/useMatchMedia";
 import { SidebarMobile } from "../Sidebar";
 import "./Header.css";
 import BoardModal from "../Modals/BoardModal";
-import useOnClickOutside from "../../hooks/useOnClickOutside";
+/*import useOnClickOutside from "../../hooks/useOnClickOutside";
 import {
   getFocusableElements,
   getRefs,
@@ -22,8 +22,9 @@ import {
   setToFocus,
   setToFocusPreviousItem,
 } from "../../utils";
+*/
 import DeleteModal from "../Modals/Delete";
-import Dropdown, { Option } from "../Dropdown";
+import Dropdown from "../Dropdown";
 
 type PropsSidebar = {
   isSidebarHidden: boolean;
@@ -32,6 +33,7 @@ type PropsSidebar = {
 
 export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
   const dataContext = useDataContext();
+  const refBtnDropdown = useRef<HTMLButtonElement | null>(null);
   const selectedBoard = dataContext.datas.find(
     (b) => b.id === dataContext.selectedIdBoard
   );
@@ -39,8 +41,22 @@ export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
     { value: "edit", label: "Edit board" },
     { value: "delete", label: "Delete Board" },
   ];
-  const [selectedOptionDropdown, setSelectedOptionDropdown] =
-    useState<string>("");
+  const [modalEditBoardIsOppen, setModalEditBoardIsOpen] = useState(false);
+  const [modalDeleteBoardIsOppen, setModalDeleteBoardIsOppen] = useState(false);
+
+  function handleChangeDropdownOption(value: string) {
+    if(value === "edit") {
+      setModalEditBoardIsOpen(true);
+    }
+    if(value === "delete") {
+      setModalDeleteBoardIsOppen(true);
+    }
+  }
+
+  //TODO: ADD STATES PARA MODAIS DELETE E EDIT BOARD
+  //TODO: STATE PARA ESCOLHER A OPTION DO DROPDOWN
+  //TODO: FUNCTION HANDLER PARA FECHAR MODAIS E VOLTAR FOCO PARA O DROPDOWN
+  //TODO: VERIFICAR ACTIONS ACIMA PARA REFATOR O HEADER COMPONENTE
 
   return (
     <>
@@ -78,41 +94,38 @@ export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
               className="header__icon-btn-add-task"
             />
           </Button>
-          {/*//TODO:  so mostrar options de editar quadro se possuir um quadro selecionado*/}
-          {
-            selectedBoard && (
-              <Dropdown
-                options={optionsDropdown}
-                onChange={(value: string) => setSelectedOptionDropdown(value)}
-              />
-            ) /*<MenuButtonBoard />*/
-          }
+          {selectedBoard && (
+            <Dropdown
+              options={optionsDropdown}
+              onChange={handleChangeDropdownOption}
+              ref={refBtnDropdown}
+            />
+          )}
         </div>
       </header>
-      {/*//TODO: ADICIONAR REF NO DROPDOWN PARA REFERENCIAR O ELEMENTO AO FECHAR MODAL TER FOCO NO DROPDOWN*/}
-      {/*selectedOptionDropdown === "edit" && selectedBoard && (
+      {modalEditBoardIsOppen && selectedBoard && (
         <BoardModal
           type="edit"
-          isOpen={modalEditBoardIsOpen}
+          isOpen={modalEditBoardIsOppen}
           onHandleOpen={(isOppen: boolean) => {
-            handleOnCloseWrapper();
+            refBtnDropdown.current?.focus();
             setModalEditBoardIsOpen(isOppen);
           }}
           initialData={selectedBoard}
         />
-        )*/}
-      {/*modalDeleteIsOpen && selectedBoard && (
+      )}
+      {modalDeleteBoardIsOppen && selectedBoard && (
         <DeleteModal
           typeDelete="board"
-          isOpen={modalDeleteIsOpen}
+          isOpen={modalDeleteBoardIsOppen}
           onHandleOpen={(isOppen: boolean) => {
-            handleOnCloseWrapper();
-            setModalDeleteIsOpen(isOppen);
+            refBtnDropdown.current?.focus();
+            setModalDeleteBoardIsOppen(isOppen);
           }}
           title_or_name={selectedBoard.name}
           id={selectedBoard.id}
         />
-        )*/}
+      )}
     </>
   );
 }
