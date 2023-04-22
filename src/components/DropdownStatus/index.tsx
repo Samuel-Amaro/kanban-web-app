@@ -9,6 +9,7 @@ import {
 } from "../../utils";
 import useOnClickOutside from "../../hooks/useOnClickOutside";
 import Button from "../Button";
+import ChevronDown from "../Icons/ChevronDown";
 
 //TODO: add styles mobile-first
 
@@ -131,10 +132,10 @@ export default function DropdownStatus({
   });
 
   return (
-    <div className="dropdown-container" ref={refContainerDropdown}>
+    <div className="dropdown-status-container" ref={refContainerDropdown}>
       <Button
         type="button"
-        className="dropdown-container__btn"
+        className="dropdown-status-container__btn"
         title={menuDropdownIsOppen ? "Hidden options" : "Show options"}
         id="menubutton2"
         aria-haspopup="true"
@@ -146,18 +147,19 @@ export default function DropdownStatus({
         ref={refBtnDropdow}
       >
         {selectedOption ? selectedOption.label : "Select a option"}
+        <ChevronDown className="dropdown-status-container__icon" />
       </Button>
       {menuDropdownIsOppen && (
         <ul
           id="dropdown-listbox"
           role="listbox"
           aria-labelledby="menubutton2"
-          className="dropdown-container__list"
+          className="dropdown-status-container__list"
           ref={refDropdown}
         >
           {options.map((option, index) => (
             <li
-              className="dropdown-container__item-list"
+              className="dropdown-status-container__item-list"
               key={index}
               role="option"
               aria-selected={

@@ -51,15 +51,11 @@ export default function ViewTask({
     e: React.ChangeEvent<HTMLInputElement>,
     subtask: Subtask
   ) {
-    //TODO: IMPLEMENTAR LOGICA PARA ATUALIZAR STATE DO CHECKBOX E CHAMAR FUNCTION PARA ATUALIZAR O STATE DA SUBTASK IN CONEXT DATAS VIA DISPATCH
-    //TODO: implementar dispatch reducer ainda, preciamos saber de qual board, de qual column e qual task e qual subtask vamos atualizar o status propriedade
-    //TODO: todos os dados ja estão aqui no componente
     if (selectedBoard) {
       const column = selectedBoard?.columns.filter(
         (column) =>
           column.name.toLocaleLowerCase() === data.status.toLocaleLowerCase()
       )[0];
-      //console.log(column);
       dispatchDatasContext({
         type: "changed_status_subtask",
         idBoard: selectedBoard?.id,
@@ -83,7 +79,20 @@ export default function ViewTask({
 
   //* INFO: QUAL OPTION DO STATUS O USER ESCOLHEU PARA ATUALIZAR STATUS DE UMA SUBTASK
   function handleChangeDropdownOptionStatus(option: OptionStatus) {
-    console.log(option);
+    if (selectedBoard) {
+      const column = selectedBoard?.columns.filter(
+        (column) =>
+          column.name.toLocaleLowerCase() === data.status.toLocaleLowerCase()
+      )[0];
+      dispatchDatasContext({
+        type: "changed_status_task",
+        idBoard: selectedBoard?.id,
+        sourceColumnId: column.id,
+        idTask: data.id,
+        newStatusTask: option.label,
+        targetColumnId: option.id,
+      });
+    }
   }
 
   if (!isOpen) {

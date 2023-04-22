@@ -29,13 +29,17 @@ export default function Main() {
         aria-live="polite"
         aria-atomic="true"
       >
-        {!selectedBoard?.columns.length && (
-          <BoardIsEmpty
-            onModalEditBoardIsOppen={(isOppen: boolean) => {
-              setModalEditBoardIsOppen(isOppen);
-            }}
-          />
-        )}
+        {
+          selectedBoard
+            ? selectedBoard.columns.length === 0 && (
+                <BoardIsEmpty
+                  onModalEditBoardIsOppen={(isOppen: boolean) => {
+                    setModalEditBoardIsOppen(isOppen);
+                  }}
+                />
+              )
+            : null /*//TODO: add uma mensagem de quando não ha um board selected*/
+        }
         {selectedBoard?.columns && selectedBoard.columns.length > 0 && (
           <>
             {selectedBoard.columns.map((column) => {

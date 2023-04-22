@@ -4,7 +4,8 @@ export type ActionTypeDatasReducer =
     {type: "save_new_board", board: Board} 
     | {type: "edit_board", board: Board} 
     | { type: "delete_board"; idBoard: string }
-    | {type: "changed_status_subtask"; idBoard: string; idColumn: string; idTask: string; idSubtask: string; newStatusSubtask: boolean};
+    | {type: "changed_status_subtask"; idBoard: string; idColumn: string; idTask: string; idSubtask: string; newStatusSubtask: boolean} 
+    | {type: "changed_status_task"; idBoard: string; sourceColumnId: string; idTask: string; newStatusTask: string; targetColumnId: string};
 
 export function datasReducer(/*datas*/draft: Board[], action: ActionTypeDatasReducer) {
     switch(action.type) {
@@ -41,11 +42,32 @@ export function datasReducer(/*datas*/draft: Board[], action: ActionTypeDatasRed
             }
             break;
         };
-        /*case "changed_status_subtask": {
-            //TODO: atualiza status propriedade de uma subtask
-            //TODO: TENTAR COM ATUALIZAÇÃO DE STATE ANINHADO, DEPOIS REFATORAR PARA USAR IMMER IMUTAVEL
-            //TODO: usar immer para reducer 
-        };*/
+        case "changed_status_subtask": {
+            const indexBoard = draft.findIndex((board) => board.id === action.idBoard);
+            const indexColumn = draft[indexBoard].columns.findIndex((column) => column.id === action.idColumn);
+            const indexTask = draft[indexBoard].columns[indexColumn].tasks.findIndex((task) => task.id === action.idTask);
+            const indexSubtask = draft[indexBoard].columns[indexColumn].tasks[indexTask].subtasks.findIndex((subtask) => subtask.id === action.idSubtask);
+            if(indexBoard > -1 && indexColumn > -1 && indexTask > -1 && indexSubtask > -1) {
+                draft[indexBoard].columns[indexColumn].tasks[indexTask].subtasks[indexSubtask].isCompleted = action.newStatusSubtask;
+            }
+            break;    
+        };
+        case "changed_status_task": {
+            const indexBoard = draft.findIndex((board) => board.id === action.idBoard);
+            const indexColumnSource = draft[indexBoard].columns.findIndex((column) => column.id === action.sourceColumnId);
+            const indexTask = draft[indexBoard].columns[indexColumnSource].tasks.findIndex((task) => task.id === action.idTask);
+            const indexColumnTarget = draft[indexBoard].columns.findIndex((column) => column.id === action.targetColumnId);
+            if(indexBoard > -1 && indexColumnSource > -1 && indexTask > -1 && indexColumnTarget > -1) {
+                console.log("changed status task");
+                const task = draft[indexBoard].columns[indexColumnSource].tasks[indexTask];
+                task.status = action.newStatusTask;
+                //remove task column source
+                draft[indexBoard].columns[indexColumnSource].tasks.splice(indexTask, 1);
+                //add task column target
+                draft[indexBoard].columns[indexColumnTarget].tasks.push(task);
+            }
+            break;
+        };
         default: {
             throw Error("Unknown action datas");
         }
