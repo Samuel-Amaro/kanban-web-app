@@ -53,7 +53,7 @@
   /**HEADER AND SIDEBAR(MOBILE/DESKTOP) AND MODALS AND CARD TASK**/
   --bg-sidebar_header_modals_card-task: var(--white);
 
-  /**BODY AND SWITCH**/
+  /**BODY AND SWITCH AND CHECKBOX**/
   --bg-body-switch: var(--light-grey);
 
   /**CONTENT MAIN**/
@@ -81,7 +81,7 @@
   /**HEADER AND SIDEBAR(MOBILE/DESKTOP) AND MODALS AND CARD TASK**/
   --bg-sidebar_header_modals_card-task: var(--dark-grey);
 
-  /**BODY AND SWITCH**/
+  /**BODY AND SWITCH AND CHECKBOX**/
   --bg-body-switch: var(--very-dark-grey);
 
   /**CONTENT MAIN AND BTN ADD COLUMN**/

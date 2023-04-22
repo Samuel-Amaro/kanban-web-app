@@ -7,6 +7,7 @@ import { useRef } from "react";
 import DropdownMenu from "../../DropdownMenu";
 import DropdownStatus, { OptionStatus } from "../../DropdownStatus";
 import { useDataContext, useDatasDispatch } from "../../../context/DataContext";
+import useNoScroll from "../../../hooks/useNoScroll";
 
 type PropsViewTaskModal = {
   isOpen: boolean;
@@ -14,8 +15,7 @@ type PropsViewTaskModal = {
   data: Task;
 };
 
-//TODO: ADD HTML SEMANTICO E ACESSIVEL
-//TODO: VERIFICAR DATA
+//TODO: add styles mobile-first
 
 const optionsDropdownMenu = [
   { value: "edit", label: "Edit Task" },
@@ -95,6 +95,8 @@ export default function ViewTask({
     }
   }
 
+  useNoScroll();
+
   if (!isOpen) {
     return null;
   }
@@ -134,37 +136,38 @@ export default function ViewTask({
           className="dialog-viewtask__subtitle"
           id="subtasks-labelledy"
         >{`Subtasks (${totalSubtasksCompleteds} of ${totalSubtasks})`}</Heading>
-        {
-          //TODO: ADD STATE PARA CONTROLAR MULTIPLOS CHECKBOXES, AO ALTERNAR O STATE DO CHECKBOX ATUALIZAR O STATE COM DISPATCH DESPACHANDO A TAREFA CORRETA, PARA ATUALIZAR O QUE ACONTECEU COM A SUBTASK, ATUALIZAR O STATE DO DATAS CONTEXT WITH O DISPATCH
-          data.subtasks.length > 0 && (
-            <ul
-              className="dialog-viewtask__list-subtasks"
-              aria-labelledby="subtasks-labelledy"
-            >
-              {data.subtasks.map((subtask) => (
-                <li className="dialog-viewtask__subtask" key={subtask.id}>
-                  <div className="dialog-viewtask__view-subtask">
-                    <input
-                      type="checkbox"
-                      id={subtask.id}
-                      checked={subtask.isCompleted}
-                      value={subtask.title}
-                      className="dialog-viewtask__input"
-                      title={`checked ${subtask.title}`}
-                      onChange={(e) => handleChangeCheckbox(e, subtask)}
-                    />
-                    <label
-                      className="dialog-viewtask__label"
-                      htmlFor={subtask.id}
-                    >
-                      {subtask.title}
-                    </label>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )
-        }
+        {data.subtasks.length > 0 && (
+          <ul
+            className="dialog-viewtask__list-subtasks"
+            aria-labelledby="subtasks-labelledy"
+          >
+            {data.subtasks.map((subtask) => (
+              <li className="dialog-viewtask__subtask" key={subtask.id}>
+                <div className="dialog-viewtask__view-subtask">
+                  <input
+                    type="checkbox"
+                    id={subtask.id}
+                    checked={subtask.isCompleted}
+                    value={subtask.title}
+                    className="dialog-viewtask__input"
+                    title={`checked ${subtask.title}`}
+                    onChange={(e) => handleChangeCheckbox(e, subtask)}
+                  />
+                  <label
+                    className={
+                      subtask.isCompleted
+                        ? "dialog-viewtask__label dialog-viewtask__label--is-completed"
+                        : "dialog-viewtask__label"
+                    }
+                    htmlFor={subtask.id}
+                  >
+                    {subtask.title}
+                  </label>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
         <Heading level={4} className="dialog-viewtask__subtitle">
           Current Status
         </Heading>
