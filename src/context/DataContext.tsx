@@ -1,7 +1,8 @@
-import React, { useState, useContext, createContext, useReducer } from "react";
+import React, { useState, useContext, createContext} from "react";
 import { DataContextType } from "../data";
 import data from "../data.json";
 import { ActionTypeDatasReducer, datasReducer } from "../reducers/datasReducer";
+import { useImmerReducer } from "use-immer";
 
 //este context fornece os datas para app
 const DataContext = React.createContext<DataContextType | null>(null);
@@ -15,8 +16,10 @@ export default function DataContextProvider({
 }: {
   children: React.ReactNode;
 }) {
+  //TODO: usar immer para deixar o state mutavel para não ter que aprofundar atualizações no estado
   //todos os boards estão aqui para primeiro carregamento
-  const [datas, dispatch] = useReducer(datasReducer, data.boards);
+  //const [datas, dispatch] = useReducer(datasReducer, data.boards);
+  const [datas, dispatch] = useImmerReducer(datasReducer, data.boards);
 
   //TODO: SE TIVER OUTRA FORMA DE ESCOLHER O BOARD SELECTED NO PRIMEIRO CARREGAMENTO ESPECIFICAR AQUI
   //TODO: AO ATUALIZAR DATAS, TEM QUE REFLETIR EM SELECTED BOARD, SÃO DOIS ESTADOS DIFERENTES MAS TEM QUE ESTAR SINCRONIZADOS

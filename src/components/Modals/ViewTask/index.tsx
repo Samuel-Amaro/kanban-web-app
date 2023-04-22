@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import { Task } from "../../../data";
+import { Subtask, Task } from "../../../data";
 import BackdropModal from "../../BackdropModal";
 import Heading from "../../Heading";
 import "./ViewTask.css";
@@ -47,7 +47,31 @@ export default function ViewTask({
       })
     : null;
 
+  function handleChangeCheckbox(
+    e: React.ChangeEvent<HTMLInputElement>,
+    subtask: Subtask
+  ) {
+    //TODO: IMPLEMENTAR LOGICA PARA ATUALIZAR STATE DO CHECKBOX E CHAMAR FUNCTION PARA ATUALIZAR O STATE DA SUBTASK IN CONEXT DATAS VIA DISPATCH
+    //TODO: implementar dispatch reducer ainda, preciamos saber de qual board, de qual column e qual task e qual subtask vamos atualizar o status propriedade
+    //TODO: todos os dados ja estão aqui no componente
+    if (selectedBoard) {
+      const column = selectedBoard?.columns.filter(
+        (column) =>
+          column.name.toLocaleLowerCase() === data.status.toLocaleLowerCase()
+      )[0];
+      //console.log(column);
+      dispatchDatasContext({
+        type: "changed_status_subtask",
+        idBoard: selectedBoard?.id,
+        idColumn: column.id,
+        idTask: data.id,
+        idSubtask: subtask.id,
+        newStatusSubtask: !subtask.isCompleted,
+      });
+    }
+  }
 
+  //* INFO: QUAL OPTION DO MENU O SER ESCOLHEU, CADA OPTION ABRE UM MODAL SOBRE TASKS
   function handleChangeDropdownOptionMenu(value: string) {
     if (value === "edit") {
       alert("edit task");
@@ -57,6 +81,7 @@ export default function ViewTask({
     }
   }
 
+  //* INFO: QUAL OPTION DO STATUS O USER ESCOLHEU PARA ATUALIZAR STATUS DE UMA SUBTASK
   function handleChangeDropdownOptionStatus(option: OptionStatus) {
     console.log(option);
   }
@@ -117,6 +142,7 @@ export default function ViewTask({
                       value={subtask.title}
                       className="dialog-viewtask__input"
                       title={`checked ${subtask.title}`}
+                      onChange={(e) => handleChangeCheckbox(e, subtask)}
                     />
                     <label
                       className="dialog-viewtask__label"
@@ -137,7 +163,12 @@ export default function ViewTask({
           <DropdownStatus
             options={optionsDropdownStatus}
             onChange={handleChangeDropdownOptionStatus}
-            defaultOption={null} /*data.status e como valor nome da column temos que trocar por id da column para facilitar pesquisa*/
+            defaultOption={
+              optionsDropdownStatus.filter(
+                (option) =>
+                  option.label.toLowerCase() === data.status.toLowerCase()
+              )[0]
+            }
           />
         )}
       </div>

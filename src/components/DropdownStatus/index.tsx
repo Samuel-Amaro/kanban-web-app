@@ -10,6 +10,8 @@ import {
 import useOnClickOutside from "../../hooks/useOnClickOutside";
 import Button from "../Button";
 
+//TODO: add styles mobile-first
+
 export type OptionStatus = {
   value: string;
   label: string;
