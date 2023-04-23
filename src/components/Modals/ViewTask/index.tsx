@@ -17,8 +17,6 @@ type PropsViewTaskModal = {
   data: Task;
 };
 
-//TODO: add styles mobile-first
-
 const optionsDropdownMenu = [
   { value: "edit", label: "Edit Task" },
   { value: "delete", label: "Delete Task" },
@@ -71,12 +69,14 @@ export default function ViewTask({
   }
 
   //* INFO: QUAL OPTION DO MENU O SER ESCOLHEU, CADA OPTION ABRE UM MODAL SOBRE TASKS
+  //TODO: cada value e para chamar um modal de editar task ou delete task
+  //TODO: implementar este event
   function handleChangeDropdownOptionMenu(value: string) {
     if (value === "edit") {
-      alert("edit task");
+      console.log("edit task");
     }
     if (value === "delete") {
-      alert("delete task");
+      console.log("delete task");
     }
   }
 
@@ -139,6 +139,7 @@ export default function ViewTask({
         id="dialog-viewtask"
         aria-labelledby="dialog-label"
         aria-modal="true"
+        ref={refDialog}
       >
         <header className="dialog-viewtask__header-container">
           <Heading

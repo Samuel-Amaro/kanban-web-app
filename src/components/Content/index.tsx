@@ -15,9 +15,6 @@ export default function Main() {
     (b) => b.id === dataContext.selectedIdBoard
   );
 
-  //TODO: ADD EVENTS E STATES NECESSARIOS PARA MOSTRAR MODAIS CORRESPONDENTES
-  //TODO: ADD STATE E CHAMAR MODAL VIEW TASK
-
   return (
     <>
       <main
@@ -137,7 +134,6 @@ function CardTask({ dataTask }: PropsCardTask) {
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
-    e.preventDefault();
     if (e.key === "Enter" || e.key === " ") {
       setModalViewTaskIsOppen(true);
     }
@@ -153,6 +149,7 @@ function CardTask({ dataTask }: PropsCardTask) {
         onPointerDown={handlePointerDown}
         onKeyDown={handleKeyDown}
         ref={refCardBtn}
+        tabIndex={0}
       >
         <span className="main-content__task-title">{dataTask.title}</span>
         <span className="main-content__stat-subtasks">
