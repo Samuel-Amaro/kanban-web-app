@@ -21,6 +21,7 @@ export type Option = {
 interface PropsDropdown {
   options: Option[];
   onChange: (value: string) => void; //esta function sera chamada quando um valor do dropdown for selecionado
+  className?: string;
 }
 
 const DropdownMenu = React.forwardRef<HTMLButtonElement, PropsDropdown>(
@@ -146,7 +147,7 @@ const DropdownMenu = React.forwardRef<HTMLButtonElement, PropsDropdown>(
           aria-label="Options to actions"
           onPointerDown={() => setMenuDropdownIsOppen(!menuDropdownIsOppen)}
           onKeyDown={handleKeyDownBtnDropdown}
-          ref={/*refBtnDropdow*/ref}
+          ref={/*refBtnDropdow*/ ref}
         >
           <VerticalEllipsis className="dropdown-container__icon" />
         </Button>
@@ -155,7 +156,11 @@ const DropdownMenu = React.forwardRef<HTMLButtonElement, PropsDropdown>(
             id="menu1"
             role="menu"
             aria-labelledby="menubutton1"
-            className="dropdown-container__list"
+            className={
+              props.className
+                ? `dropdown-container__list ${props.className}`
+                : "dropdown-container__list"
+            }
             ref={refDropdown}
           >
             {props.options.map((option, index) => (

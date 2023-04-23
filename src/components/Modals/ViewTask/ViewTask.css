@@ -1,7 +1,7 @@
 .dialog-viewtask {
   background-color: var(--bg-sidebar_header_modals_card-task);
   padding: 24px 24px 32px 24px;
-  max-width: 343px;
+  width: 343px;
   border-radius: 6px;
 }
 
@@ -10,6 +10,7 @@
   flex-flow: row nowrap;
   align-items: center;
   gap: 16px;
+  justify-content: space-between;
 }
 
 .dialog-viewtask__description,
@@ -52,6 +53,11 @@
 
 .dialog-viewtask__subtask:not(:last-child) {
   margin: 0 0 8px 0;
+}
+
+.dialog-viewtask__dropdown-menu{
+  z-index: 1;
+  left: -85px;
 }
 
 /**checkbox**/

@@ -10,6 +10,7 @@ import {
 import useOnClickOutside from "../../hooks/useOnClickOutside";
 import Button from "../Button";
 import ChevronDown from "../Icons/ChevronDown";
+import "./DropdownStatus.css";
 
 //TODO: add styles mobile-first
 
@@ -135,7 +136,11 @@ export default function DropdownStatus({
     <div className="dropdown-status-container" ref={refContainerDropdown}>
       <Button
         type="button"
-        className="dropdown-status-container__btn"
+        className={
+          menuDropdownIsOppen
+            ? "dropdown-status-container__btn dropdown-status-container__btn--active"
+            : "dropdown-status-container__btn"
+        }
         title={menuDropdownIsOppen ? "Hidden options" : "Show options"}
         id="menubutton2"
         aria-haspopup="true"
@@ -146,7 +151,9 @@ export default function DropdownStatus({
         onKeyDown={handleKeyDownBtnDropdown}
         ref={refBtnDropdow}
       >
-        {selectedOption ? selectedOption.label : "Select a option"}
+        <span className="dropdown-status-container__btn-text">
+          {selectedOption ? selectedOption.label : "Select a option"}
+        </span>
         <ChevronDown className="dropdown-status-container__icon" />
       </Button>
       {menuDropdownIsOppen && (

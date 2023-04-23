@@ -3,11 +3,13 @@ import { Subtask, Task } from "../../../data";
 import BackdropModal from "../../BackdropModal";
 import Heading from "../../Heading";
 import "./ViewTask.css";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import DropdownMenu from "../../DropdownMenu";
 import DropdownStatus, { OptionStatus } from "../../DropdownStatus";
 import { useDataContext, useDatasDispatch } from "../../../context/DataContext";
 import useNoScroll from "../../../hooks/useNoScroll";
+import { getFocusableElements, nextFocusable } from "../../../utils";
+import useKeydownWindow from "../../../hooks/useKeydownWindow";
 
 type PropsViewTaskModal = {
   isOpen: boolean;
@@ -34,6 +36,7 @@ export default function ViewTask({
     (st) => st.isCompleted
   ).length;
   const refBtnDropdown = useRef<HTMLButtonElement | null>(null);
+  const refDialog = useRef<HTMLDivElement | null>(null);
   const selectedBoard = datasContext.datas.find(
     (b) => b.id === datasContext.selectedIdBoard
   );
@@ -95,7 +98,30 @@ export default function ViewTask({
     }
   }
 
+  function handleKeyDownDialog(e: KeyboardEvent) {
+    switch (e.key) {
+      case "Esc":
+      case "Escape":
+        onHandleOpen(false);
+        break;
+      case "Tab": {
+        e.preventDefault();
+        nextFocusable(getFocusableElements(refDialog.current), !e.shiftKey);
+        break;
+      }
+      default:
+        break;
+    }
+  }
+
   useNoScroll();
+
+  useEffect(() => {
+    //ao abrir modal foca no btn dropdowm menu
+    if (refBtnDropdown.current) refBtnDropdown.current.focus();
+  }, []);
+
+  useKeydownWindow(handleKeyDownDialog);
 
   if (!isOpen) {
     return null;
@@ -126,6 +152,7 @@ export default function ViewTask({
             options={optionsDropdownMenu}
             onChange={handleChangeDropdownOptionMenu}
             ref={refBtnDropdown}
+            className="dialog-viewtask__dropdown-menu"
           />
         </header>
         {data.description && (
@@ -150,8 +177,9 @@ export default function ViewTask({
                     checked={subtask.isCompleted}
                     value={subtask.title}
                     className="dialog-viewtask__input"
-                    title={`checked ${subtask.title}`}
+                    title={`${subtask.title}`}
                     onChange={(e) => handleChangeCheckbox(e, subtask)}
+                    name="subtask"
                   />
                   <label
                     className={

@@ -46,7 +46,7 @@
   /**OUTROS**/
   --box-shadow-sidebar-mobile: rgba(54, 78, 126, 0.25);
 
-  /**MODALS**/
+  /**DROPDOWNS AND MODALS**/
   --bg-dropdown: var(--white);
   --color-labels: var(--medium-grey);
 
