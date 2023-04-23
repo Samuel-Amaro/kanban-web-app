@@ -143,9 +143,7 @@ export default function BoardModal({
     }
   }
 
-  //TODO: descobrir como gerenciar o foco no modal, ao fechar abrir, via teclado, e quando estiver aberto manter o foco nos elementos do modal
   function handleKeyDownDialog(e: KeyboardEvent) {
-    //.stopPropagation();
     switch (e.key) {
       case "Esc":
       case "Escape":
@@ -153,7 +151,6 @@ export default function BoardModal({
         break;
       case "Tab": {
         e.preventDefault();
-        console.log("Tab");
         nextFocusable(getFocusableElements(refDialog.current), !e.shiftKey);
         break;
       }

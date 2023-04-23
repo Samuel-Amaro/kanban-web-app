@@ -1,19 +1,38 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useDataContext } from "../../context/DataContext";
 import Button from "../Button";
 import Heading from "../Heading";
 import "./Content.css";
 import BoardModal from "../Modals/BoardModal";
 import { Column, Task } from "../../data";
-import { random } from "../../utils";
+import { getFocusableElements, nextFocusable, random } from "../../utils";
 import ViewTask from "../Modals/ViewTask";
 
 export default function Main() {
   const [modalEditBoardIsOppen, setModalEditBoardIsOppen] = useState(false);
+  const refMain = useRef<HTMLElement | null>(null);
+  const refBtnAddColumn = useRef<HTMLButtonElement | null>(null);
   const dataContext = useDataContext();
   const selectedBoard = dataContext.datas.find(
     (b) => b.id === dataContext.selectedIdBoard
   );
+
+  function handlePointerDownBtnAddColumn() {
+    setModalEditBoardIsOppen(true);
+  }
+
+  function handleKeydownBtnAddColumn(
+    e: React.KeyboardEvent<HTMLButtonElement>
+  ) {
+    e.preventDefault();
+    if (e.key === " " || e.key === "Enter") {
+      setModalEditBoardIsOppen(true);
+      return;
+    }
+    if(e.key === "Tab") {
+      nextFocusable(getFocusableElements(refMain.current), !e.shiftKey);
+    }
+  }
 
   return (
     <>
@@ -25,6 +44,7 @@ export default function Main() {
         }
         aria-live="polite"
         aria-atomic="true"
+        ref={refMain}
       >
         {
           selectedBoard
@@ -47,6 +67,9 @@ export default function Main() {
               className="main-content__btn-column"
               title="+ New Column"
               aria-label="+ New Column"
+              onPointerDown={handlePointerDownBtnAddColumn}
+              onKeyDown={(e) => handleKeydownBtnAddColumn(e)}
+              ref={refBtnAddColumn}
             >
               + New Column
             </button>
@@ -58,6 +81,7 @@ export default function Main() {
           type="edit"
           isOpen={modalEditBoardIsOppen}
           onHandleOpen={(isOppen: boolean) => {
+            refBtnAddColumn.current?.focus();
             setModalEditBoardIsOppen(isOppen);
           }}
           initialData={selectedBoard}
