@@ -25,6 +25,7 @@ import {
 */
 import DeleteModal from "../Modals/Delete";
 import Dropdown from "../DropdownMenu";
+import ModalTask from "../Modals/Task";
 
 type PropsSidebar = {
   isSidebarHidden: boolean;
@@ -34,6 +35,7 @@ type PropsSidebar = {
 export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
   const dataContext = useDataContext();
   const refBtnDropdown = useRef<HTMLButtonElement | null>(null);
+  const refBtnAddTask = useRef<HTMLButtonElement | null>(null);
   const selectedBoard = dataContext.datas.find(
     (b) => b.id === dataContext.selectedIdBoard
   );
@@ -43,6 +45,7 @@ export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
   ];
   const [modalEditBoardIsOppen, setModalEditBoardIsOpen] = useState(false);
   const [modalDeleteBoardIsOppen, setModalDeleteBoardIsOppen] = useState(false);
+  const [modalTaskIsOppen, setModalTaskIsOppen] = useState(false);
 
   function handleChangeDropdownOption(value: string) {
     if (value === "edit") {
@@ -50,6 +53,17 @@ export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
     }
     if (value === "delete") {
       setModalDeleteBoardIsOppen(true);
+    }
+  }
+
+  function handlePointerDownBtnAddTask() {
+    setModalTaskIsOppen(true);
+  }
+
+  function handleKeydownBtnAddTask(e: React.KeyboardEvent<HTMLButtonElement>) {
+    if (e.key === "Enter" || e.key === " ") {
+      setModalTaskIsOppen(true);
+      return;
     }
   }
 
@@ -80,6 +94,9 @@ export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
                   : true
                 : true
             }
+            onPointerDown={handlePointerDownBtnAddTask}
+            onKeyDown={(e) => handleKeydownBtnAddTask(e)}
+            ref={refBtnAddTask}
           >
             <span className="header__text-btn-add-task">+ Add New Task</span>
             <img
@@ -119,6 +136,16 @@ export default function Header({ isSidebarHidden, onSidebar }: PropsSidebar) {
           }}
           title_or_name={selectedBoard.name}
           id={selectedBoard.id}
+        />
+      )}
+      {modalTaskIsOppen && selectedBoard && (
+        <ModalTask
+          type="add"
+          isOpen={modalTaskIsOppen}
+          onHandleOpen={(isOppen: boolean) => {
+            refBtnAddTask.current?.focus();
+            setModalTaskIsOppen(isOppen);
+          }}
         />
       )}
     </>
