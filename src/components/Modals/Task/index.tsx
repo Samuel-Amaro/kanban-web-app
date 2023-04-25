@@ -1,21 +1,23 @@
 import { createPortal } from "react-dom";
-import { Subtask, Task } from "../../../data";
+import { Board, Subtask, Task } from "../../../data";
 import BackdropModal from "../../BackdropModal";
 import Heading from "../../Heading";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { nanoid } from "nanoid";
 import CrossIcon from "../../Icons/Cross";
 import Button from "../../Button";
 import DropdownStatus, { OptionStatus } from "../../DropdownStatus";
-import { useDataContext } from "../../../context/DataContext";
 import "./Task.css";
 import useNoScroll from "../../../hooks/useNoScroll";
+import { taskReducer } from "../../../reducers/taskReducer";
+import { DataErrorsTaskForm, validationFormTask } from "../../../utils";
 
 type PropsModalTask = {
   type: "add" | "edit";
   isOpen: boolean;
   onHandleOpen: (isOpen: boolean) => void;
   initialData?: { idBoard: string; idColumn: string; task: Task };
+  selectedBoard: Board | undefined;
 };
 
 export default function ModalTask({
@@ -23,11 +25,8 @@ export default function ModalTask({
   isOpen,
   onHandleOpen,
   initialData,
+  selectedBoard,
 }: PropsModalTask) {
-  const datasContext = useDataContext();
-  const selectedBoard = datasContext.datas.find(
-    (b) => b.id === datasContext.selectedIdBoard
-  );
   const refInputTitleTask = useRef<HTMLInputElement | null>(null);
   const optionsDropdownStatus: OptionStatus[] | null = selectedBoard
     ? selectedBoard.columns.map((column) => {
@@ -49,9 +48,15 @@ export default function ModalTask({
     status: optionsDropdownStatus ? optionsDropdownStatus[0].label : "",
     subtasks: defaultDatasSubtask,
   };
+  const [errorsFormTask, setErrorsFormTask] = useState<DataErrorsTaskForm>({
+    title: undefined,
+    status: undefined,
+    subtasks: [],
+  });
 
-  const [task, setTask] = useState<Task>(
-    initialData && type === "add" ? initialData.task : defaultDatasTask
+  const [task, dispatch] = useReducer(
+    taskReducer,
+    initialData && type === "edit" ? initialData.task : defaultDatasTask
   );
 
   type DatasSubtaskRefactor = { subtask: Subtask; placeholder: string };
@@ -78,42 +83,35 @@ export default function ModalTask({
   );
 
   function handleChangeDropdownOptionStatus(option: OptionStatus) {
-    setTask({
-      ...task,
-      status: option.label,
-    });
+    dispatch({ type: "handle_status_task", status: option.label });
   }
 
   function handleChangedTitle(e: React.ChangeEvent<HTMLInputElement>) {
-    setTask({ ...task, title: e.target.value });
+    dispatch({ type: "handle_changed_title", newTitle: e.target.value });
   }
 
   function handleChangedDescription(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    setTask({ ...task, description: e.target.value });
+    dispatch({
+      type: "handle_changed_description",
+      newDescription: e.target.value,
+    });
   }
 
   function handleChangedTitleSubtask(
     e: React.ChangeEvent<HTMLInputElement>,
     subtask: Subtask
   ) {
-    setTask({
-      ...task,
-      subtasks: task.subtasks.map((sub) => {
-        if (sub.id === subtask.id) {
-          return {
-            ...sub,
-            title: e.target.value,
-          };
-        }
-        return sub;
-      }),
+    dispatch({
+      type: "handle_changed_title_subtask",
+      newTitleSubtask: e.target.value,
+      subtask: subtask,
     });
   }
 
   function handlePointerDownBtnRemoveSubtask(idSubtask: string) {
-    setTask({
-      ...task,
-      subtasks: task.subtasks.filter((sub) => sub.id !== idSubtask),
+    dispatch({
+      type: "handle_removed_subtask",
+      idSubtask: idSubtask,
     });
   }
 
@@ -122,22 +120,16 @@ export default function ModalTask({
     idSubtask: string
   ) {
     if (e.key === "Enter" || e.key === "") {
-      setTask({
-        ...task,
-        subtasks: task.subtasks.filter((sub) => sub.id !== idSubtask),
+      dispatch({
+        type: "handle_removed_subtask",
+        idSubtask: idSubtask,
       });
     }
   }
 
   function handlePointerDownBtnAddSubtask() {
-    const newSubtask: Subtask = {
-      id: `subtask-${nanoid(5)}`,
-      title: "",
-      isCompleted: false,
-    };
-    setTask({
-      ...task,
-      subtasks: [...task.subtasks, newSubtask],
+    dispatch({
+      type: "handle_add_subtask",
     });
   }
 
@@ -145,21 +137,21 @@ export default function ModalTask({
     e: React.KeyboardEvent<HTMLButtonElement>
   ) {
     if (e.key === "Enter" || e.key === "") {
-      const newSubtask: Subtask = {
-        id: `subtask-${nanoid(5)}`,
-        title: "",
-        isCompleted: false,
-      };
-      setTask({
-        ...task,
-        subtasks: [...task.subtasks, newSubtask],
+      dispatch({
+        type: "handle_add_subtask",
       });
     }
   }
 
   function handleSubmitForm(e: React.FormEvent<HTMLFormElement>) {
-    //TODO: handler submit form
+    //TODO: VALIDAR SUBMIT DO FORM PARA ATUALIZAR CONTEXT
     e.preventDefault();
+    console.log("antes validation");
+    console.log(task);
+    console.log("depois validation");
+    const er = validationFormTask(task);
+    console.log(er);
+    setErrorsFormTask(er);
   }
 
   useNoScroll();
@@ -280,7 +272,6 @@ export default function ModalTask({
               Status
             </label>
             {optionsDropdownStatus && (
-              //TODO: comportamento estranho no dropdow status, ao escolher um option fechar o dropdown, fechar o modal, e isso esta errado, comportamento certo e fechar somente o dropdown
               <DropdownStatus
                 options={optionsDropdownStatus}
                 onChange={handleChangeDropdownOptionStatus}

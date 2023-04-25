@@ -1,4 +1,4 @@
-import { Board } from "./data";
+import { Board, Task } from "./data";
 
 /**
  * esta function encontrar elementos que podem receber foco dentro de um elemento pai certificando-se de excluir qualquer coisa com tabindex=-1. Também classificamos os elementos para seguir a ordem
@@ -71,6 +71,34 @@ export function validationFormBoard(fields: Board) {
   for(const value of fields.columns) {
     if(value.name.trim() === "") {
       errors.columns.push({id: value.id, error: "Can’t be empty"});
+    }
+  }
+
+  return errors;
+}
+
+type DataErrorFieldSubtask = {
+  id: string;
+  error: string;
+};
+
+export type DataErrorsTaskForm = {
+  title: string | undefined;
+  status: string | undefined;
+  subtasks: DataErrorFieldSubtask[];
+};
+
+export function validationFormTask(fields: Task) {
+  const errors: DataErrorsTaskForm = {title: undefined, status: undefined, subtasks: []};
+
+  if(fields.title.trim() === "") 
+    errors.title = "Can’t be empty";
+  if(fields.status.trim() === "")
+    errors.status = "Can’t be empty";
+
+  for(const value of fields.subtasks) {
+    if(value.title.trim() === "") {
+      errors.subtasks.push({id: value.id, error: "Can’t be empty"});
     }
   }
 

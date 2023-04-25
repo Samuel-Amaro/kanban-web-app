@@ -137,6 +137,7 @@ export default function Header({
             refBtnAddTask.current?.focus();
             setModalTaskIsOppen(isOppen);
           }}
+          selectedBoard={selectedBoard}
         />
       )}
     </>

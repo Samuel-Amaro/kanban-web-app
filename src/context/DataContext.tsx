@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext, useMemo } from "react";
+import React, { useState, useContext, createContext} from "react";
 import { DataContextType } from "../data";
 import data from "../data.json";
 import { ActionTypeDatasReducer, datasReducer } from "../reducers/datasReducer";
