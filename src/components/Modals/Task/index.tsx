@@ -1,14 +1,15 @@
 import { createPortal } from "react-dom";
-import { Column, Subtask, Task } from "../../../data";
+import { Subtask, Task } from "../../../data";
 import BackdropModal from "../../BackdropModal";
 import Heading from "../../Heading";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { nanoid } from "nanoid";
 import CrossIcon from "../../Icons/Cross";
 import Button from "../../Button";
 import DropdownStatus, { OptionStatus } from "../../DropdownStatus";
 import { useDataContext } from "../../../context/DataContext";
 import "./Task.css";
+import useNoScroll from "../../../hooks/useNoScroll";
 
 type PropsModalTask = {
   type: "add" | "edit";
@@ -27,10 +28,6 @@ export default function ModalTask({
   const selectedBoard = datasContext.datas.find(
     (b) => b.id === datasContext.selectedIdBoard
   );
-  /*const selectedBoard = useMemo(
-    () => datasContext.datas.find((b) => b.id === datasContext.selectedIdBoard),
-    [datasContext]
-  );*/
   const refInputTitleTask = useRef<HTMLInputElement | null>(null);
   const optionsDropdownStatus: OptionStatus[] | null = selectedBoard
     ? selectedBoard.columns.map((column) => {
@@ -164,6 +161,8 @@ export default function ModalTask({
     //TODO: handler submit form
     e.preventDefault();
   }
+
+  useNoScroll();
 
   useEffect(() => {
     //ao abrir modal foca primeiro campo

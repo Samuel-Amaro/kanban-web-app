@@ -1,6 +1,5 @@
-import React, { useMemo, useState } from "react";
-import DataContextProvider, { useDataContext } from "../../context/DataContext";
-import { ThemeContextProvider } from "../../context/ThemeContext";
+import { useMemo, useState } from "react";
+import { useDataContext } from "../../context/DataContext";
 import Header from "../Header";
 import { SidebarDesktop } from "../Sidebar";
 import "./App.css";
@@ -30,7 +29,7 @@ function App() {
       <Header
         isSidebarHidden={isSidebarHidden}
         onSidebar={onSidebar}
-        //setIsSidebarHidden={setIsSidebarHidden}
+        selectedBoard={selectedBoard}
       />
       {useMatchMedia({
         mobileContent: null,
