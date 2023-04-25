@@ -1,12 +1,12 @@
 import { createPortal } from "react-dom";
-import { Subtask, Task } from "../../../data";
+import { Board, Subtask, Task } from "../../../data";
 import BackdropModal from "../../BackdropModal";
 import Heading from "../../Heading";
 import "./ViewTask.css";
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import DropdownMenu from "../../DropdownMenu";
 import DropdownStatus, { OptionStatus } from "../../DropdownStatus";
-import { useDataContext, useDatasDispatch } from "../../../context/DataContext";
+import { useDatasDispatch } from "../../../context/DataContext";
 import useNoScroll from "../../../hooks/useNoScroll";
 import { getFocusableElements, nextFocusable } from "../../../utils";
 import useKeydownWindow from "../../../hooks/useKeydownWindow";
@@ -15,6 +15,15 @@ type PropsViewTaskModal = {
   isOpen: boolean;
   onHandleOpen: (isOpen: boolean) => void;
   data: Task;
+  selectedBoard: Board;
+};
+
+type OptionDropdownSelected = {
+  idBoard: string;
+  sourceColumnId: string;
+  idTask: string;
+  newStatusTask: string;
+  targetColumnId: string;
 };
 
 const optionsDropdownMenu = [
@@ -22,50 +31,48 @@ const optionsDropdownMenu = [
   { value: "delete", label: "Delete Task" },
 ];
 
-export default function ViewTask({
+const ViewTask = memo(function ViewTask({
   isOpen,
   onHandleOpen,
   data,
+  selectedBoard,
 }: PropsViewTaskModal) {
   const dispatchDatasContext = useDatasDispatch();
-  const datasContext = useDataContext();
   const totalSubtasks = data.subtasks.length;
   const totalSubtasksCompleteds = data.subtasks.filter(
     (st) => st.isCompleted
   ).length;
   const refBtnDropdown = useRef<HTMLButtonElement | null>(null);
   const refDialog = useRef<HTMLDivElement | null>(null);
-  const selectedBoard = datasContext.datas.find(
-    (b) => b.id === datasContext.selectedIdBoard
+  const optionsDropdownStatus: OptionStatus[] = selectedBoard.columns.map(
+    (column) => {
+      return {
+        value: column.name,
+        label: column.name,
+        id: column.id,
+      };
+    }
   );
-  const optionsDropdownStatus: OptionStatus[] | null = selectedBoard
-    ? selectedBoard.columns.map((column) => {
-        return {
-          value: column.name,
-          label: column.name,
-          id: column.id,
-        };
-      })
-    : null;
+  const [optionDropdownSelected, setOptionDropdownSelected] =
+    useState<OptionDropdownSelected | null>(null);
 
   function handleChangeCheckbox(
     e: React.ChangeEvent<HTMLInputElement>,
     subtask: Subtask
   ) {
-    if (selectedBoard) {
-      const column = selectedBoard?.columns.filter(
-        (column) =>
-          column.name.toLocaleLowerCase() === data.status.toLocaleLowerCase()
-      )[0];
-      dispatchDatasContext({
-        type: "changed_status_subtask",
-        idBoard: selectedBoard?.id,
-        idColumn: column.id,
-        idTask: data.id,
-        idSubtask: subtask.id,
-        newStatusSubtask: !subtask.isCompleted,
-      });
-    }
+    const column = selectedBoard.columns.filter(
+      (column) =>
+        column.name.toLocaleLowerCase() === data.status.toLocaleLowerCase()
+    )[0];
+    dispatchDatasContext({
+      type: "changed_status_subtask",
+      idBoard: selectedBoard.id,
+      idColumn: column.id,
+      idTask: data.id,
+      idSubtask: subtask.id,
+      newStatusSubtask: !subtask.isCompleted,
+    });
+    //}
   }
 
   //* INFO: QUAL OPTION DO MENU O SER ESCOLHEU, CADA OPTION ABRE UM MODAL SOBRE TASKS
@@ -82,20 +89,28 @@ export default function ViewTask({
 
   //* INFO: QUAL OPTION DO STATUS O USER ESCOLHEU PARA ATUALIZAR STATUS DE UMA SUBTASK
   function handleChangeDropdownOptionStatus(option: OptionStatus) {
-    if (selectedBoard) {
-      const column = selectedBoard?.columns.filter(
-        (column) =>
-          column.name.toLocaleLowerCase() === data.status.toLocaleLowerCase()
-      )[0];
-      dispatchDatasContext({
-        type: "changed_status_task",
-        idBoard: selectedBoard?.id,
-        sourceColumnId: column.id,
-        idTask: data.id,
-        newStatusTask: option.label,
-        targetColumnId: option.id,
-      });
-    }
+    const column = selectedBoard.columns.filter(
+      (column) =>
+        column.name.toLocaleLowerCase() === data.status.toLocaleLowerCase()
+    )[0];
+    //!causa re-renderização em toda arvore de UI
+    //!por atualizar o context datas
+    /*dispatchDatasContext({
+      type: "changed_status_task",
+      idBoard: selectedBoard.id,
+      sourceColumnId: column.id,
+      idTask: data.id,
+      newStatusTask: option.label,
+      targetColumnId: option.id,
+    });
+    */
+    setOptionDropdownSelected({
+      idBoard: selectedBoard.id,
+      sourceColumnId: column.id,
+      idTask: data.id,
+      newStatusTask: option.label,
+      targetColumnId: option.id,
+    });
   }
 
   function handleKeyDownDialog(e: KeyboardEvent) {
@@ -116,12 +131,23 @@ export default function ViewTask({
 
   useNoScroll();
 
+  useKeydownWindow(handleKeyDownDialog);
+
   useEffect(() => {
     //ao abrir modal foca no btn dropdowm menu
     if (refBtnDropdown.current) refBtnDropdown.current.focus();
   }, []);
 
-  useKeydownWindow(handleKeyDownDialog);
+  useEffect(() => {
+    return () => {
+      if (optionDropdownSelected) {
+        dispatchDatasContext({
+          type: "changed_status_task",
+          ...optionDropdownSelected,
+        });
+      }
+    };
+  }, [optionDropdownSelected]);
 
   if (!isOpen) {
     return null;
@@ -217,4 +243,6 @@ export default function ViewTask({
   );
 
   return createPortal(template, document.body);
-}
+});
+
+export default ViewTask;

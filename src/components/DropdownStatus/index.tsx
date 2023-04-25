@@ -12,8 +12,6 @@ import Button from "../Button";
 import ChevronDown from "../Icons/ChevronDown";
 import "./DropdownStatus.css";
 
-//TODO: add styles mobile-first
-
 export type OptionStatus = {
   value: string;
   label: string;

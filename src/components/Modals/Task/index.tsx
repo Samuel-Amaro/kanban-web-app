@@ -1,13 +1,14 @@
 import { createPortal } from "react-dom";
-import { Subtask, Task } from "../../../data";
+import { Column, Subtask, Task } from "../../../data";
 import BackdropModal from "../../BackdropModal";
 import Heading from "../../Heading";
-import { useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { nanoid } from "nanoid";
 import CrossIcon from "../../Icons/Cross";
 import Button from "../../Button";
 import DropdownStatus, { OptionStatus } from "../../DropdownStatus";
 import { useDataContext } from "../../../context/DataContext";
+import "./Task.css";
 
 type PropsModalTask = {
   type: "add" | "edit";
@@ -26,6 +27,11 @@ export default function ModalTask({
   const selectedBoard = datasContext.datas.find(
     (b) => b.id === datasContext.selectedIdBoard
   );
+  /*const selectedBoard = useMemo(
+    () => datasContext.datas.find((b) => b.id === datasContext.selectedIdBoard),
+    [datasContext]
+  );*/
+  const refInputTitleTask = useRef<HTMLInputElement | null>(null);
   const optionsDropdownStatus: OptionStatus[] | null = selectedBoard
     ? selectedBoard.columns.map((column) => {
         return {
@@ -43,7 +49,7 @@ export default function ModalTask({
     id: `task-${nanoid(5)}`,
     title: "",
     description: "",
-    status: "",
+    status: optionsDropdownStatus ? optionsDropdownStatus[0].label : "",
     subtasks: defaultDatasSubtask,
   };
 
@@ -74,10 +80,95 @@ export default function ModalTask({
     }
   );
 
-  //* INFO: QUAL OPTION DO STATUS O USER ESCOLHEU E PARA ATUALIZAR OU SELECIONAR UMA STATUS(COLUMN) DE UMA TASK
   function handleChangeDropdownOptionStatus(option: OptionStatus) {
-    //TODO: faz alguma coisa com a option de status escolhida
+    setTask({
+      ...task,
+      status: option.label,
+    });
   }
+
+  function handleChangedTitle(e: React.ChangeEvent<HTMLInputElement>) {
+    setTask({ ...task, title: e.target.value });
+  }
+
+  function handleChangedDescription(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setTask({ ...task, description: e.target.value });
+  }
+
+  function handleChangedTitleSubtask(
+    e: React.ChangeEvent<HTMLInputElement>,
+    subtask: Subtask
+  ) {
+    setTask({
+      ...task,
+      subtasks: task.subtasks.map((sub) => {
+        if (sub.id === subtask.id) {
+          return {
+            ...sub,
+            title: e.target.value,
+          };
+        }
+        return sub;
+      }),
+    });
+  }
+
+  function handlePointerDownBtnRemoveSubtask(idSubtask: string) {
+    setTask({
+      ...task,
+      subtasks: task.subtasks.filter((sub) => sub.id !== idSubtask),
+    });
+  }
+
+  function handleKeydownBtnRemoveSubtask(
+    e: React.KeyboardEvent<HTMLButtonElement>,
+    idSubtask: string
+  ) {
+    if (e.key === "Enter" || e.key === "") {
+      setTask({
+        ...task,
+        subtasks: task.subtasks.filter((sub) => sub.id !== idSubtask),
+      });
+    }
+  }
+
+  function handlePointerDownBtnAddSubtask() {
+    const newSubtask: Subtask = {
+      id: `subtask-${nanoid(5)}`,
+      title: "",
+      isCompleted: false,
+    };
+    setTask({
+      ...task,
+      subtasks: [...task.subtasks, newSubtask],
+    });
+  }
+
+  function handleKeydownBtnAddSubtask(
+    e: React.KeyboardEvent<HTMLButtonElement>
+  ) {
+    if (e.key === "Enter" || e.key === "") {
+      const newSubtask: Subtask = {
+        id: `subtask-${nanoid(5)}`,
+        title: "",
+        isCompleted: false,
+      };
+      setTask({
+        ...task,
+        subtasks: [...task.subtasks, newSubtask],
+      });
+    }
+  }
+
+  function handleSubmitForm(e: React.FormEvent<HTMLFormElement>) {
+    //TODO: handler submit form
+    e.preventDefault();
+  }
+
+  useEffect(() => {
+    //ao abrir modal foca primeiro campo
+    refInputTitleTask.current?.focus();
+  }, []);
 
   const template = (
     <BackdropModal
@@ -100,7 +191,7 @@ export default function ModalTask({
         >
           {type === "add" ? "Add New Task" : "Edit Task"}
         </Heading>
-        <form className="dialog-task__form">
+        <form className="dialog-task__form" onSubmit={handleSubmitForm}>
           <div className="dialog-task__form-group">
             <label htmlFor="title-task" className="dialog-task__form-label">
               Title
@@ -112,6 +203,9 @@ export default function ModalTask({
               placeholder="e.g. Take coffee bre"
               className="dialog-task__form-input"
               title="Title task"
+              ref={refInputTitleTask}
+              value={task.title}
+              onChange={handleChangedTitle}
             />
           </div>
           <div className="dialog-task__form-group">
@@ -127,7 +221,9 @@ export default function ModalTask({
               name="description-task"
               placeholder="e.g. It’s always good to take a break. This 15 minute break will recharge the batteries a little."
               title="Description task"
-            ></textarea>
+              value={task.description}
+              onChange={handleChangedDescription}
+            />
           </div>
           <div className="dialog-task__form-group-subtasks">
             <label htmlFor="subtasks" className="dialog-task__form-label">
@@ -147,12 +243,20 @@ export default function ModalTask({
                     className="dialog-task__form-input"
                     aria-label="Subtask"
                     title="Subtask"
+                    value={subtask.title}
+                    onChange={(e) => handleChangedTitleSubtask(e, subtask)}
                   />
                   <button
                     type="button"
                     title="Remove subtask from task"
                     className="dialog-task__btn-remove-subtask"
                     aria-label="Remove subtask from task"
+                    onPointerDown={() =>
+                      handlePointerDownBtnRemoveSubtask(subtask.id)
+                    }
+                    onKeyDown={(e) =>
+                      handleKeydownBtnRemoveSubtask(e, subtask.id)
+                    }
                   >
                     <CrossIcon className="dialog-task__icon-btn-remove-subtask" />
                   </button>
@@ -166,6 +270,8 @@ export default function ModalTask({
               title="+ Add New Subtask"
               aria-label="+ Add New Subtask"
               className="dialog-task__btn-add-subtask"
+              onPointerDown={handlePointerDownBtnAddSubtask}
+              onKeyDown={handleKeydownBtnAddSubtask}
             >
               + Add New Subtask
             </Button>
@@ -175,6 +281,7 @@ export default function ModalTask({
               Status
             </label>
             {optionsDropdownStatus && (
+              //TODO: comportamento estranho no dropdow status, ao escolher um option fechar o dropdown, fechar o modal, e isso esta errado, comportamento certo e fechar somente o dropdown
               <DropdownStatus
                 options={optionsDropdownStatus}
                 onChange={handleChangeDropdownOptionStatus}

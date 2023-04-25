@@ -58,7 +58,6 @@ export function datasReducer(/*datas*/draft: Board[], action: ActionTypeDatasRed
             const indexTask = draft[indexBoard].columns[indexColumnSource].tasks.findIndex((task) => task.id === action.idTask);
             const indexColumnTarget = draft[indexBoard].columns.findIndex((column) => column.id === action.targetColumnId);
             if(indexBoard > -1 && indexColumnSource > -1 && indexTask > -1 && indexColumnTarget > -1) {
-                console.log("changed status task");
                 const task = draft[indexBoard].columns[indexColumnSource].tasks[indexTask];
                 task.status = action.newStatusTask;
                 //remove task column source

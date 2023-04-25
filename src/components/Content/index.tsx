@@ -1,21 +1,20 @@
-import React, { useRef, useState } from "react";
-import { useDataContext } from "../../context/DataContext";
+import React, { useMemo, useRef, useState } from "react";
 import Button from "../Button";
 import Heading from "../Heading";
 import "./Content.css";
 import BoardModal from "../Modals/BoardModal";
-import { Column, Task } from "../../data";
+import { Board, Column, Task } from "../../data";
 import { getFocusableElements, nextFocusable, random } from "../../utils";
 import ViewTask from "../Modals/ViewTask";
 
-export default function Main() {
+type PropsMain = {
+  selectedBoard: Board;
+};
+
+export default function Main({ selectedBoard }: PropsMain) {
   const [modalEditBoardIsOppen, setModalEditBoardIsOppen] = useState(false);
   const refMain = useRef<HTMLElement | null>(null);
   const refBtnAddColumn = useRef<HTMLButtonElement | null>(null);
-  const dataContext = useDataContext();
-  const selectedBoard = dataContext.datas.find(
-    (b) => b.id === dataContext.selectedIdBoard
-  );
 
   function handlePointerDownBtnAddColumn() {
     setModalEditBoardIsOppen(true);
@@ -29,7 +28,7 @@ export default function Main() {
       setModalEditBoardIsOppen(true);
       return;
     }
-    if(e.key === "Tab") {
+    if (e.key === "Tab") {
       nextFocusable(getFocusableElements(refMain.current), !e.shiftKey);
     }
   }
@@ -38,7 +37,7 @@ export default function Main() {
     <>
       <main
         className={
-          !selectedBoard?.columns.length
+          !selectedBoard.columns.length
             ? "main-content main-content--empty "
             : "main-content"
         }
@@ -46,21 +45,16 @@ export default function Main() {
         aria-atomic="true"
         ref={refMain}
       >
-        {
-          selectedBoard
-            ? selectedBoard.columns.length === 0 && (
-                <BoardIsEmpty
-                  onModalEditBoardIsOppen={(isOppen: boolean) => {
-                    setModalEditBoardIsOppen(isOppen);
-                  }}
-                />
-              )
-            : null /*//TODO: add uma mensagem de quando não ha um board selected*/
-        }
-        {selectedBoard?.columns && selectedBoard.columns.length > 0 && (
+        {selectedBoard.columns.length > 0 ? (
           <>
             {selectedBoard.columns.map((column) => {
-              return <ColumnBoard dataColumn={column} key={column.id} />;
+              return (
+                <ColumnBoard
+                  dataColumn={column}
+                  key={column.id}
+                  selectedBoard={selectedBoard}
+                />
+              );
             })}
             <button
               type="button"
@@ -74,6 +68,12 @@ export default function Main() {
               + New Column
             </button>
           </>
+        ) : (
+          <BoardIsEmpty
+            onModalEditBoardIsOppen={(isOppen: boolean) => {
+              setModalEditBoardIsOppen(isOppen);
+            }}
+          />
         )}
       </main>
       {modalEditBoardIsOppen && (
@@ -93,9 +93,10 @@ export default function Main() {
 
 type PropsColumnBoard = {
   dataColumn: Column;
+  selectedBoard: Board;
 };
 
-function ColumnBoard({ dataColumn }: PropsColumnBoard) {
+function ColumnBoard({ dataColumn, selectedBoard }: PropsColumnBoard) {
   return (
     <section
       className={
@@ -118,22 +119,25 @@ function ColumnBoard({ dataColumn }: PropsColumnBoard) {
           {`${dataColumn.name} (${dataColumn.tasks.length})`.toUpperCase()}
         </Heading>
       </div>
-      {dataColumn.tasks.length > 0 && <TaskList tasks={dataColumn.tasks} />}
+      {dataColumn.tasks.length > 0 && (
+        <TaskList tasks={dataColumn.tasks} selectedBoard={selectedBoard} />
+      )}
     </section>
   );
 }
 
 type PropsTaskList = {
   tasks: Task[];
+  selectedBoard: Board;
 };
 
-function TaskList({ tasks }: PropsTaskList) {
+function TaskList({ tasks, selectedBoard }: PropsTaskList) {
   return (
     <ul className="main-content__tasks-list">
       {tasks.map((t) => {
         return (
           <li className="main-content__task-item" key={t.id}>
-            <CardTask dataTask={t} />
+            <CardTask dataTask={t} selectedBoard={selectedBoard} />
           </li>
         );
       })}
@@ -143,9 +147,10 @@ function TaskList({ tasks }: PropsTaskList) {
 
 type PropsCardTask = {
   dataTask: Task;
+  selectedBoard: Board;
 };
 
-function CardTask({ dataTask }: PropsCardTask) {
+function CardTask({ dataTask, selectedBoard }: PropsCardTask) {
   const [modalViewTaskIsOppen, setModalViewTaskIsOppen] = useState(false);
   const refCardBtn = useRef<HTMLButtonElement | null>(null);
   const totalSubtasks = dataTask.subtasks.length;
@@ -162,6 +167,8 @@ function CardTask({ dataTask }: PropsCardTask) {
       setModalViewTaskIsOppen(true);
     }
   }
+
+  const value = useMemo(() => selectedBoard, [selectedBoard]);
 
   return (
     <>
@@ -188,6 +195,7 @@ function CardTask({ dataTask }: PropsCardTask) {
             setModalViewTaskIsOppen(isOppen);
           }}
           data={dataTask}
+          selectedBoard={value}
         />
       )}
     </>
