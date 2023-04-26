@@ -13,9 +13,12 @@ import { taskReducer } from "../../../reducers/taskReducer";
 import {
   DataErrorsTaskForm,
   formTaskIsValid,
+  getFocusableElements,
+  nextFocusable,
   validationFieldsFormTask,
 } from "../../../utils";
 import { useDatasDispatch } from "../../../context/DataContext";
+import useKeydownWindow from "../../../hooks/useKeydownWindow";
 
 type PropsModalTask = {
   type: "add" | "edit";
@@ -34,6 +37,7 @@ export default function ModalTask({
 }: PropsModalTask) {
   const dispatchDatasContext = useDatasDispatch();
   const refInputTitleTask = useRef<HTMLInputElement | null>(null);
+  const refDialog = useRef<HTMLDivElement | null>(null);
   const optionsDropdownStatus: OptionStatus[] | null = selectedBoard
     ? selectedBoard.columns.map((column) => {
         return {
@@ -54,17 +58,11 @@ export default function ModalTask({
     status: optionsDropdownStatus ? optionsDropdownStatus[0].label : "",
     subtasks: defaultDatasSubtask,
   };
-  //TODO: add html erros in inputs, de acordo com o state abaixo,
-  //TODO: add focus, hover em inputs nos modais, o active, class, ainda não criado
-  //TODO: ver se vamos precisar de mais dados para salvar/editar uma task ao despachar com datas context dispatch, acho que vai precisar de mais dados para mudança de status ficar atento a isso,
-  //TODO: usar menos context, add estilos mobile-first para este modal
-  //TODO: ficar atento aos comportamentos de cada componente, verificar se re-renderizações não estão atrapalhando comportamento.
   const [errorsFormTask, setErrorsFormTask] = useState<DataErrorsTaskForm>({
     title: undefined,
     status: undefined,
     subtasks: [],
   });
-
   const [task, dispatch] = useReducer(
     taskReducer,
     initialData && type === "edit" ? initialData.task : defaultDatasTask
@@ -92,6 +90,22 @@ export default function ModalTask({
       };
     }
   );
+
+  function handleKeyDownDialog(e: KeyboardEvent) {
+    switch (e.key) {
+      case "Esc":
+      case "Escape":
+        onHandleOpen(false);
+        break;
+      case "Tab": {
+        e.preventDefault();
+        nextFocusable(getFocusableElements(refDialog.current), !e.shiftKey);
+        break;
+      }
+      default:
+        break;
+    }
+  }
 
   function handleChangeDropdownOptionStatus(option: OptionStatus) {
     dispatch({ type: "handle_status_task", status: option.label });
@@ -175,6 +189,7 @@ export default function ModalTask({
           break;
         }
         case "edit":
+          //TODO: logica para obter dados necessarios para salvar edição em uma task
           console.log("Task recem editada podem ser salva");
           break;
         default:
@@ -190,6 +205,8 @@ export default function ModalTask({
     refInputTitleTask.current?.focus();
   }, []);
 
+  useKeydownWindow(handleKeyDownDialog);
+
   const template = (
     <BackdropModal
       onHandleOpenModal={() => {
@@ -202,7 +219,7 @@ export default function ModalTask({
         id="dialog-task"
         aria-labelledby="dialog-task-label"
         aria-modal="true"
-        /*ref={refDialog}*/
+        ref={refDialog}
       >
         <Heading
           level={2}
