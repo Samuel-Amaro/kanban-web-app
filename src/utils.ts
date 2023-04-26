@@ -77,6 +77,11 @@ export function validationFormBoard(fields: Board) {
   return errors;
 }
 
+export function formBoardIsValid(errors: DataErrorBoard) {
+  if (errors.nameBoard || errors.columns.length > 0) return false;
+  return true;
+}
+
 type DataErrorFieldSubtask = {
   id: string;
   error: string;
@@ -88,7 +93,7 @@ export type DataErrorsTaskForm = {
   subtasks: DataErrorFieldSubtask[];
 };
 
-export function validationFormTask(fields: Task) {
+export function validationFieldsFormTask(fields: Task) {
   const errors: DataErrorsTaskForm = {title: undefined, status: undefined, subtasks: []};
 
   if(fields.title.trim() === "") 
@@ -105,8 +110,8 @@ export function validationFormTask(fields: Task) {
   return errors;
 }
 
-export function formBoardIsValid(errors: DataErrorBoard) {
-  if (errors.nameBoard || errors.columns.length > 0) return false;
+export function formTaskIsValid(errors: DataErrorsTaskForm) {
+  if(errors.status || errors.title || errors.subtasks.length > 0) return false;
   return true;
 }
 

@@ -1,11 +1,12 @@
-import { Board } from "../data";
+import { Board, Task } from "../data";
 
 export type ActionTypeDatasReducer = 
     {type: "save_new_board", board: Board} 
     | {type: "edit_board", board: Board} 
     | { type: "delete_board"; idBoard: string }
     | {type: "changed_status_subtask"; idBoard: string; idColumn: string; idTask: string; idSubtask: string; newStatusSubtask: boolean} 
-    | {type: "changed_status_task"; idBoard: string; sourceColumnId: string; idTask: string; newStatusTask: string; targetColumnId: string};
+    | {type: "changed_status_task"; idBoard: string; sourceColumnId: string; idTask: string; newStatusTask: string; targetColumnId: string}
+    | {type: "save_new_task", task: Task, idBoard: string; idColumn: string};
 
 export function datasReducer(/*datas*/draft: Board[], action: ActionTypeDatasReducer) {
     switch(action.type) {
@@ -64,6 +65,14 @@ export function datasReducer(/*datas*/draft: Board[], action: ActionTypeDatasRed
                 draft[indexBoard].columns[indexColumnSource].tasks.splice(indexTask, 1);
                 //add task column target
                 draft[indexBoard].columns[indexColumnTarget].tasks.push(task);
+            }
+            break;
+        };
+        case "save_new_task": {
+            const indexBoard = draft.findIndex((board) => board.id === action.idBoard);
+            const indexColumn = draft[indexBoard].columns.findIndex((column) => column.id === action.idColumn);
+            if(indexBoard > -1 && indexColumn > -1) {
+                draft[indexBoard].columns[indexColumn].tasks.push(action.task);
             }
             break;
         };
