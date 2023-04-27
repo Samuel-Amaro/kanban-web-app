@@ -229,69 +229,18 @@ export default function BoardModal({
             <label htmlFor="board-columns" className="dialog__label">
               Board Columns
             </label>
-            <div className="dialog__form-columns">
-              {board.columns.map((column, index) => {
-                return (
-                  <div className="dialog__container-column" key={index}>
-                    {errorsForm.columns.filter((def) => def.id === column.id)
-                      .length > 0 ? (
-                      <>
-                        <div className="dialog__form-group-error">
-                          <input
-                            type="text"
-                            name={`column-${index}`}
-                            aria-label="enter with name column"
-                            className="dialog__input dialog__input--error"
-                            title="name column Board"
-                            value={column.name}
-                            onChange={(e) => {
-                              handleChangedNameColumn(e, column);
-                            }}
-                            ref={(node) => {
-                              const map = getMap();
-                              if (node) {
-                                map.set(index, node);
-                              } else {
-                                map.delete(index);
-                              }
-                            }}
-                          />
-                          <span
-                            className="dialog__error-input"
-                            aria-live="polite"
-                          >
-                            {`${
-                              errorsForm.columns.filter(
-                                (def) => def.id === column.id
-                              )[0].error
-                            }`}
-                          </span>
-                        </div>
-                        <button
-                          type="button"
-                          title="Remove Column Board"
-                          className="dialog__btn-remove-column"
-                          aria-label="Remove Column Board"
-                          onPointerDown={() => {
-                            handlePointerOrKeyDownBtnRemoveColumn(
-                              undefined,
-                              column
-                            );
-                          }}
-                          onKeyDown={(e) => {
-                            handlePointerOrKeyDownBtnRemoveColumn(e, column);
-                          }}
-                        >
-                          <CrossIcon className="dialog__icon-btn dialog__icon-btn--error" />
-                        </button>
-                      </>
-                    ) : (
-                      <>
+            {board.columns.map((column, index) => {
+              return (
+                <div className="dialog__container-column" key={index}>
+                  {errorsForm.columns.filter((def) => def.id === column.id)
+                    .length > 0 ? (
+                    <>
+                      <div className="dialog__form-group-error">
                         <input
                           type="text"
                           name={`column-${index}`}
                           aria-label="enter with name column"
-                          className="dialog__input"
+                          className="dialog__input dialog__input--error"
                           title="name column Board"
                           value={column.name}
                           onChange={(e) => {
@@ -306,29 +255,78 @@ export default function BoardModal({
                             }
                           }}
                         />
-                        <button
-                          type="button"
-                          title="Remove Column Board"
-                          className="dialog__btn-remove-column"
-                          aria-label="Remove Column Board"
-                          onPointerDown={() => {
-                            handlePointerOrKeyDownBtnRemoveColumn(
-                              undefined,
-                              column
-                            );
-                          }}
-                          onKeyDown={(e) => {
-                            handlePointerOrKeyDownBtnRemoveColumn(e, column);
-                          }}
+                        <span
+                          className="dialog__error-input"
+                          aria-live="polite"
                         >
-                          <CrossIcon className="dialog__icon-btn" />
-                        </button>
-                      </>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+                          {`${
+                            errorsForm.columns.filter(
+                              (def) => def.id === column.id
+                            )[0].error
+                          }`}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        title="Remove Column Board"
+                        className="dialog__btn-remove-column"
+                        aria-label="Remove Column Board"
+                        onPointerDown={() => {
+                          handlePointerOrKeyDownBtnRemoveColumn(
+                            undefined,
+                            column
+                          );
+                        }}
+                        onKeyDown={(e) => {
+                          handlePointerOrKeyDownBtnRemoveColumn(e, column);
+                        }}
+                      >
+                        <CrossIcon className="dialog__icon-btn dialog__icon-btn--error" />
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <input
+                        type="text"
+                        name={`column-${index}`}
+                        aria-label="enter with name column"
+                        className="dialog__input"
+                        title="name column Board"
+                        value={column.name}
+                        onChange={(e) => {
+                          handleChangedNameColumn(e, column);
+                        }}
+                        ref={(node) => {
+                          const map = getMap();
+                          if (node) {
+                            map.set(index, node);
+                          } else {
+                            map.delete(index);
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        title="Remove Column Board"
+                        className="dialog__btn-remove-column"
+                        aria-label="Remove Column Board"
+                        onPointerDown={() => {
+                          handlePointerOrKeyDownBtnRemoveColumn(
+                            undefined,
+                            column
+                          );
+                        }}
+                        onKeyDown={(e) => {
+                          handlePointerOrKeyDownBtnRemoveColumn(e, column);
+                        }}
+                      >
+                        <CrossIcon className="dialog__icon-btn" />
+                      </button>
+                    </>
+                  )}
+                </div>
+              );
+            })}
             <Button
               type="button"
               variant="secondary"

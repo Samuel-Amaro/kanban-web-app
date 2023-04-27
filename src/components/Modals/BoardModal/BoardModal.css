@@ -113,8 +113,3 @@
 .dialog__icon-btn--error{
   fill: var(--red);
 }
-
-.dialog__form-columns{
-  max-height: 300px;
-  overflow-y: auto;
-}

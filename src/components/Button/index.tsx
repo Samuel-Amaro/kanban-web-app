@@ -21,18 +21,4 @@ const Button = forwardRef<Ref, PropsTypeButton>(function Button(props, ref) {
   return <button className={classNameMapped} ref={ref} {...rest} />;
 });
 
-/*
-export default function Button(props: PropsTypeButton) {
-  const { size, className, variant,...rest } = props;
-  const classNameMapped = classNames("button", {[`button__${size}`]: size}, {[`button__${variant}`]: variant, className});
-  return (
-    <button
-      className={classNameMapped}
-      ref={mRef}
-      {...rest}
-    />
-  );
-}
-*/
-
 export default Button;

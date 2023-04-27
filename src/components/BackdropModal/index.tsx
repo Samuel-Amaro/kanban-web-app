@@ -28,10 +28,14 @@ export default function BackdropModal({
     <div
       id="backdrop-board-modal"
       className="backdrop-modal"
-      ref={refBackdropModal}
-      onPointerDown={handlePointerDownBackdropModal}
     >
-      {children}
+      <div
+        className="backdrop-modal__wrapper"
+        ref={refBackdropModal}
+        onPointerDown={handlePointerDownBackdropModal}
+      >
+        {children}
+      </div>
     </div>
   );
 }

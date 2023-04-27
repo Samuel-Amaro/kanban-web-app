@@ -3,7 +3,6 @@
   border-radius: 6px;
   background-color: var(--bg-sidebar_header_modals_card-task);
   width: 343px;
-  margin: 30px;
 }
 
 .dialog-task__title {

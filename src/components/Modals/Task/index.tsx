@@ -28,6 +28,8 @@ type PropsModalTask = {
   selectedBoard: Board | undefined;
 };
 
+//TODO: tratar overflow de qualquer modal em relação ao bakcdrop, como resolver isso, add scrol no momento necessario, e class dinamicas, em relação a todo momento verificação do tamanho do modal em relação ao backdrop modal, ao modal ser maior que o backadrop add uma class para add scroll, e centralização de acordo
+
 export default function ModalTask({
   type,
   isOpen,
@@ -238,6 +240,15 @@ export default function ModalTask({
   useEffect(() => {
     //ao abrir modal foca primeiro campo
     refInputTitleTask.current?.focus();
+    /*console.log("Tamanho do dialog width: " + refDialog.current?.offsetWidth);
+    console.log("Tamanho do dialog height: " + refDialog.current?.offsetHeight);
+    console.log(
+      "Tamnaho da window width: " + document.documentElement.clientWidth
+    );
+    console.log(
+      "Tamanho da window height: " + document.documentElement.clientHeight
+    );
+    */
   }, []);
 
   useKeydownWindow(handleKeyDownDialog);
