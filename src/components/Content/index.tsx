@@ -153,8 +153,6 @@ type PropsCardTask = {
 };
 
 function CardTask({ dataTask, selectedBoard }: PropsCardTask) {
-  //TODO: criar states para modais de edit, e delete task, e passar como um objeto via prop para modal viewTask para passar para dropdown, e escolher de state dinamicamente e passar para o modal correspondente, renderiuzar os três modais aqui, pois todos tem os data em comun.
-  //TODO: pensar na estrutura do objeto com states a ser passado via props para o modal viewTask
   const [modalViewTaskIsOppen, setModalViewTaskIsOppen] = useState(false);
   const [modalEditTaskIsOppen, setModalEditTaskIsOppen] = useState(false);
   const [modalDeleteTaskIsOppen, setModalDeleteTaskIsOppen] = useState(false);
@@ -240,12 +238,7 @@ function CardTask({ dataTask, selectedBoard }: PropsCardTask) {
                 column.name.toLowerCase() === dataTask.status.toLowerCase()
             )[0].id
           }
-          selectedBoard={selectedBoard}
-          typeDelete={"task"} 
-          //typeDelete="task"
-          //title_or_name={dataTask.title}
-          //id={dataTask.id}
-          //selectedBoard={selectedBoard}
+          typeDelete={"task"}
         />
       )}
     </>

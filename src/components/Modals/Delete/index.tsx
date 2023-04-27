@@ -12,14 +12,9 @@ import {
   setToFocus,
   setToFocusPreviousItem,
 } from "../../../utils";
-import {
-  /*useDataContext,*/ useDatasDispatch,
-} from "../../../context/DataContext";
+import { useDatasDispatch } from "../../../context/DataContext";
 import useNoScroll from "../../../hooks/useNoScroll";
 import useKeydownWindow from "../../../hooks/useKeydownWindow";
-import { Board, Task } from "../../../data";
-
-//TODO: construir um componente generico para ter props dinamicas
 
 type PropsModal = {
   isOpen: boolean;
@@ -37,7 +32,6 @@ interface DeleteTask<TypeDelete> extends PropsModal {
   titleTask: string;
   idTask: string;
   idColumn: string;
-  selectedBoard: Board;
   typeDelete: TypeDelete;
 }
 
@@ -47,25 +41,8 @@ type PropsModalDeleteTaskOrBoard<TypeDelete extends "board" | "task"> =
 type PropsDeleteModal<TypeDelete extends "board" | "task"> =
   PropsModalDeleteTaskOrBoard<TypeDelete>;
 
-/*type PropsDeleteModal = {
-  isOpen: boolean;
-  onHandleOpen: (isOpen: boolean) => void;
-  typeDelete: "board" | "task";
-  title_or_name: string;
-  id: string;
-  selectedBoard: Board | null;
-};*/
-
 export default function DeleteModal<TypeDelete extends "board" | "task">(
-  /*{
-  isOpen,
-  onHandleOpen,
-  props
-  typeDelete,
-  title_or_name,
-  id,
-  selectedBoard,
-}:PropsDeleteModal*/ props: PropsDeleteModal<TypeDelete>
+  props: PropsDeleteModal<TypeDelete>
 ) {
   const refDialog = useRef<HTMLDivElement | null>(null);
   const refBtns = useRef<HTMLButtonElement[] | null>(null);
@@ -87,17 +64,16 @@ export default function DeleteModal<TypeDelete extends "board" | "task">(
     if (props.typeDelete === "board") {
       dispatchDatasContext({
         type: "delete_board",
-        idBoard: props.idBoard /*id*/,
+        idBoard: props.idBoard,
       });
-      return;
     }
     if (props.typeDelete === "task") {
-      /*const idColumn = selectedBoard.columns.filter(
-            (column) =>
-              column.name.toLowerCase() === initialData.status.toLowerCase()
-          )[0].id;
-      dispatchDatasContext({type: "delete_task", idBoard: selectedBoard.id, sele})*/
-      //TODO: IMPLEMENTAR LOGICA PARA CHAMAR DISPATCH DATAS CONTEXT PARA EXCLUIR UMA TASK, IMPLEMENTAR CASE NO REDUCER DATAS REDUCER
+      dispatchDatasContext({
+        type: "delete_task",
+        idBoard: props.idBoard,
+        idTask: props.idTask,
+        idColumn: props.idColumn,
+      });
     }
     props.onHandleOpen(false);
   }
@@ -109,11 +85,16 @@ export default function DeleteModal<TypeDelete extends "board" | "task">(
         if (props.typeDelete === "board") {
           dispatchDatasContext({
             type: "delete_board",
-            idBoard: props.idBoard /*id*/,
+            idBoard: props.idBoard,
           });
         }
         if (props.typeDelete === "task") {
-          //TODO: IMPLEMENTAR LOGICA PARA CHAMAR DISPATCH DATAS CONTEXT PARA EXCLUIR UMA TASK, IMPLEMENTAR CASE NO REDUCER DATAS REDUCER
+          dispatchDatasContext({
+            type: "delete_task",
+            idBoard: props.idBoard,
+            idTask: props.idTask,
+            idColumn: props.idColumn,
+          });
         }
         props.onHandleOpen(false);
         break;

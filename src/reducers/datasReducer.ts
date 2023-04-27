@@ -10,24 +10,13 @@ export type ActionTypeDatasReducer =
     | {type: "edit_task", taskChanged: Task, idBoard: string, idColumn: string}
     | {type: "delete_task", idBoard: string; idColumn: string; idTask: string};
 
-export function datasReducer(/*datas*/draft: Board[], action: ActionTypeDatasReducer) {
+export function datasReducer(draft: Board[], action: ActionTypeDatasReducer) {
     switch(action.type) {
         case "save_new_board": {
-            /*return [
-                ...datas,
-                action.board
-            ];*/
             draft.push(action.board);
             break;
         };
         case "edit_board": {
-            /*return datas.map((b) => {
-                if(b.id === action.board.id) {
-                    return action.board;
-                }
-                return b;
-            });
-            */
            const indexBoardChanged = draft.findIndex((board) => board.id === action.board.id); 
            if(indexBoardChanged > -1) {
             draft.splice(indexBoardChanged, 1, action.board);
@@ -35,10 +24,6 @@ export function datasReducer(/*datas*/draft: Board[], action: ActionTypeDatasRed
            break;
         };
         case "delete_board": {
-            /*return datas.filter((b) => {
-                return b.id !== action.idBoard
-            });
-            */
             const indexBoardToBeDeleted = draft.findIndex((board) => board.id === action.idBoard);
             if(indexBoardToBeDeleted > -1) {
                 draft.splice(indexBoardToBeDeleted, 1);
