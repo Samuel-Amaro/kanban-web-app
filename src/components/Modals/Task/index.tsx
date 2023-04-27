@@ -7,7 +7,6 @@ import { nanoid } from "nanoid";
 import CrossIcon from "../../Icons/Cross";
 import Button from "../../Button";
 import DropdownStatus, { OptionStatus } from "../../DropdownStatus";
-import "./Task.css";
 import useNoScroll from "../../../hooks/useNoScroll";
 import { taskReducer } from "../../../reducers/taskReducer";
 import {
@@ -19,6 +18,7 @@ import {
 } from "../../../utils";
 import { useDatasDispatch } from "../../../context/DataContext";
 import useKeydownWindow from "../../../hooks/useKeydownWindow";
+import "./Task.css";
 
 type PropsModalTask = {
   type: "add" | "edit";
@@ -268,25 +268,39 @@ export default function ModalTask({
             <label htmlFor="title-task" className="dialog-task__form-label">
               Title
             </label>
-            <input
-              type="text"
-              id="title-task"
-              name="title-task"
-              placeholder="e.g. Take coffee bre"
-              className={
-                errorsFormTask.title
-                  ? "dialog-task__form-input dialog-task__input--error"
-                  : "dialog-task__form-input"
-              }
-              title="Title task"
-              ref={refInputTitleTask}
-              value={task.title}
-              onChange={handleChangedTitle}
-            />
-            {errorsFormTask.title && (
-              <span className="dialog-task__error-input" aria-live="polite">
-                {`${errorsFormTask.title}`}
-              </span>
+            {errorsFormTask.title ? (
+              <div className="dialog-task__form-group-error">
+                <input
+                  type="text"
+                  id="title-task"
+                  name="title-task"
+                  placeholder="e.g. Take coffee bre"
+                  className={
+                    errorsFormTask.title
+                      ? "dialog-task__form-input dialog-task__input--error"
+                      : "dialog-task__form-input"
+                  }
+                  title="Title task"
+                  ref={refInputTitleTask}
+                  value={task.title}
+                  onChange={handleChangedTitle}
+                />
+                <span className="dialog-task__error-input" aria-live="polite">
+                  {`${errorsFormTask.title}`}
+                </span>
+              </div>
+            ) : (
+              <input
+                type="text"
+                id="title-task"
+                name="title-task"
+                placeholder="e.g. Take coffee bre"
+                className="dialog-task__form-input"
+                title="Title task"
+                ref={refInputTitleTask}
+                value={task.title}
+                onChange={handleChangedTitle}
+              />
             )}
           </div>
           <div className="dialog-task__form-group">
@@ -299,6 +313,7 @@ export default function ModalTask({
             <textarea
               id="description-task"
               className="dialog-task__form-textarea"
+              rows={3}
               name="description-task"
               placeholder="e.g. It’s always good to take a break. This 15 minute break will recharge the batteries a little."
               title="Description task"
@@ -323,29 +338,47 @@ export default function ModalTask({
                   className="dialog-task__form-group-container-subtask"
                   key={subtask.id}
                 >
-                  <input
-                    type="text"
-                    id={subtask.id}
-                    name={`subtask-index`}
-                    placeholder={placeholder}
-                    className={
-                      error.error
-                        ? "dialog-task__form-input dialog-task__input--error"
-                        : "dialog-task__form-input"
-                    }
-                    aria-label="Subtask"
-                    title="Subtask"
-                    value={subtask.title}
-                    onChange={(e) => handleChangedTitleSubtask(e, subtask)}
-                  />
+                  {error.error ? (
+                    <div className="dialog-task__form-group-error">
+                      <input
+                        type="text"
+                        id={subtask.id}
+                        name={`subtask-index`}
+                        placeholder={placeholder}
+                        className={
+                          error.error
+                            ? "dialog-task__form-input dialog-task__input--error"
+                            : "dialog-task__form-input"
+                        }
+                        aria-label="Subtask"
+                        title="Subtask"
+                        value={subtask.title}
+                        onChange={(e) => handleChangedTitleSubtask(e, subtask)}
+                      />
+                      <span
+                        className="dialog-task__error-input"
+                        aria-live="polite"
+                      >
+                        {`${error.error}`}
+                      </span>
+                    </div>
+                  ) : (
+                    <input
+                      type="text"
+                      id={subtask.id}
+                      name={`subtask-index`}
+                      placeholder={placeholder}
+                      className={"dialog-task__form-input"}
+                      aria-label="Subtask"
+                      title="Subtask"
+                      value={subtask.title}
+                      onChange={(e) => handleChangedTitleSubtask(e, subtask)}
+                    />
+                  )}
                   <button
                     type="button"
                     title="Remove subtask from task"
-                    className={
-                      error.error
-                        ? "dialog-task__btn-remove-subtask dialog-task__btn-remove-subtask--error"
-                        : "dialog-task__btn-remove-subtask"
-                    }
+                    className={"dialog-task__btn-remove-subtask"}
                     aria-label="Remove subtask from task"
                     onPointerDown={() =>
                       handlePointerDownBtnRemoveSubtask(subtask.id)
@@ -354,16 +387,14 @@ export default function ModalTask({
                       handleKeydownBtnRemoveSubtask(e, subtask.id)
                     }
                   >
-                    <CrossIcon className="dialog-task__icon-btn-remove-subtask" />
+                    <CrossIcon
+                      className={
+                        error.error
+                          ? "dialog-task__icon-btn-remove-subtask dialog-task__icon-btn-remove-subtask--error"
+                          : "dialog-task__icon-btn-remove-subtask"
+                      }
+                    />
                   </button>
-                  {error.error && (
-                    <span
-                      className="dialog-task__error-input"
-                      aria-live="polite"
-                    >
-                      {`${error.error}`}
-                    </span>
-                  )}
                 </div>
               );
             })}

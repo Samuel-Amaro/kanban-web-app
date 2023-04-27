@@ -1,3 +1,129 @@
 .dialog-task {
+  padding: 24px;
+  border-radius: 6px;
   background-color: var(--bg-sidebar_header_modals_card-task);
+  width: 343px;
+  margin: 30px;
+}
+
+.dialog-task__title {
+  color: var(--color-text-general);
+}
+
+.dialog-task__form-group,
+.dialog-task__title,
+.dialog-task__form-group-subtasks {
+  margin: 0 0 24px 0;
+}
+
+.dialog-task,
+.dialog-task__title,
+.dialog-task__form-label {
+  transition: all 0.3s ease-in-out;
+}
+
+.dialog-task__form-group-container-subtask {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.dialog-task__form-group-container-subtask:not(:last-child) {
+  margin: 0 0 12px 0;
+}
+
+.dialog-task__form,
+.dialog-task__form-label,
+.dialog-task__form-input {
+  display: block;
+}
+
+.dialog-task__form-label {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--color-labels);
+  margin: 0 0 8px 0;
+}
+
+.dialog-task__btn-remove-subtask,
+.dialog-task__form-textarea,
+.dialog-task__form-input {
+  box-sizing: border-box;
+  font-family: inherit;
+  appearance: none;
+  background-color: transparent;
+}
+
+.dialog-task__form-textarea,
+.dialog-task__form-input {
+  border-radius: 4px;
+  border: 1px solid rgba(130, 143, 163, 0.25);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 23px;
+  color: var(--color-text-general);
+  width: 100%;
+}
+
+.dialog-task__form-textarea {
+  padding: 8px 15px 33px 16px;
+  resize: none;
+}
+
+.dialog-task__form-input {
+  padding: 7px 16px 8px 16px;
+}
+
+.dialog-task__form-input::placeholder,
+.dialog-task__form-textarea::placeholder {
+  opacity: 0.25;
+  mix-blend-mode: normal;
+}
+
+.dialog-task__btn-remove-subtask {
+  border: none;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.dialog-task__icon-btn-remove-subtask {
+  fill: var(--medium-grey);
+}
+
+.dialog-task__btn-add-subtask,
+.dialog-task__btn-submit-form {
+  cursor: pointer;
+  width: 100%;
+  padding: 8px 0 9px 0;
+}
+
+.dialog-task__form-group-error{
+  position: relative;
+}
+
+.dialog-task__error-input {
+  position: absolute;
+  display: block;
+  top: 8px;
+  right: 16px;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 23px;
+  color: var(--red);
+}
+
+.dialog-task__input--error{
+  border-color: var(--red);
+  padding: 7px 114px 8px 16px;
+}
+
+.dialog-task__icon-btn-remove-subtask--error{
+  fill: var(--red);
 }
