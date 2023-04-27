@@ -118,15 +118,18 @@ export default function Header({
         />
       )}
       {modalDeleteBoardIsOppen && selectedBoard && (
-        <DeleteModal
-          typeDelete="board"
+        <DeleteModal<"board">
+          //typeDelete="board"
           isOpen={modalDeleteBoardIsOppen}
           onHandleOpen={(isOppen: boolean) => {
             refBtnDropdown.current?.focus();
             setModalDeleteBoardIsOppen(isOppen);
           }}
-          title_or_name={selectedBoard.name}
-          id={selectedBoard.id}
+          nameBoard={selectedBoard.name}
+          idBoard={selectedBoard.id}
+          typeDelete={"board"} //title_or_name={selectedBoard.name}
+          //id={selectedBoard.id}
+          //selectedBoard={null}
         />
       )}
       {modalTaskIsOppen && selectedBoard && (

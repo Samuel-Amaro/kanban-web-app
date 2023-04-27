@@ -24,7 +24,7 @@ type PropsModalTask = {
   type: "add" | "edit";
   isOpen: boolean;
   onHandleOpen: (isOpen: boolean) => void;
-  initialData?: { idBoard: string; idColumn: string; task: Task };
+  initialData?: Task | undefined;
   selectedBoard: Board | undefined;
 };
 
@@ -65,7 +65,7 @@ export default function ModalTask({
   });
   const [task, dispatch] = useReducer(
     taskReducer,
-    initialData && type === "edit" ? initialData.task : defaultDatasTask
+    initialData && type === "edit" ? initialData : defaultDatasTask
   );
 
   type DatasSubtaskRefactor = { subtask: Subtask; placeholder: string };
@@ -188,10 +188,45 @@ export default function ModalTask({
           onHandleOpen(false);
           break;
         }
-        case "edit":
-          //TODO: logica para obter dados necessarios para salvar edição em uma task
-          console.log("Task recem editada podem ser salva");
+        case "edit": {
+          if (!selectedBoard || !initialData) return;
+          //verificar se precisa mudar status da task
+          //não mudou status da task
+          const idColumnSource = selectedBoard.columns.filter(
+            (column) =>
+              column.name.toLowerCase() === initialData.status.toLowerCase()
+          )[0].id;
+          const idColumnTarget = selectedBoard.columns.filter(
+            (column) => column.name.toLowerCase() === task.status.toLowerCase()
+          )[0].id;
+          if (initialData.status.toLowerCase() === task.status.toLowerCase()) {
+            dispatchDatasContext({
+              type: "edit_task",
+              idBoard: selectedBoard.id,
+              idColumn: idColumnTarget,
+              taskChanged: task,
+            });
+            onHandleOpen(false);
+            return;
+          }
+          //mudou status da task
+          dispatchDatasContext({
+            type: "changed_status_task",
+            idBoard: selectedBoard.id,
+            sourceColumnId: idColumnSource,
+            idTask: task.id,
+            newStatusTask: task.status,
+            targetColumnId: idColumnTarget,
+          });
+          dispatchDatasContext({
+            type: "edit_task",
+            idBoard: selectedBoard.id,
+            idColumn: idColumnTarget,
+            taskChanged: task,
+          });
+          onHandleOpen(false);
           break;
+        }
         default:
           break;
       }
@@ -360,7 +395,7 @@ export default function ModalTask({
                       : optionsDropdownStatus.filter(
                           (option) =>
                             option.label.toLowerCase() ===
-                            initialData?.task.status.toLowerCase()
+                            initialData?.status.toLowerCase()
                         )[0]
                   }
                 />

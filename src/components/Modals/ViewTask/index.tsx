@@ -11,11 +11,19 @@ import useNoScroll from "../../../hooks/useNoScroll";
 import { getFocusableElements, nextFocusable } from "../../../utils";
 import useKeydownWindow from "../../../hooks/useKeydownWindow";
 
+type DataDropdownModalVisibilityStates = {
+  stateModalEdit: boolean;
+  handleStateModalEdit: (state: boolean) => void;
+  stateDeleteModal: boolean;
+  handleStateModalDelete: (state: boolean) => void;
+};
+
 type PropsViewTaskModal = {
   isOpen: boolean;
   onHandleOpen: (isOpen: boolean) => void;
   data: Task;
   selectedBoard: Board;
+  dropdownModalVisibilityStates: DataDropdownModalVisibilityStates;
 };
 
 type OptionDropdownSelected = {
@@ -36,6 +44,7 @@ const ViewTask = memo(function ViewTask({
   onHandleOpen,
   data,
   selectedBoard,
+  dropdownModalVisibilityStates,
 }: PropsViewTaskModal) {
   const dispatchDatasContext = useDatasDispatch();
   const totalSubtasks = data.subtasks.length;
@@ -76,15 +85,14 @@ const ViewTask = memo(function ViewTask({
   }
 
   //* INFO: QUAL OPTION DO MENU O SER ESCOLHEU, CADA OPTION ABRE UM MODAL SOBRE TASKS
-  //TODO: cada value e para chamar um modal de editar task ou delete task
-  //TODO: implementar este event
   function handleChangeDropdownOptionMenu(value: string) {
     if (value === "edit") {
-      console.log("edit task");
+      dropdownModalVisibilityStates.handleStateModalEdit(true);
     }
     if (value === "delete") {
-      console.log("delete task");
+      dropdownModalVisibilityStates.handleStateModalDelete(true);
     }
+    onHandleOpen(false);
   }
 
   //* INFO: QUAL OPTION DO STATUS O USER ESCOLHEU PARA ATUALIZAR STATUS DE UMA SUBTASK

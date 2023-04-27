@@ -6,7 +6,9 @@ export type ActionTypeDatasReducer =
     | { type: "delete_board"; idBoard: string }
     | {type: "changed_status_subtask"; idBoard: string; idColumn: string; idTask: string; idSubtask: string; newStatusSubtask: boolean} 
     | {type: "changed_status_task"; idBoard: string; sourceColumnId: string; idTask: string; newStatusTask: string; targetColumnId: string}
-    | {type: "save_new_task", task: Task, idBoard: string; idColumn: string};
+    | {type: "save_new_task", task: Task, idBoard: string; idColumn: string}
+    | {type: "edit_task", taskChanged: Task, idBoard: string, idColumn: string}
+    | {type: "delete_task", idBoard: string; idColumn: string; idTask: string};
 
 export function datasReducer(/*datas*/draft: Board[], action: ActionTypeDatasReducer) {
     switch(action.type) {
@@ -73,6 +75,24 @@ export function datasReducer(/*datas*/draft: Board[], action: ActionTypeDatasRed
             const indexColumn = draft[indexBoard].columns.findIndex((column) => column.id === action.idColumn);
             if(indexBoard > -1 && indexColumn > -1) {
                 draft[indexBoard].columns[indexColumn].tasks.push(action.task);
+            }
+            break;
+        };
+        case "edit_task": {
+            const indexBoard = draft.findIndex((board) => board.id === action.idBoard);
+            const indexColumn = draft[indexBoard].columns.findIndex((column) => column.id === action.idColumn);
+            const indexTaskChanged = draft[indexBoard].columns[indexColumn].tasks.findIndex((task) => task.id === action.taskChanged.id);
+            if(indexBoard > -1 && indexColumn > -1 && indexTaskChanged) {
+                draft[indexBoard].columns[indexColumn].tasks.splice(indexTaskChanged, 1, action.taskChanged);
+            }
+            break;
+        };
+        case "delete_task": {
+            const indexBoard = draft.findIndex((board) => board.id === action.idBoard);
+            const indexColumn = draft[indexBoard].columns.findIndex((column) => column.id === action.idColumn);
+            const indexTaskToBeDeleted = draft[indexBoard].columns[indexColumn].tasks.findIndex((task) => task.id === action.idTask);
+            if(indexBoard > -1 && indexColumn > -1 && indexTaskToBeDeleted > -1) {
+                draft[indexBoard].columns[indexColumn].tasks.splice(indexTaskToBeDeleted, 1);
             }
             break;
         };

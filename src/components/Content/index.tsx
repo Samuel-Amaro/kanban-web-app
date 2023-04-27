@@ -6,6 +6,8 @@ import BoardModal from "../Modals/BoardModal";
 import { Board, Column, Task } from "../../data";
 import { getFocusableElements, nextFocusable, random } from "../../utils";
 import ViewTask from "../Modals/ViewTask";
+import ModalTask from "../Modals/Task";
+import DeleteModal from "../Modals/Delete";
 
 type PropsMain = {
   selectedBoard: Board;
@@ -151,7 +153,11 @@ type PropsCardTask = {
 };
 
 function CardTask({ dataTask, selectedBoard }: PropsCardTask) {
+  //TODO: criar states para modais de edit, e delete task, e passar como um objeto via prop para modal viewTask para passar para dropdown, e escolher de state dinamicamente e passar para o modal correspondente, renderiuzar os três modais aqui, pois todos tem os data em comun.
+  //TODO: pensar na estrutura do objeto com states a ser passado via props para o modal viewTask
   const [modalViewTaskIsOppen, setModalViewTaskIsOppen] = useState(false);
+  const [modalEditTaskIsOppen, setModalEditTaskIsOppen] = useState(false);
+  const [modalDeleteTaskIsOppen, setModalDeleteTaskIsOppen] = useState(false);
   const refCardBtn = useRef<HTMLButtonElement | null>(null);
   const totalSubtasks = dataTask.subtasks.length;
   const totalSubtasksCompleteds = dataTask.subtasks.filter(
@@ -196,6 +202,50 @@ function CardTask({ dataTask, selectedBoard }: PropsCardTask) {
           }}
           data={dataTask}
           selectedBoard={value}
+          dropdownModalVisibilityStates={{
+            stateModalEdit: modalEditTaskIsOppen,
+            handleStateModalEdit: (state: boolean) => {
+              setModalEditTaskIsOppen(state);
+            },
+            stateDeleteModal: modalDeleteTaskIsOppen,
+            handleStateModalDelete: (state: boolean) => {
+              setModalDeleteTaskIsOppen(state);
+            },
+          }}
+        />
+      )}
+      {modalEditTaskIsOppen && (
+        <ModalTask
+          type="edit"
+          isOpen={modalEditTaskIsOppen}
+          onHandleOpen={(isOppen: boolean) => {
+            setModalEditTaskIsOppen(isOppen);
+          }}
+          initialData={dataTask}
+          selectedBoard={selectedBoard}
+        />
+      )}
+      {modalDeleteTaskIsOppen && (
+        <DeleteModal<"task">
+          isOpen={modalDeleteTaskIsOppen}
+          onHandleOpen={(isOppen: boolean) => {
+            setModalDeleteTaskIsOppen(isOppen);
+          }}
+          idBoard={selectedBoard.id}
+          titleTask={dataTask.title}
+          idTask={dataTask.id}
+          idColumn={
+            selectedBoard.columns.filter(
+              (column) =>
+                column.name.toLowerCase() === dataTask.status.toLowerCase()
+            )[0].id
+          }
+          selectedBoard={selectedBoard}
+          typeDelete={"task"} 
+          //typeDelete="task"
+          //title_or_name={dataTask.title}
+          //id={dataTask.id}
+          //selectedBoard={selectedBoard}
         />
       )}
     </>

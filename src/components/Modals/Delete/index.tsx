@@ -17,25 +17,58 @@ import {
 } from "../../../context/DataContext";
 import useNoScroll from "../../../hooks/useNoScroll";
 import useKeydownWindow from "../../../hooks/useKeydownWindow";
+import { Board, Task } from "../../../data";
 
-type PropsDeleteModal = {
+//TODO: construir um componente generico para ter props dinamicas
+
+type PropsModal = {
+  isOpen: boolean;
+  onHandleOpen: (isOpen: boolean) => void;
+};
+
+interface DeleteBoard<TypeDelete> extends PropsModal {
+  nameBoard: string;
+  idBoard: string;
+  typeDelete: TypeDelete;
+}
+
+interface DeleteTask<TypeDelete> extends PropsModal {
+  idBoard: string;
+  titleTask: string;
+  idTask: string;
+  idColumn: string;
+  selectedBoard: Board;
+  typeDelete: TypeDelete;
+}
+
+type PropsModalDeleteTaskOrBoard<TypeDelete extends "board" | "task"> =
+  TypeDelete extends "board" ? DeleteBoard<TypeDelete> : DeleteTask<TypeDelete>;
+
+type PropsDeleteModal<TypeDelete extends "board" | "task"> =
+  PropsModalDeleteTaskOrBoard<TypeDelete>;
+
+/*type PropsDeleteModal = {
   isOpen: boolean;
   onHandleOpen: (isOpen: boolean) => void;
   typeDelete: "board" | "task";
   title_or_name: string;
   id: string;
-};
+  selectedBoard: Board | null;
+};*/
 
-export default function DeleteModal({
+export default function DeleteModal<TypeDelete extends "board" | "task">(
+  /*{
   isOpen,
   onHandleOpen,
+  props
   typeDelete,
   title_or_name,
   id,
-}: PropsDeleteModal) {
+  selectedBoard,
+}:PropsDeleteModal*/ props: PropsDeleteModal<TypeDelete>
+) {
   const refDialog = useRef<HTMLDivElement | null>(null);
   const refBtns = useRef<HTMLButtonElement[] | null>(null);
-
   const dispatchDatasContext = useDatasDispatch();
 
   function handleKeyDownDialog(e: KeyboardEvent) {
@@ -43,40 +76,46 @@ export default function DeleteModal({
     switch (e.key) {
       case "Esc":
       case "Escape":
-        onHandleOpen(false);
+        props.onHandleOpen(false);
         break;
       default:
         break;
     }
   }
 
-  function handlePointerDownBtnDelete(/*e: React.PointerEvent<HTMLButtonElement>*/) {
-    if (typeDelete === "board") {
+  function handlePointerDownBtnDelete() {
+    if (props.typeDelete === "board") {
       dispatchDatasContext({
         type: "delete_board",
-        idBoard: id,
+        idBoard: props.idBoard /*id*/,
       });
+      return;
     }
-    if (typeDelete === "task") {
+    if (props.typeDelete === "task") {
+      /*const idColumn = selectedBoard.columns.filter(
+            (column) =>
+              column.name.toLowerCase() === initialData.status.toLowerCase()
+          )[0].id;
+      dispatchDatasContext({type: "delete_task", idBoard: selectedBoard.id, sele})*/
       //TODO: IMPLEMENTAR LOGICA PARA CHAMAR DISPATCH DATAS CONTEXT PARA EXCLUIR UMA TASK, IMPLEMENTAR CASE NO REDUCER DATAS REDUCER
     }
-    onHandleOpen(false);
+    props.onHandleOpen(false);
   }
 
   function handleKeyDownBtnDelete(e: React.KeyboardEvent<HTMLButtonElement>) {
     switch (e.key) {
       case "Enter":
       case " ":
-        if (typeDelete === "board") {
+        if (props.typeDelete === "board") {
           dispatchDatasContext({
             type: "delete_board",
-            idBoard: id,
+            idBoard: props.idBoard /*id*/,
           });
         }
-        if (typeDelete === "task") {
+        if (props.typeDelete === "task") {
           //TODO: IMPLEMENTAR LOGICA PARA CHAMAR DISPATCH DATAS CONTEXT PARA EXCLUIR UMA TASK, IMPLEMENTAR CASE NO REDUCER DATAS REDUCER
         }
-        onHandleOpen(false);
+        props.onHandleOpen(false);
         break;
       case "Up":
       case "ArrowUp":
@@ -104,14 +143,14 @@ export default function DeleteModal({
   }
 
   function handlePointerDownBtnCancel() {
-    onHandleOpen(false);
+    props.onHandleOpen(false);
   }
 
   function handleKeyDownBtnCancel(e: React.KeyboardEvent<HTMLButtonElement>) {
     switch (e.key) {
       case "Enter":
       case " ":
-        onHandleOpen(false);
+        props.onHandleOpen(false);
         break;
       case "Up":
       case "ArrowUp":
@@ -147,16 +186,20 @@ export default function DeleteModal({
 
   useNoScroll();
 
-  if (!isOpen) {
+  if (!props.isOpen) {
     return null;
   }
 
-  const messageDeleteBoard = `Are you sure you want to delete the ‘${title_or_name}’ board? This action will remove all columns and tasks and cannot be reversed.`;
+  const messageDeleteBoard = `Are you sure you want to delete the ‘${
+    props.typeDelete === "board" ? props.nameBoard : ""
+  }’ board? This action will remove all columns and tasks and cannot be reversed.`;
 
-  const messageDeleteTask = `Are you sure you want to delete the ‘${title_or_name}’ task and its subtasks? This action cannot be reversed.`;
+  const messageDeleteTask = `Are you sure you want to delete the ‘${
+    props.typeDelete === "task" ? props.titleTask : ""
+  }’ task and its subtasks? This action cannot be reversed.`;
 
   const template = (
-    <BackdropModal onHandleOpenModal={() => onHandleOpen(false)}>
+    <BackdropModal onHandleOpenModal={() => props.onHandleOpen(false)}>
       <div
         className="dialog-delete"
         role="dialog"
@@ -170,18 +213,22 @@ export default function DeleteModal({
           className="dialog-delete__title"
           id="dialog-label-title"
         >
-          {`Delete this ${typeDelete === "board" ? "board" : "task"}?`}
+          {`Delete this ${props.typeDelete === "board" ? "board" : "task"}?`}
         </Heading>
         <p className="dialog-delete__message">
-          {typeDelete === "board" ? messageDeleteBoard : messageDeleteTask}
+          {props.typeDelete === "board"
+            ? messageDeleteBoard
+            : messageDeleteTask}
         </p>
         <div className="dialog-delete__buttons">
           <Button
             type="button"
             variant="destructive"
             size="s"
-            title={`Delete ${typeDelete === "board" ? "board" : "task"}?`}
-            aria-label={`Delete ${typeDelete === "board" ? "board" : "task"}?`}
+            title={`Delete ${props.typeDelete === "board" ? "board" : "task"}?`}
+            aria-label={`Delete ${
+              props.typeDelete === "board" ? "board" : "task"
+            }?`}
             className="dialog-delete__btn-delete"
             onPointerDown={handlePointerDownBtnDelete}
             onKeyDown={(e) => {
@@ -203,10 +250,10 @@ export default function DeleteModal({
             variant="secondary"
             size="s"
             title={`Cancel action from delete ${
-              typeDelete === "board" ? "board" : "task"
+              props.typeDelete === "board" ? "board" : "task"
             }?`}
             aria-label={`Cancel action from delete ${
-              typeDelete === "board" ? "board" : "task"
+              props.typeDelete === "board" ? "board" : "task"
             }?`}
             className="dialog-delete__btn-cancel"
             onPointerDown={handlePointerDownBtnCancel}
