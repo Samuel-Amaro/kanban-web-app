@@ -92,6 +92,7 @@ export default function BoardModal({
   ) {
     if (e) {
       if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
         dispatch({ type: "removed_column", idColumn: column.id });
         return;
       }
@@ -104,6 +105,7 @@ export default function BoardModal({
   ) {
     if (e) {
       if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
         flushSync(() => {
           dispatch({ type: "add_new_column" });
         });

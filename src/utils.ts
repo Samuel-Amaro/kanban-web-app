@@ -37,7 +37,7 @@ export function getFocusableElements(parent?: HTMLElement | null) : HTMLElement[
  * @param forward 
  */
 export function nextFocusable(elements: HTMLElement[], forward = true) {
-    const currentIndex = elements.findIndex((e) => e === document.activeElement);
+  const currentIndex = elements.findIndex((e) => e === document.activeElement);
   let nextIndex = 0;
 
   if (currentIndex > -1) {

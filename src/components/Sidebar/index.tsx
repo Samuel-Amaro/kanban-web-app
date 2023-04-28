@@ -331,6 +331,7 @@ export function ListBoards(props: PropsListBoards) {
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
                   if (
                     typeWrapper === "mobile" &&
                     onCloseWrapper &&

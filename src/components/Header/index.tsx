@@ -15,6 +15,7 @@ import DeleteModal from "../Modals/Delete";
 import Dropdown from "../DropdownMenu";
 import ModalTask from "../Modals/Task";
 import { Board } from "../../data";
+import { getFocusableElements, nextFocusable } from "../../utils";
 
 type PropsSidebar = {
   isSidebarHidden: boolean;
@@ -51,9 +52,15 @@ export default function Header({
   }
 
   function handleKeydownBtnAddTask(e: React.KeyboardEvent<HTMLButtonElement>) {
-    if (e.key === "Enter" || e.key === " ") {
-      setModalTaskIsOppen(true);
-      return;
+    switch (e.key) {
+      case "Enter":
+      case " ": {
+        e.preventDefault();
+        setModalTaskIsOppen(true);
+        break;
+      }
+      default:
+        break;
     }
   }
 
@@ -126,7 +133,7 @@ export default function Header({
           }}
           nameBoard={selectedBoard.name}
           idBoard={selectedBoard.id}
-          typeDelete={"board"} 
+          typeDelete={"board"}
         />
       )}
       {modalTaskIsOppen && selectedBoard && (

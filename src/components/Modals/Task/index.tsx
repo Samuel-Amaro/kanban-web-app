@@ -1,4 +1,4 @@
-import { createPortal } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
 import { Board, Subtask, Task } from "../../../data";
 import BackdropModal from "../../BackdropModal";
 import Heading from "../../Heading";
@@ -28,7 +28,9 @@ type PropsModalTask = {
   selectedBoard: Board | undefined;
 };
 
-//TODO: tratar overflow de qualquer modal em relação ao bakcdrop, como resolver isso, add scrol no momento necessario, e class dinamicas, em relação a todo momento verificação do tamanho do modal em relação ao backdrop modal, ao modal ser maior que o backadrop add uma class para add scroll, e centralização de acordo
+//TODO: refatora estilos mobile first, diminuir o numero de variaives css de color, fazer reaproveitamento de class, para não ter dificuldade no table/desktop
+//TODO: refatorar styles, add class de focus/hover, para campus de input,
+//TODO: verificar todas features no mobile-first, se tudo acimar estiver ok, partir para design tablet/desktop
 
 export default function ModalTask({
   type,
@@ -40,6 +42,7 @@ export default function ModalTask({
   const dispatchDatasContext = useDatasDispatch();
   const refInputTitleTask = useRef<HTMLInputElement | null>(null);
   const refDialog = useRef<HTMLDivElement | null>(null);
+  const refsInputSubtasks = useRef<Map<number, HTMLInputElement> | null>(null);
   const optionsDropdownStatus: OptionStatus[] | null = selectedBoard
     ? selectedBoard.columns.map((column) => {
         return {
@@ -71,6 +74,19 @@ export default function ModalTask({
   );
 
   type DatasSubtaskRefactor = { subtask: Subtask; placeholder: string };
+
+  function getMap() {
+    if (!refsInputSubtasks.current) {
+      refsInputSubtasks.current = new Map();
+    }
+    return refsInputSubtasks.current;
+  }
+
+  function focusToId(itemId: number) {
+    const map = getMap();
+    const node = map.get(itemId);
+    node?.focus();
+  }
 
   const subtasks: DatasSubtaskRefactor[] = task.subtasks.map(
     (subtask, index) => {
@@ -135,7 +151,11 @@ export default function ModalTask({
     });
   }
 
-  function handlePointerDownBtnRemoveSubtask(idSubtask: string) {
+  function handlePointerDownBtnRemoveSubtask(
+    e: React.PointerEvent<HTMLButtonElement>,
+    idSubtask: string
+  ) {
+    e.preventDefault();
     dispatch({
       type: "handle_removed_subtask",
       idSubtask: idSubtask,
@@ -146,15 +166,25 @@ export default function ModalTask({
     e: React.KeyboardEvent<HTMLButtonElement>,
     idSubtask: string
   ) {
-    if (e.key === "Enter" || e.key === "") {
-      dispatch({
-        type: "handle_removed_subtask",
-        idSubtask: idSubtask,
-      });
+    switch (e.key) {
+      case "Enter":
+      case " ": {
+        e.preventDefault();
+        dispatch({
+          type: "handle_removed_subtask",
+          idSubtask: idSubtask,
+        });
+        break;
+      }
+      default:
+        break;
     }
   }
 
-  function handlePointerDownBtnAddSubtask() {
+  function handlePointerDownBtnAddSubtask(
+    e: React.PointerEvent<HTMLButtonElement>
+  ) {
+    e.preventDefault();
     dispatch({
       type: "handle_add_subtask",
     });
@@ -163,10 +193,20 @@ export default function ModalTask({
   function handleKeydownBtnAddSubtask(
     e: React.KeyboardEvent<HTMLButtonElement>
   ) {
-    if (e.key === "Enter" || e.key === "") {
-      dispatch({
-        type: "handle_add_subtask",
-      });
+    switch (e.key) {
+      case "Enter":
+      case " ": {
+        e.preventDefault();
+        flushSync(() => {
+          dispatch({
+            type: "handle_add_subtask",
+          });
+        });
+        focusToId(subtasks.length);
+        break;
+      }
+      default:
+        break;
     }
   }
 
@@ -240,15 +280,6 @@ export default function ModalTask({
   useEffect(() => {
     //ao abrir modal foca primeiro campo
     refInputTitleTask.current?.focus();
-    /*console.log("Tamanho do dialog width: " + refDialog.current?.offsetWidth);
-    console.log("Tamanho do dialog height: " + refDialog.current?.offsetHeight);
-    console.log(
-      "Tamnaho da window width: " + document.documentElement.clientWidth
-    );
-    console.log(
-      "Tamanho da window height: " + document.documentElement.clientHeight
-    );
-    */
   }, []);
 
   useKeydownWindow(handleKeyDownDialog);
@@ -336,79 +367,99 @@ export default function ModalTask({
             <label htmlFor="subtasks" className="dialog-task__form-label">
               Subtasks
             </label>
-            {subtasks.map(({ subtask, placeholder }: DatasSubtaskRefactor) => {
-              const errorFiltered = errorsFormTask.subtasks.filter(
-                (defs) => defs.id === subtask.id
-              );
-              const error =
-                errorFiltered.length > 0
-                  ? errorFiltered[0]
-                  : { id: "", error: "" };
-              return (
-                <div
-                  className="dialog-task__form-group-container-subtask"
-                  key={subtask.id}
-                >
-                  {error.error ? (
-                    <div className="dialog-task__form-group-error">
+            {subtasks.map(
+              ({ subtask, placeholder }: DatasSubtaskRefactor, index) => {
+                const errorFiltered = errorsFormTask.subtasks.filter(
+                  (defs) => defs.id === subtask.id
+                );
+                const error =
+                  errorFiltered.length > 0
+                    ? errorFiltered[0]
+                    : { id: "", error: "" };
+                return (
+                  <div
+                    className="dialog-task__form-group-container-subtask"
+                    key={subtask.id}
+                  >
+                    {error.error ? (
+                      <div className="dialog-task__form-group-error">
+                        <input
+                          type="text"
+                          id={subtask.id}
+                          name={`subtask-index`}
+                          placeholder={placeholder}
+                          className={
+                            error.error
+                              ? "dialog-task__form-input dialog-task__input--error"
+                              : "dialog-task__form-input"
+                          }
+                          aria-label="Subtask"
+                          title="Subtask"
+                          value={subtask.title}
+                          onChange={(e) =>
+                            handleChangedTitleSubtask(e, subtask)
+                          }
+                          ref={(node) => {
+                            const map = getMap();
+                            if (node) {
+                              map.set(index, node);
+                            } else {
+                              map.delete(index);
+                            }
+                          }}
+                        />
+                        <span
+                          className="dialog-task__error-input"
+                          aria-live="polite"
+                        >
+                          {`${error.error}`}
+                        </span>
+                      </div>
+                    ) : (
                       <input
                         type="text"
                         id={subtask.id}
                         name={`subtask-index`}
                         placeholder={placeholder}
-                        className={
-                          error.error
-                            ? "dialog-task__form-input dialog-task__input--error"
-                            : "dialog-task__form-input"
-                        }
+                        className={"dialog-task__form-input"}
                         aria-label="Subtask"
                         title="Subtask"
                         value={subtask.title}
                         onChange={(e) => handleChangedTitleSubtask(e, subtask)}
+                        ref={(node) => {
+                          const map = getMap();
+                          if (node) {
+                            map.set(index, node);
+                          } else {
+                            map.delete(index);
+                          }
+                        }}
                       />
-                      <span
-                        className="dialog-task__error-input"
-                        aria-live="polite"
-                      >
-                        {`${error.error}`}
-                      </span>
-                    </div>
-                  ) : (
-                    <input
-                      type="text"
-                      id={subtask.id}
-                      name={`subtask-index`}
-                      placeholder={placeholder}
-                      className={"dialog-task__form-input"}
-                      aria-label="Subtask"
-                      title="Subtask"
-                      value={subtask.title}
-                      onChange={(e) => handleChangedTitleSubtask(e, subtask)}
-                    />
-                  )}
-                  <button
-                    type="button"
-                    title="Remove subtask from task"
-                    className={"dialog-task__btn-remove-subtask"}
-                    aria-label="Remove subtask from task"
-                    onPointerDown={() =>
-                      handlePointerDownBtnRemoveSubtask(subtask.id)
-                    }
-                    onKeyDown={(e) =>
-                      handleKeydownBtnRemoveSubtask(e, subtask.id)
-                    }
-                  >
-                    <CrossIcon
-                      className={
-                        error.error
-                          ? "dialog-task__icon-btn-remove-subtask dialog-task__icon-btn-remove-subtask--error"
-                          : "dialog-task__icon-btn-remove-subtask"
+                    )}
+                    <button
+                      type="button"
+                      title="Remove subtask from task"
+                      className={"dialog-task__btn-remove-subtask"}
+                      aria-label="Remove subtask from task"
+                      onPointerDown={(e) =>
+                        handlePointerDownBtnRemoveSubtask(e, subtask.id)
                       }
-                    />
-                  </button>
-                </div>
-              );
-            })}
+                      onKeyDown={(e) =>
+                        handleKeydownBtnRemoveSubtask(e, subtask.id)
+                      }
+                    >
+                      <CrossIcon
+                        className={
+                          error.error
+                            ? "dialog-task__icon-btn-remove-subtask dialog-task__icon-btn-remove-subtask--error"
+                            : "dialog-task__icon-btn-remove-subtask"
+                        }
+                      />
+                    </button>
+                  </div>
+                );
+              }
+            )}
             <Button
               type="button"
               variant="secondary"
@@ -416,7 +467,7 @@ export default function ModalTask({
               title="+ Add New Subtask"
               aria-label="+ Add New Subtask"
               className="dialog-task__btn-add-subtask"
-              onPointerDown={handlePointerDownBtnAddSubtask}
+              onPointerDown={(e) => handlePointerDownBtnAddSubtask(e)}
               onKeyDown={handleKeydownBtnAddSubtask}
             >
               + Add New Subtask
