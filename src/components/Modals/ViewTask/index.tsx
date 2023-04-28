@@ -73,15 +73,16 @@ const ViewTask = memo(function ViewTask({
       (column) =>
         column.name.toLocaleLowerCase() === data.status.toLocaleLowerCase()
     )[0];
-    dispatchDatasContext({
-      type: "changed_status_subtask",
-      idBoard: selectedBoard.id,
-      idColumn: column.id,
-      idTask: data.id,
-      idSubtask: subtask.id,
-      newStatusSubtask: !subtask.isCompleted,
-    });
-    //}
+    if(column) {
+      dispatchDatasContext({
+        type: "changed_status_subtask",
+        idBoard: selectedBoard.id,
+        idColumn: column.id,
+        idTask: data.id,
+        idSubtask: subtask.id,
+        newStatusSubtask: !subtask.isCompleted,
+      });
+    }
   }
 
   //* INFO: QUAL OPTION DO MENU O SER ESCOLHEU, CADA OPTION ABRE UM MODAL SOBRE TASKS
@@ -101,6 +102,15 @@ const ViewTask = memo(function ViewTask({
       (column) =>
         column.name.toLocaleLowerCase() === data.status.toLocaleLowerCase()
     )[0];
+    if (column) {
+      setOptionDropdownSelected({
+        idBoard: selectedBoard.id,
+        sourceColumnId: column.id,
+        idTask: data.id,
+        newStatusTask: option.label,
+        targetColumnId: option.id,
+      });
+    }
     //!causa re-renderização em toda arvore de UI
     //!por atualizar o context datas
     /*dispatchDatasContext({
@@ -112,13 +122,6 @@ const ViewTask = memo(function ViewTask({
       targetColumnId: option.id,
     });
     */
-    setOptionDropdownSelected({
-      idBoard: selectedBoard.id,
-      sourceColumnId: column.id,
-      idTask: data.id,
-      newStatusTask: option.label,
-      targetColumnId: option.id,
-    });
   }
 
   function handleKeyDownDialog(e: KeyboardEvent) {

@@ -29,7 +29,6 @@ type PropsModalTask = {
 };
 
 //TODO: refatora estilos mobile first, diminuir o numero de variaives css de color, fazer reaproveitamento de class, para não ter dificuldade no table/desktop
-//TODO: refatorar styles, add class de focus/hover, para campus de input,
 //TODO: verificar todas features no mobile-first, se tudo acimar estiver ok, partir para design tablet/desktop
 
 export default function ModalTask({

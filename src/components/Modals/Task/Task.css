@@ -66,6 +66,13 @@
   line-height: 23px;
   color: var(--color-text-general);
   width: 100%;
+  cursor: pointer;
+}
+
+.dialog-task__form-textarea:is(:focus, :hover),
+.dialog-task__form-input:is(:focus, :hover) {
+  border-color: var(--main-purple);
+  outline: none;
 }
 
 .dialog-task__form-textarea {
@@ -103,7 +110,7 @@
   padding: 8px 0 9px 0;
 }
 
-.dialog-task__form-group-error{
+.dialog-task__form-group-error {
   position: relative;
 }
 
@@ -118,11 +125,11 @@
   color: var(--red);
 }
 
-.dialog-task__input--error{
+.dialog-task__input--error {
   border-color: var(--red);
   padding: 7px 114px 8px 16px;
 }
 
-.dialog-task__icon-btn-remove-subtask--error{
+.dialog-task__icon-btn-remove-subtask--error {
   fill: var(--red);
 }

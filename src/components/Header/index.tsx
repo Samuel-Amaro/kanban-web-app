@@ -15,7 +15,6 @@ import DeleteModal from "../Modals/Delete";
 import Dropdown from "../DropdownMenu";
 import ModalTask from "../Modals/Task";
 import { Board } from "../../data";
-import { getFocusableElements, nextFocusable } from "../../utils";
 
 type PropsSidebar = {
   isSidebarHidden: boolean;

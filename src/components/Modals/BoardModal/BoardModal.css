@@ -45,6 +45,12 @@
   line-height: 23px;
   color: var(--color-text-general);
   background-color: transparent;
+  cursor: pointer;
+}
+
+.dialog__input:is(:focus, :hover){
+  border-color: var(--main-purple);
+  outline: none;
 }
 
 .dialog__input::placeholder {
