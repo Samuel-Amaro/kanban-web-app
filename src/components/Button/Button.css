@@ -24,9 +24,15 @@
   border-radius: 20px;
 }
 
+.button__primary,
+.button__secondary,
+.button__destructive {
+  transition: all 0.3s ease-in-out;
+}
+
 .button__primary {
   background-color: var(--bg-primary-l-btn);
-  color: var(--color-primary-l-btn);
+  color: var(--color-text-primary-l-btn);
 }
 
 .button__primary:hover,
@@ -44,11 +50,11 @@
   background-color: var(--bg-secondary-s-btn-hover);
 }
 
-.button__destructive{
+.button__destructive {
   background-color: var(--bg-destructive-s-btn);
   color: var(--color-text-btn-destructive);
 }
 
-.button__destructive:is(:hover, :focus){
+.button__destructive:is(:hover, :focus) {
   background-color: var(--bg-destructive-s-btn-hover);
 }

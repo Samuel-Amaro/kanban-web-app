@@ -17,6 +17,7 @@
   --white: #ffffff;
   --red: #ea5555;
   --red-hover: #ff9898;
+  --black-variation-05:rgba(0, 0, 0, 0.5);
 
   /**CSS VARIABLES COLORS**/
 
@@ -24,25 +25,23 @@
   --color-text-general: var(--black);
   --color-heading-s: var(--medium-grey);
 
-  /**BUTTONS**/
-
+  /**************BUTTONS*******************/
   /**PRIMARY LARGER**/
   --bg-primary-l-btn: var(--main-purple);
   --bg-primary-l-btn-hover: var(--main-purple-hover);
-  --color-primary-l-btn: var(--white);
+  --color-text-primary-l-btn: var(--white);
   --bg-btn-select-board-hover: rgba(99, 95, 199, 0.1);
   --color-btn-select-board-hover: var(--main-purple);
-
   /**SECONDARY SMALL**/
   --bg-secondary-s-btn: rgba(99, 95, 199, 0.1);
   --color-text-secondary-s-btn: var(--main-purple);
   --bg-secondary-s-btn-hover: rgba(99, 95, 199, 0.25);
-
   /**DESTRUCTIVE SMALL**/
   --bg-destructive-s-btn: var(--red);
   --color-text-btn-destructive: var(--white);
   --bg-destructive-s-btn-hover: var(--red-hover);
-
+  /*************************END BUTTONS*************/
+  
   /**OUTROS**/
   --box-shadow-sidebar-mobile: rgba(54, 78, 126, 0.25);
 
