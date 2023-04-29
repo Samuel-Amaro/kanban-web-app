@@ -29,7 +29,7 @@
 
 .header__name-board {
   color: var(--color-text-general);
-  transition: all 0.30s ease-in-out;
+  transition: all 0.3s ease-in-out;
   max-width: 180px;
   overflow: hidden;
   white-space: nowrap;
@@ -46,7 +46,7 @@
   padding: 10px 18px 10px 18px;
 }
 
-.header__btn-add-task:disabled{
+.header__btn-add-task:disabled {
   opacity: 0.25;
 }
 
@@ -73,17 +73,16 @@
   justify-content: space-between;
   padding: 16px;
   background-color: var(--bg-sidebar_header_modals_card-task);
-  transition: all 0.30s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
-.header__icon-logo-desktop{
-  transition: all 0.30s ease-in-out;
+.header__icon-logo-desktop {
+  transition: all 0.3s ease-in-out;
 }
-
 
 /***MENU BOARD OPTIONS***/
 
-.header__menu-board{
+.header__menu-board {
   list-style: none;
   position: absolute;
   top: 50px;
@@ -94,14 +93,15 @@
   padding: 16px;
   width: 192px;
   height: 94px;
-  transition: all 0.30s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
-.header__menu-button-board{
+.header__menu-button-board {
   position: relative;
 }
 
-.header__btn-board-edit, .header__btn-board-delete{
+.header__btn-board-edit,
+.header__btn-board-delete {
   display: block;
   appearance: none;
   border: none;
@@ -113,14 +113,40 @@
   cursor: pointer;
 }
 
-.header__btn-board-edit{
+.header__btn-board-edit {
   color: var(--medium-grey);
 }
 
-.header__btn-board-delete{
+.header__btn-board-delete {
   color: var(--red);
 }
 
-.header__menu-item:not(:last-child){
+.header__menu-item:not(:last-child) {
   margin: 0 0 16px 0;
+}
+
+@media screen and (min-width: 600px) {
+  /******btn add task********/
+  .header__btn-add-task {
+    padding: 15px 25px 14px 24px;
+  }
+
+  .header__icon-btn-add-task {
+    display: none;
+  }
+
+  .header__text-btn-add-task {
+    display: inline-block;
+  }
+
+  /******title main*********/
+  .header__name-board {
+    max-width: 180px;
+    margin: 0;
+  }
+
+  /*******header container*******/
+  .header {
+    padding: 16px 24px;
+  }
 }

@@ -1,50 +1,57 @@
-.switch{
-    padding: 14px 0 14px 0;
-    background-color: var(--bg-body-switch);
-    border-radius: 6px;
-    margin: 0 13px 0 16px;
-    transition: all 0.30s ease-in-out;
+.switch {
+  padding: 14px 0 14px 0;
+  background-color: var(--bg-body-switch);
+  border-radius: 6px;
+  margin: 0 13px 0 16px;
+  transition: all 0.3s ease-in-out;
 }
 
-.switch__icon{
-    display: block;
+.switch__icon {
+  display: block;
 }
 
-.switch__wrapper{
-    width: 40px;
-    height: 20px;
-    border-radius: 12px;
-    background-color: var(--main-purple);
-    position: relative;
-    cursor: pointer;
+.switch__wrapper {
+  width: 40px;
+  height: 20px;
+  border-radius: 12px;
+  background-color: var(--main-purple);
+  position: relative;
+  cursor: pointer;
 }
 
-.switch__wrapper:hover, .switch__wrapper:focus{
-    background-color: var(--main-purple-hover);
+.switch__wrapper:hover,
+.switch__wrapper:focus {
+  background-color: var(--main-purple-hover);
 }
 
-.switch__wrapper[aria-checked="true"] .switch__controler{
-    left: 23px;
+.switch__wrapper[aria-checked="true"] .switch__controler {
+  left: 23px;
 }
 
-.switch__controler{
-    content: "";
-    display: block;
-    width: 14px;
-    height: 14px;
-    position: absolute;
-    background-color: var(--white);
-    border-radius: 50%;
-    top: 3px;
-    left: 3px;
-    right: 3px;
-    transition: all 0.35s ease;
+.switch__controler {
+  content: "";
+  display: block;
+  width: 14px;
+  height: 14px;
+  position: absolute;
+  background-color: var(--white);
+  border-radius: 50%;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  transition: all 0.35s ease;
 }
 
-.switch__container{
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    justify-content: center;
-    gap: 24px;
+.switch__container {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+@media screen and (min-width: 600px) {
+  .switch {
+    margin: 0 0 0 0;
+  }
 }

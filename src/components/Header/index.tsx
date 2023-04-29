@@ -22,6 +22,9 @@ type PropsSidebar = {
   selectedBoard: Board | undefined;
 };
 
+//TODO: mudar posicionamento da logo desktop ver melhor lugar, refatorar esta parte
+//TODO: ver melhor posicionamento do logo desktop
+
 export default function Header({
   isSidebarHidden,
   onSidebar,
@@ -74,8 +77,17 @@ export default function Header({
               nameBoard={selectedBoard?.name}
             />
           ),
-          desktopContent: <DesktopContent nameBoard={selectedBoard?.name} />,
-          mediaQuery: "(min-width: 450px)",
+          desktopContent: (
+            <Heading
+              level={1}
+              className="header__name-board"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {selectedBoard?.name ? selectedBoard.name : "Select a board"}
+            </Heading>
+          ) /*<DesktopContent nameBoard={selectedBoard?.name} />*/,
+          mediaQuery: "(min-width: 600px)",
         })}
         <div className="header__container-buttons">
           <Button
@@ -150,7 +162,7 @@ export default function Header({
   );
 }
 
-type PropsDesktopContext = {
+/*type PropsDesktopContext = {
   nameBoard: string | undefined;
 };
 
@@ -176,6 +188,7 @@ function DesktopContent({ nameBoard }: PropsDesktopContext) {
     </div>
   );
 }
+*/
 
 interface PropsMenuButtonSidebarMobile {
   isSidebarHidden: boolean;

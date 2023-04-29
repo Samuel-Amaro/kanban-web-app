@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDataContext } from "../../context/DataContext";
 import Header from "../Header";
 import { SidebarDesktop } from "../Sidebar";
 import "./App.css";
 import useMatchMedia from "../../hooks/useMatchMedia";
 import Content from "../Content";
+import { useThemeContext } from "../../context/ThemeContext";
 
 //TODO: refatorar css de tudo para colors dark porque theme ja esta ativo
 //TODO: implementar funcionalidade de salvas datas no localstorage criar function para isso
@@ -19,6 +20,7 @@ function App() {
     () => dataContext.datas.find((b) => b.id === dataContext.selectedIdBoard),
     [dataContext]
   );
+  const themeContext = useThemeContext();
 
   function onSidebar(isHidden: boolean) {
     setIsSidebarHidden(isHidden);
@@ -37,9 +39,10 @@ function App() {
           <SidebarDesktop
             isSidebarHidden={isSidebarHidden}
             onSidebar={onSidebar}
+            theme={themeContext.theme}
           />
         ),
-        mediaQuery: "(min-width: 450px)",
+        mediaQuery: "(min-width: 600px)",
       })}
       {selectedBoard && <Content selectedBoard={selectedBoard} />}
     </>

@@ -50,3 +50,9 @@
 .dropdown-container__item-list:last-child .dropdown-container__option-btn {
   color: var(--red);
 }
+
+@media screen and (min-width: 600px) {
+  .dropdown-container__btn {
+    height: 20px;
+  }
+}

@@ -3,7 +3,11 @@ import LightTheme from "../Icons/LightTheme";
 import { useThemeContext } from "../../context/ThemeContext";
 import "./Switch.css";
 
-export default function Switch() {
+type PropsSwitch = {
+  className?: string;
+};
+
+export default function Switch({ className }: PropsSwitch) {
   const themeContext = useThemeContext();
 
   function toggleStatus(
@@ -21,7 +25,7 @@ export default function Switch() {
   }
 
   return (
-    <div className="switch">
+    <div className={className ? `switch ${className}` : "switch"}>
       <div className="switch__container">
         <LightTheme className="switch__icon" />
         <div

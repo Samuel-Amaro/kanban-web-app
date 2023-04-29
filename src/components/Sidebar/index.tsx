@@ -19,15 +19,19 @@ import {
 } from "../../utils";
 import useNoScroll from "../../hooks/useNoScroll";
 import useKeydownWindow from "../../hooks/useKeydownWindow";
+import Logo from "../Icons/Logo";
+import { Theme } from "../../theme";
 
 type PropsSidebarDesktop = {
   isSidebarHidden: boolean;
   onSidebar: (isHidden: boolean) => void;
+  theme: Theme;
 };
 
 export function SidebarDesktop({
   isSidebarHidden,
   onSidebar,
+  theme,
 }: PropsSidebarDesktop) {
   const refBtnToggleSidebar = useRef<HTMLButtonElement>(null);
   const [modalCreateBoardIsOpen, setModalCreateBoardIsOpen] = useState(false);
@@ -67,32 +71,38 @@ export function SidebarDesktop({
   return (
     <>
       <aside className="sidebar">
-        <div className="sidebar__container">
-          <ListBoards
-            onCloseWrapper={handleCloseSidebar}
-            onModalCreateBoardIsOpen={handleModalIsOpen}
-            typeWrapper="desktop"
-          />
+        <div className="sidebar__logo">
+          <Logo theme={theme} className="header__icon-logo-desktop" />
         </div>
-        <div className="sidebar__container">
-          <Switch />
-          <Button
-            type="button"
-            size="l"
-            title="Hide Sidebar"
-            aria-label="Hide Sidebar"
-            className="sidebar__btn-hide"
-            onPointerDown={() => {
-              onSidebar(true);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
+        <div className="sidebar__container-primary">
+          <div className="sidebar__wrapper">
+            <ListBoards
+              onCloseWrapper={handleCloseSidebar}
+              onModalCreateBoardIsOpen={handleModalIsOpen}
+              typeWrapper="desktop"
+            />
+          </div>
+          <div className="sidebar__container-secondary">
+            <Switch className="sidebar__swith--margin"/>
+            <Button
+              type="button"
+              size="l"
+              variant="secondary"
+              title="Hide Sidebar"
+              aria-label="Hide Sidebar"
+              className="sidebar__btn-hide"
+              onPointerDown={() => {
                 onSidebar(true);
-              }
-            }}
-          >
-            <HideSidebar /> Hide Sidebar
-          </Button>
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  onSidebar(true);
+                }
+              }}
+            >
+              <HideSidebar className="sidebar__icon-btn-hidden"/> Hide Sidebar
+            </Button>
+          </div>
         </div>
       </aside>
       {modalCreateBoardIsOpen && (
@@ -111,7 +121,7 @@ interface PropsSidebarMobile extends PropsListBoards {
 }
 
 export function SidebarMobile(props: PropsSidebarMobile) {
-  const {...rest } = props;
+  const { ...rest } = props;
   const refBackdrop = useRef<HTMLDivElement | null>(null);
   const refSideBarMobile = useRef<HTMLDivElement | null>(null);
 
@@ -303,9 +313,7 @@ export function ListBoards(props: PropsListBoards) {
                         : "list-boards__icon list-boards__icon-btn-select-board"
                     }
                   />
-                  <span className="list-boards__btn--text">
-                    {board.name}
-                  </span>
+                  <span className="list-boards__btn--text">{board.name}</span>
                 </Button>
               </li>
             );

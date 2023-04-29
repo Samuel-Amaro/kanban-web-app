@@ -1,0 +1,21 @@
+@media screen and (min-width: 600px) {
+  .container {
+    display: grid;
+    grid-template-columns: minmax(min-content, auto) 1fr;
+    grid-template-areas:
+      "sidebar header"
+      "sidebar main";
+  }
+
+  .header {
+    grid-area: header;
+  }
+
+  .sidebar {
+    grid-area: sidebar;
+  }
+
+  .main-content {
+    grid-area: main;
+  }
+}

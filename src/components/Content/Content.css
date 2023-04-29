@@ -111,7 +111,7 @@
   flex: 0 0 280px;
 }
 
-.main-content__column--empty{
+.main-content__column--empty {
   align-self: stretch;
   border: 2px dashed var(--medium-grey);
 }
@@ -139,4 +139,12 @@
 
 .main-content__card-task:is(:hover, :focus) .main-content__task-title {
   color: var(--main-purple);
+}
+
+@media screen and (min-width: 600px) {
+  .main-content {
+    min-height: calc(100vh - 80px);
+    max-height: calc(100vh - 80px);
+    overflow: auto;
+  }
 }
