@@ -51,7 +51,7 @@
   color: var(--red);
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 690px) {
   .dropdown-container__btn {
     height: 20px;
   }

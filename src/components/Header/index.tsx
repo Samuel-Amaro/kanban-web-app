@@ -22,9 +22,6 @@ type PropsSidebar = {
   selectedBoard: Board | undefined;
 };
 
-//TODO: mudar posicionamento da logo desktop ver melhor lugar, refatorar esta parte
-//TODO: ver melhor posicionamento do logo desktop
-
 export default function Header({
   isSidebarHidden,
   onSidebar,
@@ -78,16 +75,12 @@ export default function Header({
             />
           ),
           desktopContent: (
-            <Heading
-              level={1}
-              className="header__name-board"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              {selectedBoard?.name ? selectedBoard.name : "Select a board"}
-            </Heading>
-          ) /*<DesktopContent nameBoard={selectedBoard?.name} />*/,
-          mediaQuery: "(min-width: 600px)",
+            <DesktopContent
+              nameBoard={selectedBoard?.name}
+              isSidebarHidden={isSidebarHidden}
+            />
+          ),
+          mediaQuery: "(min-width: 690px)",
         })}
         <div className="header__container-buttons">
           <Button
@@ -162,16 +155,21 @@ export default function Header({
   );
 }
 
-/*type PropsDesktopContext = {
+type PropsDesktopContext = {
   nameBoard: string | undefined;
+  isSidebarHidden: boolean;
 };
 
-function DesktopContent({ nameBoard }: PropsDesktopContext) {
+function DesktopContent({ nameBoard, isSidebarHidden }: PropsDesktopContext) {
   const themeContext = useThemeContext();
 
   return (
     <div className="header__group">
-      <div className="header__logo">
+      <div
+        className={
+          isSidebarHidden ? "header__logo header__logo--line" : "header__logo"
+        }
+      >
         <Logo
           theme={themeContext.theme}
           className="header__icon-logo-desktop"
@@ -188,7 +186,6 @@ function DesktopContent({ nameBoard }: PropsDesktopContext) {
     </div>
   );
 }
-*/
 
 interface PropsMenuButtonSidebarMobile {
   isSidebarHidden: boolean;

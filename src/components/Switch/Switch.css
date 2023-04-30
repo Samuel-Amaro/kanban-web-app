@@ -50,7 +50,7 @@
   gap: 24px;
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 690px) {
   .switch {
     margin: 0 0 0 0;
   }

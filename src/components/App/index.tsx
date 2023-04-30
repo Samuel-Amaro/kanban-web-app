@@ -4,7 +4,7 @@ import Header from "../Header";
 import { SidebarDesktop } from "../Sidebar";
 import "./App.css";
 import useMatchMedia from "../../hooks/useMatchMedia";
-import Content from "../Content";
+import Content, { NoContent } from "../Content";
 import { useThemeContext } from "../../context/ThemeContext";
 
 //TODO: refatorar css de tudo para colors dark porque theme ja esta ativo
@@ -39,12 +39,15 @@ function App() {
           <SidebarDesktop
             isSidebarHidden={isSidebarHidden}
             onSidebar={onSidebar}
-            theme={themeContext.theme}
           />
         ),
-        mediaQuery: "(min-width: 600px)",
+        mediaQuery: "(min-width: 690px)",
       })}
-      {selectedBoard && <Content selectedBoard={selectedBoard} />}
+      {selectedBoard ? (
+        <Content selectedBoard={selectedBoard} />
+      ) : (
+        <NoContent />
+      )}
     </>
   );
 }

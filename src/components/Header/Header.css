@@ -78,6 +78,7 @@
 
 .header__icon-logo-desktop {
   transition: all 0.3s ease-in-out;
+  display: block;
 }
 
 /***MENU BOARD OPTIONS***/
@@ -125,7 +126,11 @@
   margin: 0 0 16px 0;
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 690px) {
+  .header {
+    position: relative;
+  }
+
   /******btn add task********/
   .header__btn-add-task {
     padding: 15px 25px 14px 24px;
@@ -147,6 +152,38 @@
 
   /*******header container*******/
   .header {
-    padding: 16px 24px;
+    padding: 16px 24.38px 16px 26px;
+    border: none;
+    border-bottom: 1px solid var(--bg-lines);
+  }
+
+  .header__logo {
+    padding: 16.78px 81.47px 0 0;
+  }
+
+  .header__logo--line{
+    padding: 0 24.47px 0 0;
+  }
+
+  .header__logo::after {
+    content: "";
+    display: block;
+    width: 1px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 260px;
+    background-color: var(--bg-lines);
+  }
+
+  .header__logo--line::after {
+    content: "";
+    display: block;
+    width: 1px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 203.47px;
+    background-color: var(--bg-lines);
   }
 }

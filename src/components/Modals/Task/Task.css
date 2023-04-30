@@ -133,3 +133,12 @@
 .dialog-task__icon-btn-remove-subtask--error {
   fill: var(--red);
 }
+
+@media screen and (min-width: 550px) {
+  .dialog-task {
+    padding: 32px;
+    border-radius: 6px;
+    background-color: var(--bg-sidebar_header_modals_card-task);
+    width: 480px;
+  }
+}

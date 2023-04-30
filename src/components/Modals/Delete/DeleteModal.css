@@ -21,6 +21,24 @@
   width: 100%;
 }
 
-.dialog-delete__btn-delete{
-    margin: 0 0 16px 0;
+.dialog-delete__btn-delete {
+  margin: 0 0 16px 0;
+}
+
+@media screen and (min-width: 550px) {
+  .dialog-delete {
+    padding: 32px 32px 40px 32px;
+    width: 480px;
+  }
+
+  .dialog-delete__btn-delete {
+    margin: 0;
+  }
+
+  .dialog-delete__buttons {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap: 16px;
+  }
 }

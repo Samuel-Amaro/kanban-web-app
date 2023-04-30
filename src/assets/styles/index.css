@@ -58,6 +58,9 @@
   /**CONTENT MAIN**/
   --color-01-gradiente-btn-add-column: #e9effa;
   --color-02-gradiente-btn-add-column: rgba(233, 239, 250, 0.5);
+
+  /**lines diviser**/
+  --bg-lines: var(--lines-light);
 }
 
 [data-theme="dark"] {
@@ -86,6 +89,9 @@
   /**CONTENT MAIN AND BTN ADD COLUMN**/
   --color-01-gradiente-btn-add-column: rgba(43, 44, 55, 0.25);
   --color-02-gradiente-btn-add-column: rgba(43, 44, 55, 0.125);
+
+  /**bg lines**/
+  --bg-lines: var(--lines-dark);
 }
 
 html {

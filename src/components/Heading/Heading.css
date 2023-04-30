@@ -15,7 +15,7 @@
   font-style: normal;
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 690px) {
   .heading-xl {
     font-style: normal;
     font-weight: bold;

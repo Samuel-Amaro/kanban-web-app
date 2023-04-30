@@ -48,7 +48,7 @@
   cursor: pointer;
 }
 
-.dialog__input:is(:focus, :hover){
+.dialog__input:is(:focus, :hover) {
   border-color: var(--main-purple);
   outline: none;
 }
@@ -95,12 +95,12 @@
   cursor: pointer;
 }
 
-.dialog__form-group-error{
+.dialog__form-group-error {
   position: relative;
   width: 100%;
 }
 
-.dialog__error-input{
+.dialog__error-input {
   display: block;
   position: absolute;
   top: 8px;
@@ -111,11 +111,19 @@
   color: var(--red);
 }
 
-.dialog__input--error{
+.dialog__input--error {
   border-color: var(--red);
   padding: 7px 114px 8px 16px;
 }
 
-.dialog__icon-btn--error{
+.dialog__icon-btn--error {
   fill: var(--red);
+}
+
+@media screen and (min-width: 550px) {
+  .dialog {
+    padding: 32px;
+    width: 480px;
+    margin: 0;
+  }
 }

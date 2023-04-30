@@ -283,3 +283,11 @@ function BoardIsEmpty({ onModalEditBoardIsOppen }: PropsBoardIsEmpty) {
     </div>
   );
 }
+
+export function NoContent() {
+  return (
+    <main className="main-content main-content--no-content">
+      <p className="main-content__messsage">Selected a board or create</p>
+    </main>
+  );
+}

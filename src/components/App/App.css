@@ -1,9 +1,9 @@
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 690px) {
   .container {
     display: grid;
     grid-template-columns: minmax(min-content, auto) 1fr;
     grid-template-areas:
-      "sidebar header"
+      "header header"
       "sidebar main";
   }
 

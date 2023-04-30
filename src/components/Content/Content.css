@@ -141,10 +141,22 @@
   color: var(--main-purple);
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 690px) {
   .main-content {
     min-height: calc(100vh - 80px);
     max-height: calc(100vh - 80px);
     overflow: auto;
+  }
+
+  .main-content--no-content{
+    align-items: center;
+    justify-content: center;
+  }
+
+  .main-content__messsage{
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 23px;
+    font-style: normal;
   }
 }
