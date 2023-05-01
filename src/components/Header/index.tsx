@@ -22,8 +22,6 @@ type PropsSidebar = {
   selectedBoard: Board | undefined;
 };
 
-//TODO: COMEÇAR ESTILIZAÇÃO DESKTOP
-
 export default function Header({
   isSidebarHidden,
   onSidebar,

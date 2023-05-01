@@ -15,11 +15,13 @@ type PropsProviderThemeContext = {
 };
 
 export function ThemeContextProvider({ children }: PropsProviderThemeContext) {
-  const [theme, setTheme] = useState<Theme>("light");
+  const themeOption = localStorage.getItem("themeOption");
+  const [theme, setTheme] = useState<Theme>(themeOption ? themeOption as Theme : "light");
 
   useEffect(() => {
     const body = document.querySelector("body") as HTMLBodyElement;
     body.dataset.theme = theme;
+    localStorage.setItem("themeOption", theme);
   }, [theme]);
 
   function toggleTheme(theme: Theme) {

@@ -67,7 +67,7 @@ export function datasReducer(draft: Board[], action: ActionTypeDatasReducer) {
             const indexBoard = draft.findIndex((board) => board.id === action.idBoard);
             const indexColumn = draft[indexBoard].columns.findIndex((column) => column.id === action.idColumn);
             const indexTaskChanged = draft[indexBoard].columns[indexColumn].tasks.findIndex((task) => task.id === action.taskChanged.id);
-            if(indexBoard > -1 && indexColumn > -1 && indexTaskChanged) {
+            if(indexBoard > -1 && indexColumn > -1 && indexTaskChanged > -1) {
                 draft[indexBoard].columns[indexColumn].tasks.splice(indexTaskChanged, 1, action.taskChanged);
             }
             break;
