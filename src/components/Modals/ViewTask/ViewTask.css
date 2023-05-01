@@ -134,3 +134,9 @@
     width: 480px;
   }
 }
+
+@media screen and (min-width: 940px) {
+  .dialog-viewtask__header-container {
+    gap: 24px;
+  }
+}

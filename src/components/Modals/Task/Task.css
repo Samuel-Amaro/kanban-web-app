@@ -141,4 +141,8 @@
     background-color: var(--bg-sidebar_header_modals_card-task);
     width: 480px;
   }
+
+  .dialog-task__form-group-error {
+    flex: 1 1 auto;
+  }
 }

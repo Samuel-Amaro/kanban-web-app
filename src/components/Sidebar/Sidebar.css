@@ -175,3 +175,33 @@
     height: 48px;
   }
 }
+
+@media screen and (min-width: 940px) {
+  .list-boards__title {
+    margin: 0 0 19px 32px;
+  }
+
+  .list-boards__list {
+    max-width: 276px;
+  }
+
+  .list-boards__btn--select-board,
+  .list-boards__btn--create-board {
+    gap: 16px;
+    padding: 15px 65.5px 14px 32px;
+  }
+
+  .list-boards-container {
+    padding: 0 24px 0 0;
+  }
+
+  .sidebar__swith--margin {
+    margin: 0 25px 8px 24px;
+  }
+
+  .sidebar__btn-hide {
+    width: calc(100% - 24px);
+    gap: 15px;
+    padding: 14px 0 15px 31px;
+  }
+}

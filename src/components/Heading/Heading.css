@@ -23,3 +23,10 @@
     line-height: 25px;
   }
 }
+
+@media screen and (min-width: 940px) {
+  .heading-xl {
+    font-size: 24px;
+    line-height: 30px;
+  }
+}
