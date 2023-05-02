@@ -1,4 +1,8 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, {
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Button from "../Button";
 import Heading from "../Heading";
 import "./Content.css";
@@ -121,9 +125,13 @@ function ColumnBoard({ dataColumn, selectedBoard }: PropsColumnBoard) {
           {`${dataColumn.name} (${dataColumn.tasks.length})`.toUpperCase()}
         </Heading>
       </div>
-      {dataColumn.tasks.length > 0 && (
+      {/*dataColumn.tasks.length > 0 && (
         <TaskList tasks={dataColumn.tasks} selectedBoard={selectedBoard} />
-      )}
+      )*/}
+      <TaskList
+        tasks={dataColumn.tasks}
+        selectedBoard={selectedBoard}
+      />
     </section>
   );
 }
@@ -131,15 +139,176 @@ function ColumnBoard({ dataColumn, selectedBoard }: PropsColumnBoard) {
 type PropsTaskList = {
   tasks: Task[];
   selectedBoard: Board;
+  //idColumn: string;
 };
 
-function TaskList({ tasks, selectedBoard }: PropsTaskList) {
+function TaskList({ tasks, selectedBoard /*idColumn*/ }: PropsTaskList) {
+  /*const dispatchDatasContext = useDatasDispatch();
+  const refList = useRef<HTMLUListElement | null>(null);
+
+  function handleDrop(e: React.DragEvent<HTMLElement>) {
+    e.preventDefault();
+    const idTask = e.dataTransfer.getData("text");
+    const draggableCardTaskElement = document.querySelector(
+      `[data-id-task="${idTask}"]`
+    );
+    if (draggableCardTaskElement) {
+      const idColumnSource = draggableCardTaskElement.getAttribute(
+        "data-id-column-source"
+      );
+      const applyAfter = getNewPosition(e.clientY);
+      if (idColumnSource && idColumnSource !== idColumn) {
+        //mudando status da task e colocando em um lugar especifico
+        if (applyAfter) {
+          const idTaskCardRef = getIdTaskByChildElement(applyAfter);
+          if (idTaskCardRef) {
+            const indexTaskRef = tasks.findIndex((t) => t.id === idTaskCardRef);
+            //console.log(indexTaskRef);
+            dispatchDatasContext({
+              type: "changed_status_task_and_add_new_position",
+              idBoard: selectedBoard.id,
+              sourceColumnId: idColumnSource,
+              idTask: idTask,
+              targetColumnId: idColumn,
+              newStatusTask: selectedBoard.columns.filter(
+                (c) => c.id === idColumn
+              )[0].name,
+              newIndexPosition: indexTaskRef + 1,
+            });
+            return;
+          }
+          return;
+        }
+        dispatchDatasContext({
+          type: "changed_status_task_and_add_new_position",
+          idBoard: selectedBoard.id,
+          sourceColumnId: idColumnSource,
+          idTask: idTask,
+          targetColumnId: idColumn,
+          newStatusTask: selectedBoard.columns.filter(
+            (c) => c.id === idColumn
+          )[0].name,
+          newIndexPosition: 0,
+        });
+        //console.log("apply after não existe");
+        return;
+      } else {
+        if (applyAfter) {
+          const idTaskCardRef = getIdTaskByChildElement(applyAfter);
+          if (idTaskCardRef) {
+            console.log("reordenação after");
+            dispatchDatasContext({
+              type: "changed_position_task",
+              idTaskToPosition: idTask,
+              idReferenceTaskForPlacement: idTaskCardRef,
+              position: "after",
+              idBoard: selectedBoard.id,
+              idColumn: idColumn,
+            });
+          }
+          return;
+        }
+        console.log("reordenação begin");
+        dispatchDatasContext({
+          type: "changed_position_task",
+          idTaskToPosition: idTask,
+          idReferenceTaskForPlacement: null,
+          position: "begin",
+          idBoard: selectedBoard.id,
+          idColumn: idColumn,
+        });
+        return;
+      }
+    }
+  }
+
+  function getNewPosition(posY: number) {
+    if (!refList.current?.querySelectorAll("li")) return;
+    let cardRef = null;
+
+    for (const liEl of refList.current.querySelectorAll("li")) {
+      const card = liEl.getBoundingClientRect();
+      const cardCenterY = card.y + card.height / 2;
+
+      if (posY >= cardCenterY) cardRef = liEl;
+    }
+
+    return cardRef;
+  }
+
+  function getIdColumnByChildElement(liEl: HTMLLIElement) {
+    const cardChild = liEl.firstElementChild;
+    if (cardChild) {
+      const idColumnTaskRef = cardChild.getAttribute("data-id-column-source");
+      if (idColumnTaskRef) return idColumnTaskRef;
+      return null;
+    }
+    return null;
+  }
+
+  function getIdTaskByChildElement(liEl: HTMLLIElement) {
+    const cardChild = liEl.firstElementChild;
+    if (cardChild) {
+      const idTaskRef = cardChild.getAttribute("data-id-task");
+      if (idTaskRef) return idTaskRef;
+      return null;
+    }
+    return null;
+  }
+
+  function handleDragOver(e: React.DragEvent<HTMLElement>) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    /*const idTask = e.dataTransfer.getData("text");
+    const draggableCardTaskElement = document.querySelector(
+      `[data-id-task="${idTask}"]`
+    );
+    if (draggableCardTaskElement) {
+      const applyAfter = getNewPosition(e.clientY);
+      if (applyAfter) {
+        const idTaskCardRef = getIdTaskByChildElement(applyAfter);
+        if (idTaskCardRef) {
+          const indexTaskRef = tasks.findIndex((t) => t.id === idTaskCardRef);
+          console.log(indexTaskRef);
+        }
+        return;
+      }
+      console.log("apply after não existe");
+    }
+    const idTask = e.dataTransfer.getData("text");
+    const draggableCardTaskElement = document.querySelector(
+      `[data-id-task="${idTask}"]`
+    );
+    if(draggableCardTaskElement) {
+      const applyAfter = getNewPosition(e.clientY);
+      if(applyAfter) {
+        applyAfter.insertAdjacentElement("afterend", draggableCardTaskElement);
+        return;
+      }
+      refList.current?.prepend(draggableCardTaskElement);
+    }
+  }*/
+
   return (
-    <ul className="main-content__tasks-list">
+    <ul
+      /*className="main-content__tasks-list"*/ className={
+        tasks.length > 0
+          ? "main-content__tasks-list"
+          : "main-content__tasks-list--empty"
+      }
+      /*onDrop={(e) => handleDrop(e)}
+      onDragOver={(e) => handleDragOver(e)}
+      ref={refList}
+      */
+    >
       {tasks.map((t) => {
         return (
           <li className="main-content__task-item" key={t.id}>
-            <CardTask dataTask={t} selectedBoard={selectedBoard} />
+            <CardTask
+              dataTask={t}
+              selectedBoard={selectedBoard}
+              //idColumn={idColumn}
+            />
           </li>
         );
       })}
@@ -150,9 +319,10 @@ function TaskList({ tasks, selectedBoard }: PropsTaskList) {
 type PropsCardTask = {
   dataTask: Task;
   selectedBoard: Board;
+  //idColumn: string;
 };
 
-function CardTask({ dataTask, selectedBoard }: PropsCardTask) {
+function CardTask({ dataTask, selectedBoard /*, idColumn*/ }: PropsCardTask) {
   const [modalViewTaskIsOppen, setModalViewTaskIsOppen] = useState(false);
   const [modalEditTaskIsOppen, setModalEditTaskIsOppen] = useState(false);
   const [modalDeleteTaskIsOppen, setModalDeleteTaskIsOppen] = useState(false);
@@ -162,7 +332,7 @@ function CardTask({ dataTask, selectedBoard }: PropsCardTask) {
     (st) => st.isCompleted
   ).length;
 
-  function handlePointerDown() {
+  function handleClick() {
     setModalViewTaskIsOppen(true);
   }
 
@@ -171,6 +341,15 @@ function CardTask({ dataTask, selectedBoard }: PropsCardTask) {
       setModalViewTaskIsOppen(true);
     }
   }
+
+  /*function handleDragStart(e: React.DragEvent<HTMLButtonElement>) {
+    //console.log(e.currentTarget.dataset.idTask);
+    if (e.currentTarget.dataset.idTask) {
+      e.dataTransfer.setData("text/plain", e.currentTarget.dataset.idTask);
+      e.dataTransfer.dropEffect = "move";
+      e.dataTransfer.effectAllowed = "move";
+    }
+  }*/
 
   const value = useMemo(() => selectedBoard, [selectedBoard]);
 
@@ -181,10 +360,15 @@ function CardTask({ dataTask, selectedBoard }: PropsCardTask) {
         className="main-content__card-task"
         title={`View Task ${dataTask.title}`}
         aria-label={`View Task ${dataTask.title}`}
-        onPointerDown={handlePointerDown}
+        onClick={handleClick}
         onKeyDown={handleKeyDown}
         ref={refCardBtn}
         tabIndex={0}
+        /*draggable={true}
+        onDragStart={(e) => handleDragStart(e)}
+        data-id-task={dataTask.id}
+        data-id-column-source={idColumn}
+        */
       >
         <span className="main-content__task-title">{dataTask.title}</span>
         <span className="main-content__stat-subtasks">

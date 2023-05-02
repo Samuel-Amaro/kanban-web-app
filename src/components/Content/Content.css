@@ -111,9 +111,13 @@
   flex: 0 0 280px;
 }
 
-.main-content__column--empty {
+.main-content__column--empty{
   align-self: stretch;
+}
+
+.main-content__tasks-list--empty{
   border: 2px dashed var(--medium-grey);
+  height: 100%;
 }
 
 .main-content__btn-column {
