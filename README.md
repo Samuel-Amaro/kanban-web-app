@@ -49,8 +49,8 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Solution URL: [Repository GitHub]()
+- Live Site URL: [Result Live]()
 
 ## My process
 
@@ -64,6 +64,8 @@ Users should be able to:
 - Responsive Web Design(RWD)
 - WebAcessibility with arias attributers, and roles
 - Typescript
+- NPM
+- [Vite](https://pt.vitejs.dev/) - Vite Tooling Front-End
 - [React](https://reactjs.org/) - JS library
   - Hooks React, and Custom Hooks
   - Context API with reducers
