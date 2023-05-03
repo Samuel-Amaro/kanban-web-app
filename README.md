@@ -1,115 +1,251 @@
-# Frontend Mentor - Kanban task management web app
+# Frontend Mentor - Kanban task management web app solution
 
-![Design preview for the Kanban task management web app coding challenge](./preview.jpg)
+This is a solution to the [Kanban task management web app challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/kanban-task-management-web-app-wgQLt-HlbB). Frontend Mentor challenges help you improve your coding skills by building realistic projects. 
 
-## Welcome! 👋
+## Table of contents
 
-Thanks for purchasing this premium Frontend Mentor coding challenge.
+- [Overview](#overview)
+  - [The challenge](#the-challenge)
+  - [Screenshot](#screenshot)
+  - [Links](#links)
+- [My process](#my-process)
+  - [Built with](#built-with)
+- [Author](#author)
 
-[Frontend Mentor](https://www.frontendmentor.io) challenges help you improve your coding skills by building realistic projects. These premium challenges are perfect portfolio pieces, so please feel free to use what you create in your portfolio to show others.
+## Overview
 
-**To do this challenge, you need a very strong understanding of HTML, CSS, and JavaScript.**
+### The challenge
 
-## The challenge
+Users should be able to:
 
-Your challenge is to build out this task management app and get it looking as close to the design as possible.
+- [x] View the optimal layout for the app depending on their device's screen size
+- [x] See hover states for all interactive elements on the page
+- [x] Create, read, update, and delete boards and tasks
+- [x] Receive form validations when trying to create/edit boards and tasks
+- [x] Mark subtasks as complete and move tasks between columns
+- [x] Hide/show the board sidebar
+- [x] Toggle the theme between light/dark modes
+- [x] **Bonus**: Allow users to drag and drop tasks to change their status and re-order them in a column
+- [x] **Bonus**: Keep track of any changes, even after refreshing the browser (`localStorage` could be used for this if you're not building out a full-stack app)
+- [x] **Bonus**: Build this project as a full-stack application
 
-You can use any tools you like to help you complete the challenge. So if you've got something you'd like to practice, feel free to give it a go.
+### Screenshot
 
-We provide the data in a local `data.json` file, so use that to populate the content on the first load. If you want to take it up a notch, feel free to build this as a full-stack application!
+#### Preview
 
-Your users should be able to:
+![](./src/assets/images/preview.jpg)
 
-- View the optimal layout for the app depending on their device's screen size
-- See hover states for all interactive elements on the page
-- Create, read, update, and delete boards and tasks
-- Receive form validations when trying to create/edit boards and tasks
-- Mark subtasks as complete and move tasks between columns
-- Hide/show the board sidebar
-- Toggle the theme between light/dark modes
-- **Bonus**: Allow users to drag and drop tasks to change their status and re-order them in a column
-- **Bonus**: Keep track of any changes, even after refreshing the browser (`localStorage` could be used for this if you're not building out a full-stack app)
-- **Bonus**: Build this project as a full-stack application
+#### Result Mobile
 
-Want some support on the challenge? [Join our Slack community](https://www.frontendmentor.io/slack) and ask questions in the **#help** channel.
+![](./src/assets/images/result-mobile.png)
 
-### Expected Behaviour
+#### Result Desktop Tablet
 
-- Boards
-  - Clicking different boards in the sidebar will change to the selected board.
-  - Clicking "Create New Board" in the sidebar opens the "Add New Board" modal.
-  - Clicking in the dropdown menu "Edit Board" opens up the "Edit Board" modal where details can be changed.
-  - Columns are added and removed for the Add/Edit Board modals.
-  - Deleting a board deletes all columns and tasks and requires confirmation.
-- Columns
-  - A board needs at least one column before tasks can be added. If no columns exist, the "Add New Task" button in the header is disabled.
-  - Clicking "Add New Column" opens the "Edit Board" modal where columns are added.
-- Tasks
-  - Adding a new task adds it to the bottom of the relevant column.
-  - Updating a task's status will move the task to the relevant column. If you're taking on the drag and drop bonus, dragging a task to a different column will also update the status.
+![](./src/assets/images/result-desktop-tablet.png)
 
-## Where to find everything
+#### Result Desktop
 
-Your task is to build out the project to the design file provided. We provide both Sketch and Figma versions of the design, so you can choose which tool you prefer to use. You can download the design file on the platform. **Please be sure not to share them with anyone else.** The design download comes with a `README.md` file as well to help you get set up.
+![](./src/assets/images/result-desktop.png)
 
-All the required assets for this project are in the `/assets` folder. The assets are already exported for the correct screen size and optimized. Some images are reusable at multiple screen sizes. So if you don't see an image in a specific folder, it will typically be in another folder for that page.
+### Links
 
-We've decided to use a nested data structure for the `data.json` file, but feel free to alter and flatten the data however you like if you want to change it.
+- Solution URL: [Add solution URL here](https://your-solution-url.com)
+- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
 
-The design system in the design file will give you more information about the various colors, fonts, and styles used in this project. Our fonts always come from [Google Fonts](https://fonts.google.com/).
+## My process
 
-## Building your project
+### Built with
 
-Feel free to use any workflow that you feel comfortable with. Below is a suggested process, but do not feel like you need to follow these steps:
+- Semantic HTML5 markup
+- CSS(Flexbox, Grid)
+- [Bem](https://getbem.com/introduction/) - Bem Metodolody CSS Architecture
+- [Normalize](https://necolas.github.io/normalize.css/) - Normalize CSS
+- Mobile-first workflow
+- Responsive Web Design(RWD)
+- WebAcessibility with arias attributers, and roles
+- Typescript
+- [React](https://reactjs.org/) - JS library
+  - Hooks React, and Custom Hooks
+  - Context API with reducers
+  - [Immer](https://immerjs.github.io/immer/) - JS package
+  - [Classnames](https://github.com/JedWatson/classnames) - JS utility
+  - [Nano ID](https://github.com/ai/nanoid) - ID generator for JavaScript.
+- [HTML Drag and Drop API](https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API) - HTML Drag and Drop API
+- [LocalStorage Web API Browser](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API) - LocalStorage Web API Browser
 
-1. Separate the `starter-code` from the rest of this project and rename it to something meaningful for you. Initialize the codebase as a public repository on [GitHub](https://github.com/). Creating a repo will make it easier to share your code with the community if you need help. If you're not sure how to do this, [have a read-through of this Try Git resource](https://try.github.io/). **⚠️ IMPORTANT ⚠️: There are already a couple of `.gitignore` files in this project. Please do not remove them or change the content of the files. If you create a brand new project, please use the `.gitignore` files provided in your new codebase. This is to avoid the accidental upload of the design files to GitHub. With these premium challenges, please be sure not to share the design files in your GitHub repo. Thanks!**
-2. Configure your repository to publish your code to a web address. This will also be useful if you need some help during a challenge as you can share the URL for your project with your repo URL. There are a number of ways to do this, and we provide some recommendations below.
-3. Look through the designs to start planning out how you'll tackle the project. This step is crucial to help you think ahead for CSS classes to create reusable styles.
-4. Before adding any styles, structure your content with HTML. Writing your HTML first can help focus your attention on creating well-structured content.
-5. Write out the base styles for your project, including general content styles, such as `font-family` and `font-size`.
-6. Start adding styles to the top of the page and work down. Only move on to the next section once you're happy you've completed the area you're working on.
+## Author
 
-## Deploying your project
+- Website - [Portfolio Web Samuel](https://samuel-amaro.github.io/portfolio-web/)
+- Frontend Mentor - [@samuel-amaro](https://www.frontendmentor.io/profile/Samuel-Amaro)
 
-As mentioned above, there are many ways to host your project for free. Our recommend hosts are:
+# Como usar o Tooling Front-End vite com react é typescript
 
-- [GitHub Pages](https://pages.github.com/)
-- [Vercel](https://vercel.com/)
-- [Netlify](https://www.netlify.com/)
+### Criar projeto vite
 
-You can host your site using one of these solutions or any of our other trusted providers. [Read more about our recommended and trusted hosts](https://medium.com/frontend-mentor/frontend-mentor-trusted-hosting-providers-bf000dfebe).
+```sh
+npm create vite@latest
+```
 
-## Create a custom `README.md`
+depois so seguir as instruções e escolher as opções de template fornecidas, de acordo com a necessidade do projeto.
 
-We strongly recommend overwriting this `README.md` with a custom one. We've provided a template inside the [`README-template.md`](./README-template.md) file in this starter code.
+### Instalar depêndencias
 
-The template provides a guide for what to add. A custom `README` will help you explain your project and reflect on your learnings. Please feel free to edit our template as much as you like.
+O vite não instala as dependencias somente as especifica, para instalar todas depencias e instalar a pasta node-modules para executar o projeto
 
-Once you've added your information to the template, delete this file and rename the `README-template.md` file to `README.md`. That will make it show up as your repository's README file.
+```sh
+npm install
+```
 
-## Submitting your solution
+### Executando o projeto no modo Dev
 
-Submit your solution on the platform for the rest of the community to see. Follow our ["Complete guide to submitting solutions"](https://medium.com/frontend-mentor/a-complete-guide-to-submitting-solutions-on-frontend-mentor-ac6384162248) for tips on how to do this.
+Apos instalar dependencias iniciais podemos iniciar nosso projeto e começar a trabalhar, iniciamos executando o servidor de desenvolvimento, rodar o projeto no modo de desenvolvimento
 
-Remember, if you're looking for feedback on your solution, be sure to ask questions when submitting it. The more specific and detailed you are with your questions, the higher the chance you'll get valuable feedback from the community.
+```sh
+npm run dev
+```
 
-**⚠️ IMPORTANT ⚠️: With these premium challenges, please be sure not to upload the design files to GitHub when you're submitting to the platform and sharing it around. If you've created a brand new project, the easiest way to do that is to copy across the `.gitignore` provided in this starter project.**
+### Build para production
 
-## Sharing your solution
+fazendo o build para produção
 
-There are multiple places you can share your solution:
+```sh
+npm run build
+```
 
-1. Share your solution page in the **#finished-projects** channel of the [Slack community](https://www.frontendmentor.io/slack). 
-2. Tweet [@frontendmentor](https://twitter.com/frontendmentor) and mention **@frontendmentor**, including the repo and live URLs in the tweet. We'd love to take a look at what you've built and help share it around.
-3. Share your solution on other social channels like LinkedIn.
-4. Blog about your experience building your project. Writing about your workflow, technical choices, and talking through your code is a brilliant way to reinforce what you've learned. Great platforms to write on are [dev.to](https://dev.to/), [Hashnode](https://hashnode.com/), and [CodeNewbie](https://community.codenewbie.org/).
+### ESLint é Prettier
 
-We provide templates to help you share your solution once you've submitted it on the platform. Please do edit them and include specific questions when you're looking for feedback. 
+#### Instalar ESLint para checagem de tipos e encontrar problemas no codigo
 
-The more specific you are with your questions the more likely it is that another member of the community will give you feedback.
+instalar e configurar, apos executar o comando, so seguir as intruções, e escolher as opções que encaixam de acordo com as ferramentas que serão necessarias para seu projeto.
 
-## Got feedback for us?
+```sh
+npm init @eslint/config
+```
 
-We love receiving feedback! We're always looking to improve our challenges and our platform. So if you have anything you'd like to mention, please email hi[at]frontendmentor[dot]io.
+#### Plugins ESLint
 
-**Have fun building!** 🚀
+eslint-plugin-jsx-a11y
+
+Verificador AST estático para regras de acessibilidade em elementos JSX.
+
+```sh
+npm install eslint-plugin-jsx-a11y --save-dev
+```
+
+Uso
+
+Você também pode habilitar todas as regras recomendadas ou estritas de uma só vez. Adicionar `plugin:jsx-a11y/recommended` ou `plugin:jsx-a11y/strict` em extends:
+
+```sh
+{
+  "extends": ["plugin:jsx-a11y/recommended"]
+}
+```
+
+#### Prettier
+
+instale o Prettier localmente
+
+```sh
+npm install --save-dev --save-exact prettier
+```
+
+Em seguida, crie um arquivo de configuração vazio para permitir que os editores e outras ferramentas saibam que você está usando o Prettier:
+
+```sh
+echo {}> .prettierrc.json
+```
+
+Desativa todas as regras desnecessárias ou que possam entrar em conflito com o Prettier.
+
+```sh
+npm install --save-dev eslint-config-prettier
+```
+
+Em seguida, adicione `"prettier"` à matriz "extends" em seu `.eslintrc.*` arquivo. Certifique-se de colocá-lo por último, para que tenha a chance de substituir outras configurações.
+
+```sh
+{
+  "extends": [
+    "some-other-config-you-use",
+    "prettier"
+  ]
+}
+```
+
+## Deploy e Build Para GitHub Pages 
+
+Deploy e build para produção no GitHub Pages.
+
+### Envie seu código para o repositório GitHub
+
+Execute os seguintes comandos no seu Terminal
+
+```sh 
+  $ git init
+```
+```sh 
+$ git add .
+```
+```sh 
+$ git commit -m "first commit"
+```
+```sh 
+$ git branch -M main
+```
+```sh 
+$ git remote add origin http://github.com/username/repo-name.git
+```
+```sh 
+$ git push -u origin main
+``` 
+
+Agora, você poderá ver seu código em seu repositório.
+
+### Deployment (Static)
+
+1. Vá para o seu ```vite.config.js``` arquivo. E adicione seu URL base a ele.
+
+```javascript
+export default defineConfig({
+  plugins: [react()],
+  base: "/repo-name/" //Aqui e o url base do website
+})
+```
+
+2. Instalar package GitHub pages
+
+```sh
+npm install gh-pages --save-dev
+``` 
+
+3. adicionar à ```package.json```
+
+```json
+"homepage": "https://<username>.github.io/<repo>/",
+...
+"scripts": {
+...
+  "build": "vite build",
+  "predeploy": "npm run build", //add esse script
+  "deploy": "gh-pages -d dist", //add esse script
+  ...
+```
+
+4. Opcional - Se for uma aplicação SPA - Single Page Apps for GitHub Pages usando react-router-dom
+
+  * Copie o [404.html](https://github.com/rafgraph/spa-github-pages/blob/gh-pages/404.html) arquivo para o seu repositório como está.
+
+    * Observe que, se você estiver configurando um site do Project Pages e não estiver usando um domínio personalizado (ou seja, o endereço do seu site é username.github.io/repo-name), será necessário definir pathSegmentsToKeep como 1 no 404.html arquivo para manter /repo-name o caminho após o redirecionamento. Se você estiver usando o React Router, precisará dizer a ele para usar o repo-name como o basename, por exemplo 
+    ```jsx
+      <BrowserRouter basename="/repo-name" />
+    ```
+
+  * Copie o [script de redirecionamento](https://github.com/rafgraph/spa-github-pages/blob/gh-pages/index.html#L21-L42) do ```index.html``` arquivo e adicione-o ao seu ```index.html``` arquivo - Observe que o script de redirecionamento deve ser colocado antes do script do aplicativo de página única em seu ```index.html``` arquivo.  
+
+5. Por fim execute o comando
+
+```sh
+npm run deploy
+```
+
