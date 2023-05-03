@@ -10,7 +10,7 @@ export type ActionTypeDatasReducer =
     | {type: "edit_task", taskChanged: Task, idBoard: string, idColumn: string}
     | {type: "delete_task", idBoard: string; idColumn: string; idTask: string}
     | {type: "changed_status_task_and_add_new_position", idBoard: string; sourceColumnId: string; idTask: string; newStatusTask: string; targetColumnId: string, newIndexPosition: number}
-    | {type: "changed_position_task", idTaskToPosition: string, idReferenceTaskForPlacement: string | null, position: "begin" | "after", idBoard: string; idColumn: string};
+    | {type: "changed_position_task", idTaskToPosition: string, idReferenceTaskForPlacement: string | null, /*position: "begin" | "after",*/ idBoard: string; idColumn: string};
 
 export function datasReducer(draft: Board[], action: ActionTypeDatasReducer) {
     switch (action.type) {
@@ -142,7 +142,7 @@ export function datasReducer(draft: Board[], action: ActionTypeDatasReducer) {
         }
         break;
       }
-      /*case "changed_status_task_and_add_new_position": {
+      case "changed_status_task_and_add_new_position": {
         const indexBoard = draft.findIndex(
           (board) => board.id === action.idBoard
         );
@@ -184,31 +184,26 @@ export function datasReducer(draft: Board[], action: ActionTypeDatasReducer) {
         const indexTaskToPositionInitial = draft[indexBoard].columns[
           indexColumn
         ].tasks.findIndex((task) => task.id === action.idTaskToPosition);
-        const taskToPosition = draft[indexBoard].columns[
-          indexColumn
-        ].tasks[indexTaskToPositionInitial];
         if(indexBoard > -1 && indexColumn > -1 && indexTaskToPositionInitial > -1) {
             //remove do array a task a ser reposicionada
-            draft[indexBoard].columns[indexColumn].tasks.splice(indexTaskToPositionInitial, 1);
-            if(action.position === "begin" && !action.idReferenceTaskForPlacement) {
-                //add a task novamente no inicio
-                draft[indexBoard].columns[indexColumn].tasks.splice(0, 0, taskToPosition);
-                break;
-            }else if(action.position === "after" && action.idReferenceTaskForPlacement){
+            if(action.idReferenceTaskForPlacement) {
                 //add a task novamente em uma position especifica
                 //procura index da task reference
                 const indexTaskReferenceForReplacement = draft[indexBoard].columns[
                 indexColumn
                 ].tasks.findIndex((task) => task.id === action.idReferenceTaskForPlacement);
                 if(indexTaskReferenceForReplacement > -1) {
-                    draft[indexBoard].columns[indexColumn].tasks.splice(indexTaskReferenceForReplacement, 0, taskToPosition);
+                    draft[indexBoard].columns[indexColumn].tasks.splice(indexTaskReferenceForReplacement, 0, draft[indexBoard].columns[indexColumn].tasks.splice(indexTaskToPositionInitial, 1)[0]);
                     break;
                 }
+            }else{
+              //add a task novamente no inicio
+              draft[indexBoard].columns[indexColumn].tasks.splice(0, 0, draft[indexBoard].columns[indexColumn].tasks.splice(indexTaskToPositionInitial, 1)[0]);
+              break;
             }
         }
         break;
       };
-      */
       default: {
         throw Error("Unknown action datas");
       }

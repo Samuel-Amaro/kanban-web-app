@@ -1,8 +1,4 @@
-import React, {
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { Fragment,useMemo, useRef, useState } from "react";
 import Button from "../Button";
 import Heading from "../Heading";
 import "./Content.css";
@@ -12,6 +8,7 @@ import { getFocusableElements, nextFocusable, random } from "../../utils";
 import ViewTask from "../Modals/ViewTask";
 import ModalTask from "../Modals/Task";
 import DeleteModal from "../Modals/Delete";
+import { useDatasDispatch } from "../../context/DataContext";
 
 type PropsMain = {
   selectedBoard: Board;
@@ -125,12 +122,10 @@ function ColumnBoard({ dataColumn, selectedBoard }: PropsColumnBoard) {
           {`${dataColumn.name} (${dataColumn.tasks.length})`.toUpperCase()}
         </Heading>
       </div>
-      {/*dataColumn.tasks.length > 0 && (
-        <TaskList tasks={dataColumn.tasks} selectedBoard={selectedBoard} />
-      )*/}
       <TaskList
         tasks={dataColumn.tasks}
         selectedBoard={selectedBoard}
+        idColumn={dataColumn.id}
       />
     </section>
   );
@@ -139,11 +134,11 @@ function ColumnBoard({ dataColumn, selectedBoard }: PropsColumnBoard) {
 type PropsTaskList = {
   tasks: Task[];
   selectedBoard: Board;
-  //idColumn: string;
+  idColumn: string;
 };
 
-function TaskList({ tasks, selectedBoard /*idColumn*/ }: PropsTaskList) {
-  /*const dispatchDatasContext = useDatasDispatch();
+function TaskList({ tasks, selectedBoard, idColumn }: PropsTaskList) {
+  const dispatchDatasContext = useDatasDispatch();
   const refList = useRef<HTMLUListElement | null>(null);
 
   function handleDrop(e: React.DragEvent<HTMLElement>) {
@@ -163,7 +158,6 @@ function TaskList({ tasks, selectedBoard /*idColumn*/ }: PropsTaskList) {
           const idTaskCardRef = getIdTaskByChildElement(applyAfter);
           if (idTaskCardRef) {
             const indexTaskRef = tasks.findIndex((t) => t.id === idTaskCardRef);
-            //console.log(indexTaskRef);
             dispatchDatasContext({
               type: "changed_status_task_and_add_new_position",
               idBoard: selectedBoard.id,
@@ -190,30 +184,25 @@ function TaskList({ tasks, selectedBoard /*idColumn*/ }: PropsTaskList) {
           )[0].name,
           newIndexPosition: 0,
         });
-        //console.log("apply after não existe");
         return;
       } else {
         if (applyAfter) {
           const idTaskCardRef = getIdTaskByChildElement(applyAfter);
           if (idTaskCardRef) {
-            console.log("reordenação after");
             dispatchDatasContext({
               type: "changed_position_task",
               idTaskToPosition: idTask,
               idReferenceTaskForPlacement: idTaskCardRef,
-              position: "after",
               idBoard: selectedBoard.id,
               idColumn: idColumn,
             });
+            return;
           }
-          return;
         }
-        console.log("reordenação begin");
         dispatchDatasContext({
           type: "changed_position_task",
           idTaskToPosition: idTask,
           idReferenceTaskForPlacement: null,
-          position: "begin",
           idBoard: selectedBoard.id,
           idColumn: idColumn,
         });
@@ -236,16 +225,6 @@ function TaskList({ tasks, selectedBoard /*idColumn*/ }: PropsTaskList) {
     return cardRef;
   }
 
-  function getIdColumnByChildElement(liEl: HTMLLIElement) {
-    const cardChild = liEl.firstElementChild;
-    if (cardChild) {
-      const idColumnTaskRef = cardChild.getAttribute("data-id-column-source");
-      if (idColumnTaskRef) return idColumnTaskRef;
-      return null;
-    }
-    return null;
-  }
-
   function getIdTaskByChildElement(liEl: HTMLLIElement) {
     const cardChild = liEl.firstElementChild;
     if (cardChild) {
@@ -256,50 +235,21 @@ function TaskList({ tasks, selectedBoard /*idColumn*/ }: PropsTaskList) {
     return null;
   }
 
-  function handleDragOver(e: React.DragEvent<HTMLElement>) {
+  function handleDragOver(e: React.DragEvent<HTMLUListElement>) {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
-    /*const idTask = e.dataTransfer.getData("text");
-    const draggableCardTaskElement = document.querySelector(
-      `[data-id-task="${idTask}"]`
-    );
-    if (draggableCardTaskElement) {
-      const applyAfter = getNewPosition(e.clientY);
-      if (applyAfter) {
-        const idTaskCardRef = getIdTaskByChildElement(applyAfter);
-        if (idTaskCardRef) {
-          const indexTaskRef = tasks.findIndex((t) => t.id === idTaskCardRef);
-          console.log(indexTaskRef);
-        }
-        return;
-      }
-      console.log("apply after não existe");
-    }
-    const idTask = e.dataTransfer.getData("text");
-    const draggableCardTaskElement = document.querySelector(
-      `[data-id-task="${idTask}"]`
-    );
-    if(draggableCardTaskElement) {
-      const applyAfter = getNewPosition(e.clientY);
-      if(applyAfter) {
-        applyAfter.insertAdjacentElement("afterend", draggableCardTaskElement);
-        return;
-      }
-      refList.current?.prepend(draggableCardTaskElement);
-    }
-  }*/
+  }
 
   return (
     <ul
-      /*className="main-content__tasks-list"*/ className={
+      className={
         tasks.length > 0
           ? "main-content__tasks-list"
           : "main-content__tasks-list--empty"
       }
-      /*onDrop={(e) => handleDrop(e)}
+      onDrop={(e) => handleDrop(e)}
       onDragOver={(e) => handleDragOver(e)}
       ref={refList}
-      */
     >
       {tasks.map((t) => {
         return (
@@ -307,7 +257,7 @@ function TaskList({ tasks, selectedBoard /*idColumn*/ }: PropsTaskList) {
             <CardTask
               dataTask={t}
               selectedBoard={selectedBoard}
-              //idColumn={idColumn}
+              idColumn={idColumn}
             />
           </li>
         );
@@ -319,10 +269,10 @@ function TaskList({ tasks, selectedBoard /*idColumn*/ }: PropsTaskList) {
 type PropsCardTask = {
   dataTask: Task;
   selectedBoard: Board;
-  //idColumn: string;
+  idColumn: string;
 };
 
-function CardTask({ dataTask, selectedBoard /*, idColumn*/ }: PropsCardTask) {
+function CardTask({ dataTask, selectedBoard, idColumn }: PropsCardTask) {
   const [modalViewTaskIsOppen, setModalViewTaskIsOppen] = useState(false);
   const [modalEditTaskIsOppen, setModalEditTaskIsOppen] = useState(false);
   const [modalDeleteTaskIsOppen, setModalDeleteTaskIsOppen] = useState(false);
@@ -342,14 +292,14 @@ function CardTask({ dataTask, selectedBoard /*, idColumn*/ }: PropsCardTask) {
     }
   }
 
-  /*function handleDragStart(e: React.DragEvent<HTMLButtonElement>) {
+  function handleDragStart(e: React.DragEvent<HTMLButtonElement>) {
     //console.log(e.currentTarget.dataset.idTask);
     if (e.currentTarget.dataset.idTask) {
       e.dataTransfer.setData("text/plain", e.currentTarget.dataset.idTask);
       e.dataTransfer.dropEffect = "move";
       e.dataTransfer.effectAllowed = "move";
     }
-  }*/
+  }
 
   const value = useMemo(() => selectedBoard, [selectedBoard]);
 
@@ -364,11 +314,10 @@ function CardTask({ dataTask, selectedBoard /*, idColumn*/ }: PropsCardTask) {
         onKeyDown={handleKeyDown}
         ref={refCardBtn}
         tabIndex={0}
-        /*draggable={true}
+        draggable={true}
         onDragStart={(e) => handleDragStart(e)}
         data-id-task={dataTask.id}
         data-id-column-source={idColumn}
-        */
       >
         <span className="main-content__task-title">{dataTask.title}</span>
         <span className="main-content__stat-subtasks">
