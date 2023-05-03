@@ -49,7 +49,7 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [Repository GitHub]()
+- Solution URL: [Repository GitHub](https://github.com/Samuel-Amaro/kanban-task-management-web-app)
 - Live Site URL: [Result Live]()
 
 ## My process
