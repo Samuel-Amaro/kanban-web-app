@@ -6,8 +6,6 @@ type ThemeContextType = {
   toggleTheme: (theme: Theme) => void;
 };
 
-//TODO: VALOR INICIAL DO TEMA PARA CONTEXT VEM DO LOCALSTORAGE DO BROWSER
-
 export const ThemeContext = React.createContext<null | ThemeContextType>(null);
 
 type PropsProviderThemeContext = {

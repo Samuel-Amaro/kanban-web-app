@@ -63,6 +63,5 @@ export function taskReducer(state: Task, action: ActionType) {
       default: {
         throw Error("Unknown action task");
       }
-
     }
 }

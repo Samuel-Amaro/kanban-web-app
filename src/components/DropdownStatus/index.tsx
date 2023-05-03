@@ -20,7 +20,7 @@ export type OptionStatus = {
 
 interface PropsDropdown {
   options: OptionStatus[];
-  onChange: (option: OptionStatus) => void; //esta function sera chamada quando um valor do dropdown for selecionado
+  onChange: (option: OptionStatus) => void; 
   defaultOption: OptionStatus | null;
 }
 

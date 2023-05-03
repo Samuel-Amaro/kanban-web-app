@@ -10,7 +10,7 @@ export type ActionTypeDatasReducer =
     | {type: "edit_task", taskChanged: Task, idBoard: string, idColumn: string}
     | {type: "delete_task", idBoard: string; idColumn: string; idTask: string}
     | {type: "changed_status_task_and_add_new_position", idBoard: string; sourceColumnId: string; idTask: string; newStatusTask: string; targetColumnId: string, newIndexPosition: number}
-    | {type: "changed_position_task", idTaskToPosition: string, idReferenceTaskForPlacement: string | null, /*position: "begin" | "after",*/ idBoard: string; idColumn: string};
+    | {type: "changed_position_task", idTaskToPosition: string, idReferenceTaskForPlacement: string | null, idBoard: string; idColumn: string};
 
 export function datasReducer(draft: Board[], action: ActionTypeDatasReducer) {
     switch (action.type) {

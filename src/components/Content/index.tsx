@@ -293,7 +293,6 @@ function CardTask({ dataTask, selectedBoard, idColumn }: PropsCardTask) {
   }
 
   function handleDragStart(e: React.DragEvent<HTMLButtonElement>) {
-    //console.log(e.currentTarget.dataset.idTask);
     if (e.currentTarget.dataset.idTask) {
       e.dataTransfer.setData("text/plain", e.currentTarget.dataset.idTask);
       e.dataTransfer.dropEffect = "move";

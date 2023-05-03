@@ -111,17 +111,6 @@ const ViewTask = memo(function ViewTask({
         targetColumnId: option.id,
       });
     }
-    //!causa re-renderização em toda arvore de UI
-    //!por atualizar o context datas
-    /*dispatchDatasContext({
-      type: "changed_status_task",
-      idBoard: selectedBoard.id,
-      sourceColumnId: column.id,
-      idTask: data.id,
-      newStatusTask: option.label,
-      targetColumnId: option.id,
-    });
-    */
   }
 
   function handleKeyDownDialog(e: KeyboardEvent) {
