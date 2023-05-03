@@ -5,7 +5,7 @@ import LogoMobile from "../Icons/LogoMobile";
 import { useThemeContext } from "../../context/ThemeContext";
 import Logo from "../Icons/Logo";
 import ChevronUp from "../Icons/ChevronUp";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import iconTaskMobile from "../../assets/images/icon-add-task-mobile.svg";
 import useMatchMedia from "../../hooks/useMatchMedia";
 import { SidebarMobile } from "../Sidebar";
@@ -238,6 +238,14 @@ function MenuButtonSidebarMobile({
     btnSideBar.current?.focus();
     onSidebar(true);
   }
+
+  useEffect(() => {
+    if (!isSidebarHidden) onSidebar(true);
+
+    return () => {
+      onSidebar(false);
+    };
+  }, []);
 
   return (
     <div className="header__group">
