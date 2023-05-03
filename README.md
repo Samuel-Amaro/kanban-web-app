@@ -50,7 +50,7 @@ Users should be able to:
 ### Links
 
 - Solution URL: [Repository GitHub](https://github.com/Samuel-Amaro/kanban-task-management-web-app)
-- Live Site URL: [Result Live]()
+- Live Site URL: [Result Live](https://samuel-amaro.github.io/kanban-web-app/)
 
 ## My process
 
