@@ -23,6 +23,9 @@ export function boardReducer(state: Board, action: ActionType) {
                         return {
                             ...c,
                             name: action.newNameColumn,
+                            tasks: c.tasks.map((t) => {
+                                return {...t, status: action.newNameColumn}
+                            })
                         };
                     }
                     return c;

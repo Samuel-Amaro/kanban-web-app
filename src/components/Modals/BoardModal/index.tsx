@@ -26,6 +26,8 @@ type PropsBoardModal = {
   initialData?: Board | null;
 };
 
+//TODO: ao atualizar name column, não esta atualizando status de uma task da column, oque sera, como resolver?
+
 export default function BoardModal({
   type,
   isOpen,
