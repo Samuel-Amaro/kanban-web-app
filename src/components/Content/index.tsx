@@ -1,4 +1,4 @@
-import React, { Fragment,useMemo, useRef, useState } from "react";
+import React, { Fragment, useMemo, useRef, useState } from "react";
 import Button from "../Button";
 import Heading from "../Heading";
 import "./Content.css";
@@ -19,7 +19,7 @@ export default function Main({ selectedBoard }: PropsMain) {
   const refMain = useRef<HTMLElement | null>(null);
   const refBtnAddColumn = useRef<HTMLButtonElement | null>(null);
 
-  function handlePointerDownBtnAddColumn() {
+  function handleClickBtnAddColumn() {
     setModalEditBoardIsOppen(true);
   }
 
@@ -64,7 +64,7 @@ export default function Main({ selectedBoard }: PropsMain) {
               className="main-content__btn-column"
               title="+ New Column"
               aria-label="+ New Column"
-              onPointerDown={handlePointerDownBtnAddColumn}
+              onClick={handleClickBtnAddColumn}
               onKeyDown={(e) => handleKeydownBtnAddColumn(e)}
               ref={refBtnAddColumn}
             >
@@ -240,6 +240,14 @@ function TaskList({ tasks, selectedBoard, idColumn }: PropsTaskList) {
     e.dataTransfer.dropEffect = "move";
   }
 
+  function handleDragEnter(e: React.DragEvent<HTMLUListElement>) {
+    e.currentTarget.classList.add("main-content__tasks-list--dragover");
+  }
+
+  function handleDragLeave(e: React.DragEvent<HTMLUListElement>) {
+    e.currentTarget.classList.remove("main-content__tasks-list--dragover");
+  }
+
   return (
     <ul
       className={
@@ -249,6 +257,8 @@ function TaskList({ tasks, selectedBoard, idColumn }: PropsTaskList) {
       }
       onDrop={(e) => handleDrop(e)}
       onDragOver={(e) => handleDragOver(e)}
+      onDragEnter={(e) => handleDragEnter(e)}
+      onDragLeave={(e) => handleDragLeave(e)}
       ref={refList}
     >
       {tasks.map((t) => {

@@ -58,7 +58,7 @@
 .main-content__tasks-list {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 0 100px 0;
 }
 
 .main-content__task-item:not(:last-child) {
@@ -118,6 +118,10 @@
 .main-content__tasks-list--empty {
   border: 2px dashed var(--medium-grey);
   height: 100%;
+}
+
+.main-content__tasks-list--dragover {
+  border: 2px dashed var(--medium-grey);
 }
 
 .main-content__btn-column {
